@@ -740,6 +740,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theActionManager.add("displaysettings", themeManager.getResizableIcon(
 				"display", ICON_SIZE.L4), "Change display settings",
 				KeyEvent.VK_D, "", this);
+		
+		theActionManager.add("savespec",themeManager.getResizableIcon(
+				"savespec", ICON_SIZE.L4), "Save spectra",
+				KeyEvent.VK_D, "", this);
 
 		// help
 		theActionManager.add("about", themeManager.getResizableIcon("about",
@@ -1483,6 +1487,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				.getJCheckBox("Reducing end indicator [canvas]", this));
 		band4.addFlowComponent(theActionManager.get("showredend").getJCheckBox(
 				"Reducing end indicator [export]", this));
+		band4.addFlowComponent(theActionManager.get("savespec").getJCheckBox(
+				"Save spectra [GWP File]", this));
+		
 
 		theActionManager.get("showmassescanvas").setSelected(
 				theGlycanRenderer.getGraphicOptions().SHOW_MASSES_CANVAS);
@@ -1492,6 +1499,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				theGlycanRenderer.getGraphicOptions().SHOW_REDEND);
 		theActionManager.get("showredendcanvas").setSelected(
 				theGlycanRenderer.getGraphicOptions().SHOW_REDEND_CANVAS);
+		theActionManager.get("savespec").setSelected(
+				theGlycanRenderer.getGraphicOptions().SAVE_SPECTRA_CUSTOM);
+		
 
 		JFlowRibbonBand band5 = new JFlowRibbonBand(
 				"Switch themes",
@@ -2444,10 +2454,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						10));
 		this.updateChangeResidueRibbonGallery("Change residue", band4);
 
-		RibbonTask task1 = new RibbonTask("Linkage specification", band1);
+		//RibbonTask task1 = new RibbonTask("Linkage specification", band1);
 
 		return new RibbonContextualTaskGroup("Residue options", Color.GREEN,
-				new RibbonTask("Residue input", band2, band3, band4), task1);// ,new
+				new RibbonTask("Residue input", band2, band3, band4));// ,new //task1
 		// RibbonTask("Add residue",band3),new
 		// RibbonTask("Change residue",band4));
 	}
@@ -4044,9 +4054,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					.getSource()).isSelected();
 			this.respondToDocumentChange = true;
 			repaint();
-		}
-
-		else if (action.equals("orientation")) {
+		}else if(action.equals("savespec")){
+			theWorkspace.getGraphicOptions().SAVE_SPECTRA_CUSTOM= ((JCheckBox) e
+					.getSource()).isSelected();
+		}else if (action.equals("orientation")) {
 			onChangeOrientation();
 			updateOrientationButton();
 			updateResidueActions();

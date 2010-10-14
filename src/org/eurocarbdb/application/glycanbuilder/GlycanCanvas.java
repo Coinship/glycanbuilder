@@ -566,6 +566,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 
 	private void createActions() {
+		theActionManager.add("explode", ThemeManager.getResizableEmptyIcon(defaultMenuIconSize), "Explode", -1,
+				"", this);
 		theActionManager.add("undo", themeManager.getResizableIcon(
 				STOCK_ICON.UNDO, defaultMenuIconSize), "Undo", KeyEvent.VK_U,
 				"ctrl Z", this);
@@ -1417,8 +1419,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		updateOrientationButton();
 
 		band3.addFlowComponent(orientationButton);
+		band3.addFlowComponent(theActionManager.get("explode")
+				.getJCommandButton(ICON_SIZE.L4, " ", this,
+						new RichTooltip("Explode panels", " "), true));
 		band3.addFlowComponent(new JLabel("Zoom"));
 		band3.addFlowComponent(zoomList);
+		
+		
 
 		ArrayList<RibbonBandResizePolicy> resizePolicies3 = new ArrayList<RibbonBandResizePolicy>();
 		resizePolicies3.add(new CoreRibbonResizePolicies.FlowTwoRows(band3
@@ -4082,7 +4089,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			onNavigateLeft();
 		else if (action.equals("navright"))
 			onNavigateRight();
-
+		else if (action.equals("explode"))
+			explode();
 		updateActions();
 	}
 
@@ -4398,5 +4406,16 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					TERMINAL_GAL_NAME);
 		}
 	}
+	
+	private List<UIActionListener> uiActionListenerList=new ArrayList<UIActionListener>();
+	
+	public void registerUIListener(UIActionListener uiActionListener){
+		uiActionListenerList.add(uiActionListener);
+	}
 
+	public void explode(){
+		for(UIActionListener uiActionListener:uiActionListenerList){
+			uiActionListener.explode();
+		}
+	}
 }

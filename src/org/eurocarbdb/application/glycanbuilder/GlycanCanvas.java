@@ -88,6 +88,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
+import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
@@ -566,7 +567,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 
 	private void createActions() {
-		theActionManager.add("explode", ThemeManager.getResizableEmptyIcon(defaultMenuIconSize), "Explode", -1,
+		theActionManager.add("explode", themeManager.getResizableIcon(
+				"explode", defaultMenuIconSize), "Explode", -1,
 				"", this);
 		theActionManager.add("undo", themeManager.getResizableIcon(
 				STOCK_ICON.UNDO, defaultMenuIconSize), "Undo", KeyEvent.VK_U,
@@ -580,6 +582,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theActionManager.add("copy", themeManager.getResizableIcon(
 				STOCK_ICON.COPY, defaultMenuIconSize), "Copy", KeyEvent.VK_C,
 				"ctrl C", this);
+		
+		
+		
 		theActionManager.add("paste", themeManager.getResizableIcon(
 				STOCK_ICON.PASTE, defaultMenuIconSize), "Paste", KeyEvent.VK_P,
 				"ctrl V", this);

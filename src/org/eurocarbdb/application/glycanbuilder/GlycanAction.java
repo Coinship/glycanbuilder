@@ -89,6 +89,7 @@ public class GlycanAction extends AbstractAction {
 	public void init(String action, EurocarbResizableIcon i, String label, int mnemonic,
 			String accelerator, ActionListener l) {
 		setEnabled(true);
+		System.err.println("AZ: "+accelerator);
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
 		putValue(Action.ACTION_COMMAND_KEY, action);
 		putValue(Action.MNEMONIC_KEY, mnemonic);
@@ -111,6 +112,18 @@ public class GlycanAction extends AbstractAction {
 		
 		this.eurocarbIcon=i;
 		this.enableAwareObjects=new ArrayList<Object>();
+		
+		//Should really give calling code control of this, but we need to emulate the old keybindings which were
+		//always active for buttons in the toolbars.
+		//TODO: Pass control to calling code
+		if(l instanceof JComponent){
+			JComponent component=(JComponent) l;
+			KeyStroke keyStroke=(KeyStroke) getValue(Action.ACCELERATOR_KEY);
+			if(keyStroke!=null && component.getActionForKeyStroke(keyStroke)==null){
+				component.registerKeyboardAction(this, (String) getValue(Action.ACTION_COMMAND_KEY), keyStroke,
+		                JComponent.WHEN_IN_FOCUSED_WINDOW);
+			}
+		}
 	}
 
 
@@ -197,6 +210,7 @@ public class GlycanAction extends AbstractAction {
 	 * Notify all the listeners that the action has been performed.
 	 */
 	public void actionPerformed(ActionEvent e) {
+		System.err.println("Action performed");
 		for (Iterator<ActionListener> i = listeners.iterator(); i.hasNext();)
 			i.next().actionPerformed(e);
 	}
@@ -348,7 +362,7 @@ public class GlycanAction extends AbstractAction {
 			this.enableAwareObjects.add(jCommandButton);
 			
 			jCommandButton.registerKeyboardAction(this, "lineup", (KeyStroke)getValue(Action.ACCELERATOR_KEY),
-	                JComponent.WHEN_IN_FOCUSED_WINDOW);
+					JComponent.WHEN_IN_FOCUSED_WINDOW);
 			
 			return jCommandButton;
 	}
@@ -413,7 +427,7 @@ public class GlycanAction extends AbstractAction {
 			this.enableAwareObjects.add(jCommandButton);
 			
 			jCommandButton.registerKeyboardAction(this, "lineup", (KeyStroke)getValue(Action.ACCELERATOR_KEY),
-	                JComponent.WHEN_IN_FOCUSED_WINDOW);
+					JComponent.WHEN_IN_FOCUSED_WINDOW);
 			
 			return jCommandButton;
 	}

@@ -291,6 +291,22 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private HashMap<RESIDUE_INSERT_MODES, List<ResidueGalleryIndex>> residueGalleries;
 
+	private JComboBox field_anomeric_state_r;
+
+	private JComboBox field_anomeric_carbon_r;
+
+	private DropDownList field_linkage_position_r;
+
+	private JComboBox field_chirality_r;
+
+	private JComboBox field_ring_size_r;
+
+	private JCheckBox field_second_bond_r;
+
+	private JComboBox field_second_child_position_r;
+
+	private DropDownList field_second_parent_position_r;
+
 	public enum RESIDUE_INSERT_MODES {
 		INSERT, REPLACE, ADD, TERMINAL
 	}
@@ -2395,47 +2411,47 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		toolbar.add(createLabel("Linkage", 5));
-		toolbar.add(field_anomeric_state = new JComboBox(new String[] { "?",
+		toolbar.add(field_anomeric_state_r = new JComboBox(new String[] { "?",
 				"a", "b" }));
-		toolbar.add(field_anomeric_carbon = new JComboBox(new String[] { "?",
+		toolbar.add(field_anomeric_carbon_r = new JComboBox(new String[] { "?",
 				"1", "2", "3" }));
 		toolbar.add(createLabel("->", 1));
-		toolbar.add(field_linkage_position = new DropDownList(new String[] {
+		toolbar.add(field_linkage_position_r = new DropDownList(new String[] {
 				"?", "1", "2", "3", "4", "5", "6", "7", "8", "9" }));
 		toolbar.add(createLabel("Chirality", 5));
-		toolbar.add(field_chirality = new JComboBox(new String[] { "?", "D",
+		toolbar.add(field_chirality_r = new JComboBox(new String[] { "?", "D",
 				"L" }));
 		toolbar.add(createLabel("Ring", 5));
-		toolbar.add(field_ring_size = new JComboBox(new String[] { "?", "p",
+		toolbar.add(field_ring_size_r = new JComboBox(new String[] { "?", "p",
 				"f", "o" }));
 		toolbar.add(createLabel("2nd bond", 5));
-		toolbar.add(field_second_bond = new JCheckBox(""));
-		toolbar.add(field_second_child_position = new JComboBox(new String[] {
+		toolbar.add(field_second_bond_r = new JCheckBox(""));
+		toolbar.add(field_second_child_position_r = new JComboBox(new String[] {
 				"?", "1", "2", "3" }));
 		toolbar.add(createLabel("->", 1));
 
 		toolbar
-				.add(field_second_parent_position = new DropDownList(
+				.add(field_second_parent_position_r = new DropDownList(
 						new String[] { "?", "1", "2", "3", "4", "5", "6", "7",
 								"8", "9" }));
 
-		field_anomeric_state.setActionCommand("setproperties");
-		field_anomeric_carbon.setActionCommand("setproperties");
-		field_linkage_position.setActionCommand("setproperties");
-		field_chirality.setActionCommand("setproperties");
-		field_ring_size.setActionCommand("setproperties");
-		field_second_bond.setActionCommand("setproperties");
-		field_second_child_position.setActionCommand("setproperties");
-		field_second_parent_position.setActionCommand("setproperties");
+		field_anomeric_state_r.setActionCommand("setproperties_r");
+		field_anomeric_carbon_r.setActionCommand("setproperties_r");
+		field_linkage_position_r.setActionCommand("setproperties_r");
+		field_chirality_r.setActionCommand("setproperties_r");
+		field_ring_size_r.setActionCommand("setproperties_r");
+		field_second_bond_r.setActionCommand("setproperties_r");
+		field_second_child_position_r.setActionCommand("setproperties_r");
+		field_second_parent_position_r.setActionCommand("setproperties_r");
 
-		field_anomeric_state.addActionListener(this);
-		field_anomeric_carbon.addActionListener(this);
-		field_linkage_position.addActionListener(this);
-		field_chirality.addActionListener(this);
-		field_ring_size.addActionListener(this);
-		field_second_bond.addActionListener(this);
-		field_second_child_position.addActionListener(this);
-		field_second_parent_position.addActionListener(this);
+		field_anomeric_state_r.addActionListener(this);
+		field_anomeric_carbon_r.addActionListener(this);
+		field_linkage_position_r.addActionListener(this);
+		field_chirality_r.addActionListener(this);
+		field_ring_size_r.addActionListener(this);
+		field_second_bond_r.addActionListener(this);
+		field_second_child_position_r.addActionListener(this);
+		field_second_parent_position_r.addActionListener(this);
 
 		// band1.setLayout(new BorderLayout());
 		band1.addFlowComponent(toolbar);
@@ -3920,6 +3936,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		Residue current = getCurrentResidue();
 		if (current != null) {
+			System.err.println("Updating residue properties");
 			current
 					.setAnomericState(getSelectedValueChar(field_anomeric_state));
 			current
@@ -3933,6 +3950,44 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				if (field_second_bond.isSelected()) {
 					char[] sel_second_parent_positions = getSelectedPositions(field_second_parent_position);
 					char sel_second_child_position = getSelectedValueChar(field_second_child_position);
+					parent_linkage.setLinkagePositions(sel_linkage_positions,
+							sel_second_parent_positions,
+							sel_second_child_position);
+				} else
+					parent_linkage.setLinkagePositions(sel_linkage_positions);
+			}
+
+			theDoc.fireDocumentChanged();
+			setSelection(current);
+			this.respondToDocumentChange = true;
+			repaint();
+		}
+	}
+	
+	/**
+	 * Set the properties of the residue with the focus using the values in the
+	 * properties toolbar
+	 * 
+	 * @see #getToolBarProperties
+	 */
+	public void onSetProperties_r() {
+
+		Residue current = getCurrentResidue();
+		if (current != null) {
+			System.err.println("Updating residue properties _r");
+			current
+					.setAnomericState(getSelectedValueChar(field_anomeric_state_r));
+			current
+					.setAnomericCarbon(getSelectedValueChar(field_anomeric_carbon_r));
+			current.setChirality(getSelectedValueChar(field_chirality_r));
+			current.setRingSize(getSelectedValueChar(field_ring_size_r));
+
+			Linkage parent_linkage = current.getParentLinkage();
+			if (parent_linkage != null) {
+				char[] sel_linkage_positions = getSelectedPositions(field_linkage_position_r);
+				if (field_second_bond_r.isSelected()) {
+					char[] sel_second_parent_positions = getSelectedPositions(field_second_parent_position_r);
+					char sel_second_child_position = getSelectedValueChar(field_second_child_position_r);
 					parent_linkage.setLinkagePositions(sel_linkage_positions,
 							sel_second_parent_positions,
 							sel_second_child_position);
@@ -4082,6 +4137,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			onProperties();
 		else if (action.equals("setproperties"))
 			onSetProperties();
+		else if (action.equals("setproperties_r"))
+			onSetProperties_r();
 		else if (action.equals("moveccw"))
 			onMoveCCW();
 		// else if( action.equals("resetplace") )

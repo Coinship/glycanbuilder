@@ -89,7 +89,6 @@ public class GlycanAction extends AbstractAction {
 	public void init(String action, EurocarbResizableIcon i, String label, int mnemonic,
 			String accelerator, ActionListener l) {
 		setEnabled(true);
-		System.err.println("AZ: "+accelerator);
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
 		putValue(Action.ACTION_COMMAND_KEY, action);
 		putValue(Action.MNEMONIC_KEY, mnemonic);
@@ -116,10 +115,18 @@ public class GlycanAction extends AbstractAction {
 		//Should really give calling code control of this, but we need to emulate the old keybindings which were
 		//always active for buttons in the toolbars.
 		//TODO: Pass control to calling code
-		if(l instanceof JComponent){
-			JComponent component=(JComponent) l;
+		if(l instanceof JComponent || l instanceof JFrame){
+			//System.err.println("here1");
+			JComponent component=null;
+			if(l instanceof JComponent){
+				component=(JComponent) l;
+			}else{
+				component=(JComponent)((JFrame) l).getContentPane();
+			}
+			
 			KeyStroke keyStroke=(KeyStroke) getValue(Action.ACCELERATOR_KEY);
 			if(keyStroke!=null && component.getActionForKeyStroke(keyStroke)==null){
+				//System.err.println("here2");
 				component.registerKeyboardAction(this, (String) getValue(Action.ACTION_COMMAND_KEY), keyStroke,
 		                JComponent.WHEN_IN_FOCUSED_WINDOW);
 			}

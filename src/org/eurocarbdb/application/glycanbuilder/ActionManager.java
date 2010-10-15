@@ -88,10 +88,13 @@ public class ActionManager {
 			i = ThemeManager.getResizableEmptyIcon(ICON_SIZE.TINY);
 		}
 		GlycanAction a = theActions.get(action);
-		if (a == null)
+		if (a == null){
+			//System.err.println("INIT");	
 			a = new GlycanAction(action, i, label, mnemonic, accelerator, l);
-		else
+		}else{
+			
 			a.init(action, i, label, mnemonic, accelerator, l);
+		}
 		theActions.put(action, a);
 
 		return a;

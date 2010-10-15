@@ -568,8 +568,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private void createActions() {
 		theActionManager.add("explode", themeManager.getResizableIcon(
-				"explode", defaultMenuIconSize), "Explode", -1,
-				"", this);
+				"explode", defaultMenuIconSize), "Explode", KeyEvent.VK_E,
+				"ctrl E", this);
 		theActionManager.add("undo", themeManager.getResizableIcon(
 				STOCK_ICON.UNDO, defaultMenuIconSize), "Undo", KeyEvent.VK_U,
 				"ctrl Z", this);

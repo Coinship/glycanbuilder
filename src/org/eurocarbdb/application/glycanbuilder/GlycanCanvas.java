@@ -570,6 +570,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theActionManager.add("explode", themeManager.getResizableIcon(
 				"explode", defaultMenuIconSize), "Explode", KeyEvent.VK_E,
 				"ctrl E", this);
+		theActionManager.add("implode", themeManager.getResizableIcon(
+				"implode", defaultMenuIconSize), "Implode", KeyEvent.VK_E,
+				"ctrl shift E", this);
 		theActionManager.add("undo", themeManager.getResizableIcon(
 				STOCK_ICON.UNDO, defaultMenuIconSize), "Undo", KeyEvent.VK_U,
 				"ctrl Z", this);
@@ -4096,6 +4099,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			onNavigateRight();
 		else if (action.equals("explode"))
 			explode();
+		else if (action.equals("implode"))
+			implode();
 		updateActions();
 	}
 
@@ -4421,6 +4426,12 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	public void explode(){
 		for(UIActionListener uiActionListener:uiActionListenerList){
 			uiActionListener.explode();
+		}
+	}
+	
+	public void implode(){
+		for(UIActionListener uiActionListener:uiActionListenerList){
+			uiActionListener.implode();
 		}
 	}
 }

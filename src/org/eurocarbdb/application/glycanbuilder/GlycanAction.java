@@ -116,7 +116,6 @@ public class GlycanAction extends AbstractAction {
 		//always active for buttons in the toolbars.
 		//TODO: Pass control to calling code
 		if(l instanceof JComponent || l instanceof JFrame){
-			//System.err.println("here1");
 			JComponent component=null;
 			if(l instanceof JComponent){
 				component=(JComponent) l;
@@ -126,7 +125,6 @@ public class GlycanAction extends AbstractAction {
 			
 			KeyStroke keyStroke=(KeyStroke) getValue(Action.ACCELERATOR_KEY);
 			if(keyStroke!=null && component.getActionForKeyStroke(keyStroke)==null){
-				//System.err.println("here2");
 				component.registerKeyboardAction(this, (String) getValue(Action.ACTION_COMMAND_KEY), keyStroke,
 		                JComponent.WHEN_IN_FOCUSED_WINDOW);
 			}
@@ -217,7 +215,6 @@ public class GlycanAction extends AbstractAction {
 	 * Notify all the listeners that the action has been performed.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		System.err.println("Action performed");
 		for (Iterator<ActionListener> i = listeners.iterator(); i.hasNext();)
 			i.next().actionPerformed(e);
 	}

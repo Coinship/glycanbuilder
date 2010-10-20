@@ -30,6 +30,10 @@ import static org.eurocarbdb.application.glycanbuilder.Geometry.right;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.top;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.union;
 
+import org.eurocarbdb.application.glycoworkbench.GlycoWorkbench;
+import org.eurocarbdb.application.glycoworkbench.plugin.Plugin;
+import org.eurocarbdb.application.glycoworkbench.plugin.WorkspacePanel;
+import org.eurocarbdb.application.glycoworkbench.plugin.WorkspacePlugin;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;
@@ -306,6 +310,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	private JComboBox field_second_child_position_r;
 
 	private DropDownList field_second_parent_position_r;
+
+	private HashMap<String, String> qualifiedNameToThemeName;
 
 	public enum RESIDUE_INSERT_MODES {
 		INSERT, REPLACE, ADD, TERMINAL
@@ -1554,8 +1560,17 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		themeNameToQualifiedName.put("EmeraldDuskSkin", "org.pushingpixels.substance.api.skin.EmeraldDuskSkin");
 		themeNameToQualifiedName.put("OfficeSilver2007Skin", "org.pushingpixels.substance.api.skin.OfficeSilver2007Skin");
 		
+		this.qualifiedNameToThemeName=new HashMap<String,String>();
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.OfficeBlue2007Skin","OfficeBlue2007Skin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.AutumnSkin","AutumnSkin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.TwilightSkin","TwilightSkin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.GraphiteGlassSkin","GraphiteGlassSkin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.GraphiteAquaSkin","GraphiteAquaSkin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.EmeraldDuskSkin","EmeraldDuskSkin");
+		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.OfficeSilver2007Skin","OfficeSilver2007Skin");
 		
-		JComboBox themes = new JComboBox(new String[] {
+		
+		final JComboBox themes = new JComboBox(new String[] {
 				"OfficeBlue2007Skin",
 				"AutumnSkin",
 				"TwilightSkin",
@@ -1563,34 +1578,46 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				"GraphiteAquaSkin",
 				"EmeraldDuskSkin",
 				"OfficeSilver2007Skin" });
+		
+		themes.setSelectedItem(qualifiedNameToThemeName.get(theWorkspace.getGraphicOptions().THEME));
+		
 		themes.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane
 						.showMessageDialog(
 								null,
-								"You may need to restart GlycoWorkbench, for the new theme to take full affect!");
-				// TODO Auto-generated method stub
+								"Theme change will take effect the next time GlycoWorkbench is started");
 				JComboBox cb = (JComboBox) e.getSource();
 				String themeString = (String) cb.getSelectedItem();
 				if(themeNameToQualifiedName.containsKey(themeString)){
 					themeString=themeNameToQualifiedName.get(themeString);
-					try {
-						SubstanceLookAndFeel.setSkin(themeString);
-					} catch (Exception exc) {
-						exc.printStackTrace();
-					}
+//					try {
+//						SubstanceLookAndFeel.setSkin(themeString);
+//						notifyLAFListeners();
+//					} catch (Exception exc) {
+//						exc.printStackTrace();
+//					}
 					theWorkspace.getGraphicOptions().THEME = themeString;
-
+					
 				}
-				
 			}
 		});
 
 		band5.addFlowComponent(themes);
 
 		return new RibbonTask("View", band1, band2, band4, band3, band5);
+	}
+	
+	protected List<LAFListener> lafListenerList=new ArrayList<LAFListener>();
+	private void notifyLAFListeners(){
+		for(LAFListener lafListener:lafListenerList){
+			lafListener.lafChanged();
+		}
+	}
+	
+	public void registerLAFListener(LAFListener lafListener){
+		lafListenerList.add(lafListener);
 	}
 
 	private void updateOrientationButton() {
@@ -3936,7 +3963,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		Residue current = getCurrentResidue();
 		if (current != null) {
-			System.err.println("Updating residue properties");
 			current
 					.setAnomericState(getSelectedValueChar(field_anomeric_state));
 			current
@@ -3974,7 +4000,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		Residue current = getCurrentResidue();
 		if (current != null) {
-			System.err.println("Updating residue properties _r");
 			current
 					.setAnomericState(getSelectedValueChar(field_anomeric_state_r));
 			current

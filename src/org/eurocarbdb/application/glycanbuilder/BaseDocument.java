@@ -372,6 +372,8 @@ public abstract class BaseDocument {
     public boolean save(String filename) {
 
     try{
+    	setFilename(filename);
+    	
         // write to tmp file
         File tmpfile = File.createTempFile("gwb",null);
         write(new FileOutputStream(tmpfile));
@@ -381,7 +383,7 @@ public abstract class BaseDocument {
         tmpfile.delete();
 
         //
-        setFilename(filename);
+        
         
         //
         fireDocumentInit();

@@ -1608,17 +1608,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		return new RibbonTask("View", band1, band2, band4, band3, band5);
 	}
-	
-	protected List<LAFListener> lafListenerList=new ArrayList<LAFListener>();
-	private void notifyLAFListeners(){
-		for(LAFListener lafListener:lafListenerList){
-			lafListener.lafChanged();
-		}
-	}
-	
-	public void registerLAFListener(LAFListener lafListener){
-		lafListenerList.add(lafListener);
-	}
 
 	private void updateOrientationButton() {
 		if (orientationButton == null) {

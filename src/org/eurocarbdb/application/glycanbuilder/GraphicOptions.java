@@ -53,7 +53,7 @@ public class GraphicOptions {
 	/** UOXF colour */
 	public static final String NOTATION_UOXFCOL = "uoxfcol";
 
-	public String THEME = "org.pushingpixels.substance.api.skin.TwilightSkin";
+	public String THEME = "org.pushingpixels.substance.api.skin.OfficeBlue2007Skin";
 
 	/**
 	 * Specify one of the possible preset variations on the basic cartoon

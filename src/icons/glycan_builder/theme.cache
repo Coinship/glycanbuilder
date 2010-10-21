@@ -100,3 +100,5 @@ DEFAULT~png~undo
 DEFAULT~png~uoxf
 DEFAULT~png~uoxfcol
 DEFAULT~png~write
+DEFAULT~png~rotateccw
+DEFAULT~png~rotatecw

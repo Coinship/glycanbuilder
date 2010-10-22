@@ -30,10 +30,6 @@ import static org.eurocarbdb.application.glycanbuilder.Geometry.right;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.top;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.union;
 
-import org.eurocarbdb.application.glycoworkbench.GlycoWorkbench;
-import org.eurocarbdb.application.glycoworkbench.plugin.Plugin;
-import org.eurocarbdb.application.glycoworkbench.plugin.WorkspacePanel;
-import org.eurocarbdb.application.glycoworkbench.plugin.WorkspacePlugin;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;

@@ -308,7 +308,7 @@ public abstract class BaseDocument {
        @see #read
      */
     public boolean open(String filename, boolean merge, boolean warning) {
-    	System.err.println("In open1");
+    	
     return open(new File(filename), merge, warning);
     }
 
@@ -324,7 +324,7 @@ public abstract class BaseDocument {
     {
     try {
         FileInputStream fis = new FileInputStream(file);
-        System.err.println("In open two");
+        
         // read structure
         try {
         read(fis,merge);

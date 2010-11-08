@@ -848,12 +848,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 	
 	private void updateOrientation(){
-		updateStructureRibbonGallery(STRUCTURE_GALLERY_NAME,
-				structureSelectionBand);
-		
-		for (ResidueGalleryIndex gal : this.residueGalleries
-				.get(RESIDUE_INSERT_MODES.TERMINAL)) {
-			updateTerminalRibbonGallery(gal.galleryName, gal.band);
+		if(theWorkspace.getGraphicOptions().ORIENTATION==GraphicOptions.LR || theWorkspace.getGraphicOptions().ORIENTATION==GraphicOptions.RL){
+			updateStructureRibbonGallery(STRUCTURE_GALLERY_NAME,
+					structureSelectionBand);
+			
+			for (ResidueGalleryIndex gal : this.residueGalleries
+					.get(RESIDUE_INSERT_MODES.TERMINAL)) {
+				updateTerminalRibbonGallery(gal.galleryName, gal.band);
+			}
 		}
 	}
 
@@ -1775,7 +1777,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						String description=coreType.getDescription();
 						description=description.replaceAll("N-glycan", "");
 						description=description.replaceAll("O-glycan", "");
-						JCommandToggleButtonAction button = new JCommandToggleButtonAction(coreType.getName(),
+						JCommandToggleButtonAction button = new JCommandToggleButtonAction(description,
 								 imageIcon);
 						button.addActionListener(self);
 						
@@ -1800,7 +1802,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 			
 			band.addRibbonGallery(galleryName, galleryButtons,
-						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
+						visibleButtonCounts, 4, 4, RibbonElementPriority.TOP);
 		}
 	}
 
@@ -1865,7 +1867,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
 
 			band.addRibbonGallery(galleryName, galleryButtons,
-						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
+						visibleButtonCounts, 5, 4, RibbonElementPriority.TOP);
 			
 		}
 	}
@@ -1931,7 +1933,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 			
 			band.addRibbonGallery(galleryName, galleryButtons,
-						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
+						visibleButtonCounts, 5, 4, RibbonElementPriority.TOP);
 		}
 	}
 
@@ -1996,7 +1998,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			
 
 			band.addRibbonGallery(galleryName, galleryButtons,
-								visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
+								visibleButtonCounts, 5, 4, RibbonElementPriority.TOP);
 		}
 	}
 	

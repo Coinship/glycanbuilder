@@ -267,7 +267,7 @@ public class ICON_PATH {
 				iconProperties.id=id;
 				
 				EurocarbResizableIcon eurocarbIcon = new EurocarbResizableIcon();
-				eurocarbIcon.setResizableIcon(ImageWrapperResizableIcon.getIcon(iconProperties.imgURL, new Dimension(iconSize.getSize(),iconSize.getSize())));
+				eurocarbIcon.setResizableIcon(ImageResizableIconReducedMem.getIcon(iconProperties.imgURL, new Dimension(iconSize.getSize(),iconSize.getSize())));
 				eurocarbIcon.setIconProperties(iconProperties);
 				eurocarbIcon.setThemeManager(this.themeManager);
 				

@@ -129,7 +129,7 @@ public class ThemeManager {
 	 */
 	public static EurocarbResizableIcon getResizableEmptyIcon(ICON_SIZE iconSize) {
 		EurocarbResizableIcon eurocarbIcon = new EurocarbResizableIcon();
-		eurocarbIcon.setResizableIcon(ImageWrapperResizableIcon.getIcon(getEmptyIcon(iconSize).getImage(), new Dimension(iconSize.getSize(), iconSize.getSize())));
+		eurocarbIcon.setResizableIcon(new ImageResizableIconReducedMem(getEmptyIcon(iconSize).getImage(), iconSize.getSize(), iconSize.getSize()));
 		eurocarbIcon.setIconProperties(null);
 
 		return eurocarbIcon;

@@ -2115,6 +2115,8 @@ public class GlycanRenderer {
 		// reset scale
 		view_opt.setScale(1.);
 		view_opt.SHOW_INFO = old_flag;
+		
+		img.flush();
 
 		return img;
 	}

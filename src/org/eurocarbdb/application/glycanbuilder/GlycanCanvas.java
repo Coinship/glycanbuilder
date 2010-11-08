@@ -320,6 +320,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private HashMap<String, String> qualifiedNameToThemeName;
 
+	private JMenu addResidueMenu;
+
+	private JMenu addTerminalMenu;
+
+	private JMenuItem insertResidueMenu;
+
+	private JMenuItem changeResidueMenu;
+
 	public enum RESIDUE_INSERT_MODES {
 		INSERT, REPLACE, ADD, TERMINAL
 	}
@@ -448,6 +456,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		contextAwareContainers = new HashSet<ContextAwareContainer>();
 		notationChangeListeners = new HashSet<NotationChangeListener>();
+		
 	}
 
 	public void addContextAwareContainer(ContextAwareContainer container) {
@@ -2326,7 +2335,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	public JPopupMenu createPopupMenu() {
 		return createPopupMenu(true);
 	}
-
+	
+	
+	protected HashMap<String,JPopupMenu> cachedMenus=new HashMap<String,JPopupMenu>();
+	
 	/**
 	 * Return a popup menu to be used with this component
 	 * 
@@ -2335,7 +2347,43 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 *            the current residue should be added to the menu
 	 */
 	public JPopupMenu createPopupMenu(boolean change_properties) {
-
+		StringBuffer buf=new StringBuffer();
+		if (!hasCurrentSelection()) {
+			buf.append("0");
+		}else{
+			buf.append("1");
+		}
+		
+		if (!hasCurrentLinkage()) {
+			buf.append("0");
+		}else{
+			buf.append("1");
+		}
+		
+		if (hasCurrentResidue()) {
+			buf.append("1");
+		}else{
+			buf.append("0");
+		}
+		
+		if (change_properties) {
+			buf.append("1");
+		}else{
+			buf.append("0");
+		}
+		
+		if (hasCurrentSelection()) {
+			buf.append("1");
+		}else{
+			buf.append("0");
+		}
+		
+		String key=buf.toString();
+		if(cachedMenus.containsKey(key)){
+			return cachedMenus.get(key);
+		}
+		
+		System.err.println("Creating menu!!!!");
 		JPopupMenu menu = new JPopupMenu();
 
 		menu.setDoubleBuffered(true);
@@ -2354,14 +2402,33 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			menu.add(createAddStructureMenu());
 		}
 		if (!hasCurrentLinkage()) {
-			menu.add(createAddResidueMenu());
-			menu.add(createAddTerminalMenu());
+			if(addResidueMenu==null){
+				addResidueMenu=createAddResidueMenu();
+			}
+			
+			menu.add(addResidueMenu);
+			
+			if(addTerminalMenu==null){
+				addTerminalMenu=createAddTerminalMenu();
+			}
+
+			menu.add(addTerminalMenu);
 		}
 
 		// modify structure
 		if (hasCurrentResidue()) {
-			menu.add(createInsertResidueMenu());
-			menu.add(createChangeResidueTypeMenu());
+			if(insertResidueMenu==null){
+				insertResidueMenu=createInsertResidueMenu();
+			}
+			
+			menu.add(insertResidueMenu);
+			
+			if(changeResidueMenu==null){
+				changeResidueMenu=createChangeResidueTypeMenu();
+			}
+			
+			menu.add(changeResidueMenu);
+			
 			// menu.add(createChangeRedEndMenu());
 			menu.add(theActionManager.get("bracket"));
 			menu.add(theActionManager.get("repeat"));
@@ -2383,7 +2450,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			// menu.add(theActionManager.get("resetplace"));
 			menu.add(theActionManager.get("movecw"));
 		}
+		
 
+		cachedMenus.put(key,menu);
+		
 		return menu;
 	}
 
@@ -3756,6 +3826,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		this.respondToDocumentChange = true;
 		repaint();
 		updateResidueActions();
+		
+		addResidueMenu=null;
+		addTerminalMenu=null;
+		insertResidueMenu=null;
+		changeResidueMenu=null;
+		
+		cachedMenus.clear();
 	}
 
 	public void fireNotationChangedEvent(String notation) {

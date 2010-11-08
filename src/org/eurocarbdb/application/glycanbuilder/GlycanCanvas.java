@@ -1587,6 +1587,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		themeNameToQualifiedName.put("GraphiteAquaSkin", "org.pushingpixels.substance.api.skin.GraphiteAquaSkin");
 		themeNameToQualifiedName.put("EmeraldDuskSkin", "org.pushingpixels.substance.api.skin.EmeraldDuskSkin");
 		themeNameToQualifiedName.put("OfficeSilver2007Skin", "org.pushingpixels.substance.api.skin.OfficeSilver2007Skin");
+		themeNameToQualifiedName.put("BasicWhiteSkin", "basic.white");
 		
 		this.qualifiedNameToThemeName=new HashMap<String,String>();
 		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.OfficeBlue2007Skin","OfficeBlue2007Skin");
@@ -1596,6 +1597,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.GraphiteAquaSkin","GraphiteAquaSkin");
 		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.EmeraldDuskSkin","EmeraldDuskSkin");
 		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.OfficeSilver2007Skin","OfficeSilver2007Skin");
+		qualifiedNameToThemeName.put("basic.white","BasicWhiteSkin");
 		
 		
 		final JComboBox themes = new JComboBox(new String[] {
@@ -1605,7 +1607,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				"GraphiteGlassSkin",
 				"GraphiteAquaSkin",
 				"EmeraldDuskSkin",
-				"OfficeSilver2007Skin" });
+				"OfficeSilver2007Skin",
+				"BasicWhiteSkin",
+		});
 		
 		themes.setSelectedItem(qualifiedNameToThemeName.get(theWorkspace.getGraphicOptions().THEME));
 		
@@ -4232,12 +4236,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			updateOrientationButton();
 			
 			updateOrientation();
-			
-			
 			repaint();
-			
-
-			
 		} else if (action.equals("properties"))
 			onProperties();
 		else if (action.equals("setproperties"))

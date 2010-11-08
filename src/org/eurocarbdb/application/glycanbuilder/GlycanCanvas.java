@@ -30,6 +30,7 @@ import static org.eurocarbdb.application.glycanbuilder.Geometry.right;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.top;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.union;
 
+import org.eurocarbdb.application.glycoworkbench.GlycoWorkbench;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;
@@ -48,6 +49,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -94,16 +96,23 @@ import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.RichTooltip;
 import org.pushingpixels.flamingo.api.common.StringValuePair;
+import org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.api.ribbon.JFlowRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
@@ -116,6 +125,8 @@ import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 import org.pushingpixels.substance.api.skin.SubstanceOfficeBlue2007LookAndFeel;
 import org.pushingpixels.substance.internal.utils.SubstanceSizeUtils;
+
+import com.sun.java.help.impl.SwingWorker;
 
 /**
  * A component that implement a visual editor of glycan structures. Multiple
@@ -781,9 +792,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		ResidueRenderer rr = theGlycanRenderer.getResidueRenderer();
 		for (ResidueType t : ResidueDictionary.allResidues()) {
-			ImageWrapperResizableIcon icon = ImageWrapperResizableIcon.getIcon(
-					rr.getImage(t, iconSize.getSize()), new Dimension(iconSize
-							.getSize(), iconSize.getSize()));
+			ImageResizableIconReducedMem icon = new ImageResizableIconReducedMem(
+					rr.getImage(t, iconSize.getSize()), iconSize
+							.getSize(), iconSize.getSize());
 
 			EurocarbResizableIcon eu_icon = new EurocarbResizableIcon(
 					this.themeManager, null, icon);
@@ -835,6 +846,16 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theActionManager.get("movecw").setEnabled(hasCurrentSelection());
 
 	}
+	
+	private void updateOrientation(){
+		updateStructureRibbonGallery(STRUCTURE_GALLERY_NAME,
+				structureSelectionBand);
+		
+		for (ResidueGalleryIndex gal : this.residueGalleries
+				.get(RESIDUE_INSERT_MODES.TERMINAL)) {
+			updateTerminalRibbonGallery(gal.galleryName, gal.band);
+		}
+	}
 
 	private void updateResidueActions() {
 		// structure
@@ -842,9 +863,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		ICON_SIZE iconSize = ICON_SIZE.L4;
 
 		for (ResidueType t : ResidueDictionary.allResidues()) {
-			ImageWrapperResizableIcon icon = ImageWrapperResizableIcon.getIcon(
-					rr.getImage(t, iconSize.getSize()), new Dimension(iconSize
-							.getSize(), iconSize.getSize()));
+			ImageResizableIconReducedMem icon = new ImageResizableIconReducedMem(
+					rr.getImage(t, iconSize.getSize()), iconSize
+							.getSize(), iconSize.getSize());
 
 			EurocarbResizableIcon eu_icon = new EurocarbResizableIcon(
 					this.themeManager, null, icon);
@@ -1400,37 +1421,44 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		panel.setMaxButtonColumns(6);
 		panel.setMaxButtonRows(1);
 		band1.addFlowComponent(panel);
-
-		JComboBox zoomList = new JComboBox();
-
-		zoomList.addItem(theActionManager.get("scale=300").getName());
-		zoomList.addItem(theActionManager.get("scale=400").getName());
-		zoomList.addItem(theActionManager.get("scale=200").getName());
-		zoomList.addItem(theActionManager.get("scale=150").getName());
-		zoomList.addItem(theActionManager.get("scale=100").getName());
-		zoomList.addItem(theActionManager.get("scale=67").getName());
-		zoomList.addItem(theActionManager.get("scale=50").getName());
-		zoomList.addItem(theActionManager.get("scale=33").getName());
-		zoomList.addItem(theActionManager.get("scale=25").getName());
+		
 		int zoom = (int) (theWorkspace.getGraphicOptions().SCALE_CANVAS * 100);
 		if (zoom == 145)
 			zoom = 150;
-		zoomList.setSelectedItem(theActionManager.get("scale=" + zoom)
-				.getName());
-		zoomList.addActionListener(new ActionListener() {
-
+		
+		final JCommandButton zoomButton=new JCommandButton(String.valueOf(zoom),
+				GlycoWorkbench.getDefaultThemeManager().getResizableIcon("edit-find", ICON_SIZE.L3).getResizableIcon());
+		zoomButton.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+		zoomButton.setDisplayState(CommandButtonDisplayState.TILE);
+		zoomButton.setPopupCallback(new PopupPanelCallback(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				JComboBox cb = (JComboBox) e.getSource();
-				String zoomLevel = (String) cb.getSelectedItem();
-				theWorkspace.getGraphicOptions().SCALE_CANVAS = Double
-						.parseDouble(zoomLevel.substring(0,
-								zoomLevel.length() - 1)) / 100.;
-				respondToDocumentChange = true;
-				repaint();
+			public JPopupPanel getPopupPanel(JCommandButton arg0) {
+				JCommandPopupMenu menu=new JCommandPopupMenu();
+				
+				ActionListener actionListener=new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JCommandMenuButton cb = (JCommandMenuButton) e.getSource();
+						String zoomLevel = (String) cb.getText();
+						theWorkspace.getGraphicOptions().SCALE_CANVAS = Double
+								.parseDouble(zoomLevel.substring(0,
+										zoomLevel.length() - 1)) / 100.;
+						respondToDocumentChange = true;
+						zoomButton.setText(zoomLevel);
+						repaint();
+					}
+				};
+				
+				int scaleArray[]={300,400,200,150,100,67,50,33,25};
+				for(int scale:scaleArray){
+					JCommandMenuButton button=new JCommandMenuButton(theActionManager.get("scale="+scale).getName(),null);
+					button.addActionListener(actionListener);
+					menu.addMenuButton(button);
+				}
+				
+				return menu;
 			}
-
+			
 		});
 
 		updateOrientationButton();
@@ -1452,8 +1480,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				.getJCommandButton(ICON_SIZE.L4, " ", this,
 						new RichTooltip("Implode panels", " "), true));
 		band3.addFlowComponent(orientationButton);
-		band3.addFlowComponent(new JLabel("Zoom"));
-		band3.addFlowComponent(zoomList);
+		//band3.addFlowComponent(new JLabel("Zoom"));
+		band3.addFlowComponent(zoomButton);
 		
 		
 
@@ -1713,8 +1741,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * @param galleryName
 	 * @param band
 	 */
-	private void updateStructureRibbonGallery(String galleryName,
-			JRibbonBand band) {
+	private void updateStructureRibbonGallery(final String galleryName,
+			final JRibbonBand band) {
 		final GlycanCanvas self = this;
 
 		if (band != null && band.getControlPanel() != null) {
@@ -1724,28 +1752,31 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			}
 
 			ICON_SIZE iconSize = ICON_SIZE.L6;
-			List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+			final List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
 			for (String superclass : CoreDictionary.getSuperclasses()) {
 				Collection<CoreType> core_types = CoreDictionary
 						.getCores(superclass);
 				if (core_types.size() > 0) {
 					List<JCommandToggleButton> galleryButtonsList = new ArrayList<JCommandToggleButton>();
 					for (CoreType coreType : core_types) {
-						JCommandToggleButtonAction button = new JCommandToggleButtonAction(
-								coreType.getName(), ImageWrapperResizableIcon
-										.getIcon(theGlycanRenderer.getImage(
-												Glycan.fromString(coreType
-														.getStructure()),
-												false, false, false),
-												new Dimension(iconSize
-														.getSize(), iconSize
-														.getSize()))
-
-						);
+						BufferedImage image=theGlycanRenderer.getImage(
+								Glycan.fromString(coreType
+										.getStructure()),
+								false, false, false);
+						ImageResizableIconReducedMem imageIcon=new ImageResizableIconReducedMem(image,
+								iconSize
+										.getSize(), iconSize
+										.getSize());
+						imageIcon.minScale(1);
+						String description=coreType.getDescription();
+						description=description.replaceAll("N-glycan", "");
+						description=description.replaceAll("O-glycan", "");
+						JCommandToggleButtonAction button = new JCommandToggleButtonAction(coreType.getName(),
+								 imageIcon);
 						button.addActionListener(self);
-
+						
 						button
-								.setDisplayState(CommandButtonDisplayState.FIT_TO_ICON);
+								.setDisplayState(CommandButtonDisplayState.BIG);
 
 						button.setActionCommand("addstructure="
 								+ coreType.getName());
@@ -1758,14 +1789,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				}
 			}
 
-			Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
+			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
 			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
 			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
 
+			
 			band.addRibbonGallery(galleryName, galleryButtons,
-					visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
-
+						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
 		}
 	}
 
@@ -1777,8 +1808,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * @param galleryName
 	 * @param band
 	 */
-	private void updateInsertResidueRibbonGallery(String galleryName,
-			JRibbonBand band) {
+	private void updateInsertResidueRibbonGallery(final String galleryName,
+			final JRibbonBand band) {
 		final GlycanCanvas self = this;
 
 		if (band != null && band.getControlPanel() != null) {
@@ -1792,7 +1823,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			}
 
 			ICON_SIZE iconSize = ICON_SIZE.L6;
-			List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+			final List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
 			for (String superclass : ResidueDictionary.getSuperclasses()) {
 				Collection<ResidueType> core_types = ResidueDictionary
 						.getResidues(superclass);
@@ -1802,12 +1833,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 							.getResidues(superclass)) {
 						if (t.canHaveParent() && t.canHaveChildren()) {
 							// && t.getMaxLinkages() >= 2
-							ResizableIcon icon = ImageWrapperResizableIcon
-									.getIcon(this.getGlycanRenderer()
+							ResizableIcon icon = new ImageResizableIconReducedMem(this.getGlycanRenderer()
 											.getResidueRenderer().getImage(t,
 													iconSize.getSize()),
-											new Dimension(iconSize.getSize(),
-													iconSize.getSize()));
+											iconSize.getSize(),
+													iconSize.getSize());
 							JCommandToggleButtonAction button = new JCommandToggleButtonAction(
 									t.getName(), icon);
 							button.addActionListener(self);
@@ -1825,14 +1855,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				}
 			}
 
-			Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
+			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
 			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
 			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
 
 			band.addRibbonGallery(galleryName, galleryButtons,
-					visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
-
+						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
+			
 		}
 	}
 
@@ -1844,8 +1874,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * @param galleryName
 	 * @param band
 	 */
-	private void updateChangeResidueRibbonGallery(String galleryName,
-			JRibbonBand band) {
+	private void updateChangeResidueRibbonGallery(final String galleryName,
+			final JRibbonBand band) {
 		final GlycanCanvas self = this;
 
 		if (band != null && band.getControlPanel() != null) {
@@ -1859,7 +1889,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			}
 
 			ICON_SIZE iconSize = ICON_SIZE.L6;
-			List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+			final List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
 			for (String superclass : ResidueDictionary.getSuperclasses()) {
 				Collection<ResidueType> core_types = ResidueDictionary
 						.getResidues(superclass);
@@ -1869,11 +1899,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 							.getResidues(superclass)) {
 						// if (t.canHaveParent() && t.canHaveChildren()) {
 						// && t.getMaxLinkages() >= 2
-						ResizableIcon icon = ImageWrapperResizableIcon.getIcon(
+						ResizableIcon icon = new ImageResizableIconReducedMem(
 								this.getGlycanRenderer().getResidueRenderer()
 										.getImage(t, iconSize.getSize()),
-								new Dimension(iconSize.getSize(), iconSize
-										.getSize()));
+								iconSize.getSize(), iconSize
+										.getSize());
 						JCommandToggleButtonAction button = new JCommandToggleButtonAction(
 								t.getName(), icon);
 						button.addActionListener(self);
@@ -1890,14 +1920,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				}
 			}
 
-			Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
+			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
 			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
 			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
 
+			
 			band.addRibbonGallery(galleryName, galleryButtons,
-					visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
-
+						visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
 		}
 	}
 
@@ -1909,8 +1939,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * @param galleryName
 	 * @param band
 	 */
-	private void updateAddResidueRibbonGallery(String galleryName,
-			JRibbonBand band) {
+	private void updateAddResidueRibbonGallery(final String galleryName,
+			final JRibbonBand band) {
 		final GlycanCanvas self = this;
 
 		if (band != null && band.getControlPanel() != null) {
@@ -1923,7 +1953,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			}
 
 			ICON_SIZE iconSize = ICON_SIZE.L6;
-			List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+			final List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
 			for (String superclass : ResidueDictionary.getSuperclasses()) {
 				Collection<ResidueType> core_types = ResidueDictionary
 						.getResidues(superclass);
@@ -1933,12 +1963,12 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 							.getResidues(superclass)) {
 						if (t.canHaveParent()) {
 							// && t.getMaxLinkages() >= 2
-							ResizableIcon icon = ImageWrapperResizableIcon
-									.getIcon(this.getGlycanRenderer()
+							ResizableIcon icon = new ImageResizableIconReducedMem(
+									this.getGlycanRenderer()
 											.getResidueRenderer().getImage(t,
 													iconSize.getSize()),
-											new Dimension(iconSize.getSize(),
-													iconSize.getSize()));
+											iconSize.getSize(),
+													iconSize.getSize());
 							JCommandToggleButtonAction button = new JCommandToggleButtonAction(
 									t.getName(), icon);
 							button.addActionListener(self);
@@ -1955,33 +1985,57 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				}
 			}
 
-			Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
+			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
 			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
 			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
+			
 
 			band.addRibbonGallery(galleryName, galleryButtons,
-					visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
-
+								visibleButtonCounts, 6, 4, RibbonElementPriority.TOP);
 		}
 	}
+	
+	private HashMap<TerminalType,ImageResizableIconReducedMem> getCachedTerminalImages(){
+		HashMap<TerminalType,ImageResizableIconReducedMem> map=new HashMap<TerminalType,ImageResizableIconReducedMem>();
+		ICON_SIZE iconSize = ICON_SIZE.L6;
+		for (String superclass : TerminalDictionary.getSuperclasses()) {
+			Collection<TerminalType> terminal_types = TerminalDictionary
+					.getTerminals(superclass);
+			if (terminal_types.size() > 0) {
+				for (TerminalType terminalType : terminal_types) {
+					List<JCommandToggleButton> galleryButtonsList = new ArrayList<JCommandToggleButton>();
 
-	private void updateTerminalRibbonGallery(String galleryName,
-			JRibbonBand band) {
+					ImageResizableIconReducedMem imageIcon = new ImageResizableIconReducedMem(
+							getGlycanRenderer().getImage(
+									Glycan.fromString(terminalType
+											.getStructure()), false, false,
+									false), iconSize
+									.getSize(), iconSize.getSize());
+					imageIcon.minScale(1);
+					map.put(terminalType, imageIcon);
+				}
+			}
+		}
+		
+		return map;
+	}
+	
+	private void updateTerminalRibbonGallery(final String galleryName,
+			final JRibbonBand band, HashMap<TerminalType,ImageResizableIconReducedMem> map){
 		final GlycanCanvas self = this;
-
 		if (band != null && band.getControlPanel() != null) {
 
 			if (band.getControlPanel().getRibbonGallery(galleryName) != null) {
 				band.getControlPanel().removeRibbonGallery(galleryName);
 				// System.err.println("Removing terminal residue gallery");
 			} else {
-				this.residueGalleries.get(RESIDUE_INSERT_MODES.TERMINAL).add(
+				residueGalleries.get(RESIDUE_INSERT_MODES.TERMINAL).add(
 						new ResidueGalleryIndex(band, galleryName));
 			}
-
+			
 			ICON_SIZE iconSize = ICON_SIZE.L6;
-			List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
+			final List<StringValuePair<List<JCommandToggleButton>>> galleryButtons = new ArrayList<StringValuePair<List<JCommandToggleButton>>>();
 			for (String superclass : TerminalDictionary.getSuperclasses()) {
 				Collection<TerminalType> terminal_types = TerminalDictionary
 						.getTerminals(superclass);
@@ -1989,22 +2043,16 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					for (TerminalType terminalType : terminal_types) {
 						List<JCommandToggleButton> galleryButtonsList = new ArrayList<JCommandToggleButton>();
 
-						ResizableIcon icon = ImageWrapperResizableIcon.getIcon(
-								this.getGlycanRenderer().getImage(
-										Glycan.fromString(terminalType
-												.getStructure()), false, false,
-										false), new Dimension(iconSize
-										.getSize(), iconSize.getSize()));
-
+						ImageResizableIconReducedMem imageIcon=map.get(terminalType);
 						JCommandToggleButtonAction button1 = new JCommandToggleButtonAction(
-								"x-linked", icon);
+								"x-linked", imageIcon);
 						button1.addActionListener(self);
 						button1.setActionCommand("addterminal="
 								+ terminalType.getName());
 						galleryButtonsList.add(button1);
 						for (int l = 1; l < 9; l++) {
 							JCommandToggleButtonAction button = new JCommandToggleButtonAction(
-									l + "-linked", icon);
+									l + "-linked", imageIcon);
 							button.addActionListener(self);
 							button.setActionCommand("addterminal=" + l + "-"
 									+ terminalType.getName());
@@ -2020,14 +2068,44 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				}
 			}
 
-			Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
+			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
 			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
 			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
 			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
-
+			
 			band.addRibbonGallery(galleryName, galleryButtons,
-					visibleButtonCounts, 4, 4, RibbonElementPriority.TOP);
+						visibleButtonCounts, 4, 4, RibbonElementPriority.TOP);
+		}
+	}
 
+	private void updateTerminalRibbonGallery(final String galleryName,
+			final JRibbonBand band) {
+		boolean updating=false;
+		if (band != null && band.getControlPanel() != null) {
+			if (band.getControlPanel().getRibbonGallery(galleryName) != null) {
+				updating=true;
+			}
+		}
+
+		if(updating){
+			javax.swing.SwingWorker worker=new javax.swing.SwingWorker(){
+				protected HashMap<TerminalType,ImageResizableIconReducedMem> map;
+				
+				@Override
+				protected Object doInBackground() throws Exception {
+					map=getCachedTerminalImages();
+					return null;
+				}
+
+				@Override
+				protected void done(){
+					updateTerminalRibbonGallery(galleryName,band,map);
+				}
+			};
+			
+			worker.execute();
+		}else{
+			updateTerminalRibbonGallery(galleryName,band,getCachedTerminalImages());
 		}
 	}
 
@@ -4152,9 +4230,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		}else if (action.equals("orientation")) {
 			onChangeOrientation();
 			updateOrientationButton();
-			updateResidueActions();
-
+			
+			updateOrientation();
+			
+			
 			repaint();
+			
+
+			
 		} else if (action.equals("properties"))
 			onProperties();
 		else if (action.equals("setproperties"))

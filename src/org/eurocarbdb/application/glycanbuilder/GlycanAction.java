@@ -511,7 +511,7 @@ public class GlycanAction extends AbstractAction {
 	 */
 	public ResizableIcon getResizableIcon(ICON_SIZE iconSize){
 		if(this.eurocarbIcon.getIconProperties()==null){
-			return ImageWrapperResizableIcon.getIcon(ThemeManager.getEmptyIcon(iconSize).getImage(), new Dimension(iconSize.getSize(),iconSize.getSize()));
+			return new ImageResizableIconReducedMem(ThemeManager.getEmptyIcon(iconSize).getImage(),iconSize.getSize(),iconSize.getSize());
 		}else{
 			return this.eurocarbIcon.getThemeManager().getResizableIcon(this.getEurocarbIcon().getIconProperties().id, iconSize).getResizableIcon();
 		}

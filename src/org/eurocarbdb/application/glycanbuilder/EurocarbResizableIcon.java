@@ -17,7 +17,7 @@ public class EurocarbResizableIcon {
 		this.iconPath = iconPath;
 	}
 	public EurocarbResizableIcon(ThemeManager themeManager2, IconProperties pro,
-			ImageWrapperResizableIcon icon) {
+			ResizableIcon icon) {
 		this.themeManager=themeManager2;
 		this.iconProperties=pro;
 		this.resizableIcon=icon;

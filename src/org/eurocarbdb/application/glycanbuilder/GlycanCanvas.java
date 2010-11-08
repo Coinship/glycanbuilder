@@ -99,6 +99,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton.CommandButtonLocationOrderKind;
 import org.pushingpixels.flamingo.api.common.CommandButtonDisplayState;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
@@ -1437,8 +1438,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		if (zoom == 145)
 			zoom = 150;
 		
-		final JCommandButton zoomButton=new JCommandButton(String.valueOf(zoom),
-				GlycoWorkbench.getDefaultThemeManager().getResizableIcon("edit-find", ICON_SIZE.L3).getResizableIcon());
+		final JCommandButton zoomButton=new JCommandButton(String.valueOf(zoom)+"%",
+				GlycoWorkbench.getDefaultThemeManager().getResizableIcon("magglass", ICON_SIZE.L3).getResizableIcon());
 		zoomButton.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
 		zoomButton.setDisplayState(CommandButtonDisplayState.TILE);
 		zoomButton.setPopupCallback(new PopupPanelCallback(){
@@ -1610,8 +1611,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		qualifiedNameToThemeName.put("org.pushingpixels.substance.api.skin.OfficeSilver2007Skin","OfficeSilver2007Skin");
 		qualifiedNameToThemeName.put("basic.white","BasicWhiteSkin");
 		
+		final JCommandButton themeButton=new JCommandButton(qualifiedNameToThemeName.get(theWorkspace.getGraphicOptions().THEME));
+		themeButton.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+		themeButton.setDisplayState(CommandButtonDisplayState.TILE);
 		
-		final JComboBox themes = new JComboBox(new String[] {
+		final String themes[] =  {
 				"OfficeBlue2007Skin",
 				"AutumnSkin",
 				"TwilightSkin",
@@ -1620,34 +1624,42 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				"EmeraldDuskSkin",
 				"OfficeSilver2007Skin",
 				"BasicWhiteSkin",
-		});
+		};
 		
-		themes.setSelectedItem(qualifiedNameToThemeName.get(theWorkspace.getGraphicOptions().THEME));
-		
-		themes.addActionListener(new ActionListener() {
+		themeButton.setPopupCallback(new PopupPanelCallback(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"Theme change will take effect the next time GlycoWorkbench is started");
-				JComboBox cb = (JComboBox) e.getSource();
-				String themeString = (String) cb.getSelectedItem();
-				if(themeNameToQualifiedName.containsKey(themeString)){
-					themeString=themeNameToQualifiedName.get(themeString);
-//					try {
-//						SubstanceLookAndFeel.setSkin(themeString);
-//						notifyLAFListeners();
-//					} catch (Exception exc) {
-//						exc.printStackTrace();
-//					}
-					theWorkspace.getGraphicOptions().THEME = themeString;
-					
+			public JPopupPanel getPopupPanel(JCommandButton arg0) {
+				JCommandPopupMenu menu=new JCommandPopupMenu();
+				
+				ActionListener actionListener=new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JCommandMenuButton cb = (JCommandMenuButton) e.getSource();
+						String themeString = (String) cb.getText();
+						if(themeNameToQualifiedName.containsKey(themeString)){
+							themeString=themeNameToQualifiedName.get(themeString);
+//							try {
+//								SubstanceLookAndFeel.setSkin(themeString);
+//								notifyLAFListeners();
+//							} catch (Exception exc) {
+//								exc.printStackTrace();
+//							}
+							theWorkspace.getGraphicOptions().THEME = themeString;
+						}
+						JOptionPane.showMessageDialog(null, "GlycoWorkbench must be restarted for the new theme to be applied");
+					}
+				};
+				
+				for(String theme:themes){
+					JCommandMenuButton button=new JCommandMenuButton(theme,null);
+					button.addActionListener(actionListener);
+					menu.addMenuButton(button);
 				}
+				return menu;
 			}
 		});
-
-		band5.addFlowComponent(themes);
+		
+		band5.addFlowComponent(themeButton);
 
 		return new RibbonTask("View", band1, band2, band4, band3, band5);
 	}

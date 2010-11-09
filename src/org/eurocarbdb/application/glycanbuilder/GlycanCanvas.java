@@ -30,7 +30,6 @@ import static org.eurocarbdb.application.glycanbuilder.Geometry.right;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.top;
 import static org.eurocarbdb.application.glycanbuilder.Geometry.union;
 
-import org.eurocarbdb.application.glycoworkbench.GlycoWorkbench;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;
@@ -1447,7 +1446,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			zoom = 150;
 		
 		final JCommandButton zoomButton=new JCommandButton(String.valueOf(zoom)+"%",
-				GlycoWorkbench.getDefaultThemeManager().getResizableIcon("magglass", ICON_SIZE.L3).getResizableIcon());
+				themeManager.getResizableIcon("magglass", ICON_SIZE.L3).getResizableIcon());
 		zoomButton.setAutoWidthPopupPanel(true);
 		zoomButton.setAlignPopupToRight(true);
 		zoomButton.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);

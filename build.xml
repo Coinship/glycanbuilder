@@ -162,8 +162,8 @@
             <zipfileset src="${java.extlib.dir}/swing-layout-1.0.jar"/>
             <zipfileset src="${java.extlib.dir}/log4j-1.2.12.jar"/>
         	<zipfileset src="${java.extlib.dir}/jdom-1.0.jar"/>
-        	<zipfileset src="${java.extlib.dir}/prefetched/flamingo.jar"/>
-        	<zipfileset src="${java.extlib.dir}/prefetched/flamingo-tst.jar"/>
+        	<zipfileset src="${java.dist.dir}/flamingo.jar"/>
+        	<zipfileset src="${java.dist.dir}/flamingo-tst.jar"/>
         	<zipfileset src="${java.dist.dir}/${project.resourcesdb.jar}"/>
         	<zipfileset src="${java.dist.dir}/${project.molframework.jar}"/>
         </jar>

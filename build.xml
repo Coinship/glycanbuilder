@@ -31,7 +31,7 @@
 
 
     <!-- TARGET: build ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-    <target name="build" depends="build-resourcesdb, build-molframework" description="Compiles GlycanBuilder"> 
+    <target name="build" depends="build-flamingo, build-resourcesdb, build-molframework" description="Compiles GlycanBuilder"> 
         <mkdir dir="${java.build.dir}" />
         <javac 
             srcdir="${java.source.dir}"

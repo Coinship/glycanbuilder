@@ -34,6 +34,7 @@ import org.eurocarbdb.application.glycoworkbench.GlycoWorkbench;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -431,10 +432,17 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theViewMenu = createViewMenu();
 
 		if (enableRibbons) {
+			int restoreOrientation=theWorkspace.getGraphicOptions().ORIENTATION;
+			if(theWorkspace.getGraphicOptions().ORIENTATION==GraphicOptions.BT || theWorkspace.getGraphicOptions().ORIENTATION==GraphicOptions.TB ){
+				theWorkspace.getGraphicOptions().ORIENTATION=GraphicOptions.RL;
+			}
+
 			theEditRibbon = createEditRibbonBand();
 			theStructureRibbon = createStructureRibbonTask();
 			theViewRibbon = createViewRibbonTask();
 			theLinkageRibbon = createLinkageRibbon();
+			
+			theWorkspace.getGraphicOptions().ORIENTATION=restoreOrientation;
 		}
 
 		// set the canvas
@@ -1440,8 +1448,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		
 		final JCommandButton zoomButton=new JCommandButton(String.valueOf(zoom)+"%",
 				GlycoWorkbench.getDefaultThemeManager().getResizableIcon("magglass", ICON_SIZE.L3).getResizableIcon());
-		zoomButton.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
+		zoomButton.setAutoWidthPopupPanel(true);
+		zoomButton.setAlignPopupToRight(true);
+		zoomButton.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
 		zoomButton.setDisplayState(CommandButtonDisplayState.TILE);
+		zoomButton.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		zoomButton.setPopupCallback(new PopupPanelCallback(){
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton arg0) {
@@ -1614,6 +1625,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		final JCommandButton themeButton=new JCommandButton(qualifiedNameToThemeName.get(theWorkspace.getGraphicOptions().THEME));
 		themeButton.setCommandButtonKind(CommandButtonKind.POPUP_ONLY);
 		themeButton.setDisplayState(CommandButtonDisplayState.TILE);
+		//themeButton.setAlignPopupToRight(true);
+		//themeButton.setAutoWidthPopupPanel(true);
 		
 		final String themes[] =  {
 				"OfficeBlue2007Skin",

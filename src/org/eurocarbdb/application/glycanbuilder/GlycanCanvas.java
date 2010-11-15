@@ -42,6 +42,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -2108,12 +2109,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			}
 
 			final Map<RibbonElementPriority, Integer> visibleButtonCounts = new HashMap<RibbonElementPriority, Integer>();
-			visibleButtonCounts.put(RibbonElementPriority.LOW, 4);
-			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 4);
-			visibleButtonCounts.put(RibbonElementPriority.TOP, 4);
+			visibleButtonCounts.put(RibbonElementPriority.LOW, 3);
+			visibleButtonCounts.put(RibbonElementPriority.MEDIUM, 3);
+			
+			visibleButtonCounts.put(RibbonElementPriority.TOP, 3);
 			
 			band.addRibbonGallery(galleryName, galleryButtons,
-						visibleButtonCounts, 4, 4, RibbonElementPriority.TOP);
+						visibleButtonCounts, 3, 3, RibbonElementPriority.TOP);
 		}
 	}
 
@@ -4366,6 +4368,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		else if (action.equals("implode"))
 			implode();
 		updateActions();
+		
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				revalidate();
+				repaint();
+			}
+		});
 	}
 
 	public void residueHistoryChanged() {

@@ -201,7 +201,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	protected BuilderWorkspace theWorkspace = null;
 	protected GlycanDocument theDoc = null;
 	// protected ActionManager theActionManager;
-	protected ActionManager theActionManager;
+	private ActionManager theActionManager;
 
 	// graphic objects
 	protected JScrollPane theScrollPane = null;
@@ -238,7 +238,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	protected HashSet<Linkage> selected_linkages;
 
 	// painting
-	protected GlycanRenderer theGlycanRenderer;
+	private GlycanRenderer theGlycanRenderer;
 	protected Rectangle all_structures_bbox;
 	protected BBoxManager theBBoxManager;
 	protected PositionManager thePosManager;
@@ -399,14 +399,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		theDoc = theWorkspace.getStructures();
 		theDoc.addDocumentChangeListener(this);
 		// theActionManager = new ActionManager();
-		theActionManager = new ActionManager();
+		setTheActionManager(new ActionManager());
 
 		current_residue = null;
 		current_linkage = null;
 		selected_residues = new HashSet<Residue>();
 		selected_linkages = new HashSet<Linkage>();
 
-		theGlycanRenderer = theWorkspace.getGlycanRenderer();
+		setTheGlycanRenderer(theWorkspace.getGlycanRenderer());
 		thePosManager = new PositionManager();
 		theBBoxManager = new BBoxManager();
 		all_structures_bbox = null;
@@ -515,21 +515,21 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * Return the action manager
 	 */
 	public ActionManager getActionManager() {
-		return theActionManager;
+		return getTheActionManager();
 	}
 
 	/**
 	 * Return the object that is used to render the structures
 	 */
 	public GlycanRenderer getGlycanRenderer() {
-		return theGlycanRenderer;
+		return getTheGlycanRenderer();
 	}
 
 	/**
 	 * Set the object that is used to render the structures
 	 */
 	public void setGlycanRenderer(GlycanRenderer r) {
-		theGlycanRenderer = r;
+		setTheGlycanRenderer(r);
 	}
 
 	/**
@@ -614,57 +614,57 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 
 	private void createActions() {
-		theActionManager.add("explode", themeManager.getResizableIcon(
+		getTheActionManager().add("explode", themeManager.getResizableIcon(
 				"explode", defaultMenuIconSize), "Explode", KeyEvent.VK_E,
 				"ctrl E", this);
-		theActionManager.add("implode", themeManager.getResizableIcon(
+		getTheActionManager().add("implode", themeManager.getResizableIcon(
 				"implode", defaultMenuIconSize), "Implode", KeyEvent.VK_E,
 				"ctrl shift E", this);
-		theActionManager.add("undo", themeManager.getResizableIcon(
+		getTheActionManager().add("undo", themeManager.getResizableIcon(
 				STOCK_ICON.UNDO, defaultMenuIconSize), "Undo", KeyEvent.VK_U,
 				"ctrl Z", this);
-		theActionManager.add("redo", themeManager.getResizableIcon(
+		getTheActionManager().add("redo", themeManager.getResizableIcon(
 				STOCK_ICON.REDO, defaultMenuIconSize), "Redo", KeyEvent.VK_R,
 				"ctrl Y", this);
-		theActionManager.add("cut", themeManager.getResizableIcon(
+		getTheActionManager().add("cut", themeManager.getResizableIcon(
 				STOCK_ICON.CUT, defaultMenuIconSize), "Cut", KeyEvent.VK_T,
 				"ctrl X", this);
-		theActionManager.add("copy", themeManager.getResizableIcon(
+		getTheActionManager().add("copy", themeManager.getResizableIcon(
 				STOCK_ICON.COPY, defaultMenuIconSize), "Copy", KeyEvent.VK_C,
 				"ctrl C", this);
 		
 		
 		
-		theActionManager.add("paste", themeManager.getResizableIcon(
+		getTheActionManager().add("paste", themeManager.getResizableIcon(
 				STOCK_ICON.PASTE, defaultMenuIconSize), "Paste", KeyEvent.VK_P,
 				"ctrl V", this);
-		theActionManager.add("delete", themeManager.getResizableIcon(
+		getTheActionManager().add("delete", themeManager.getResizableIcon(
 				"deleteNew", defaultMenuIconSize), "Delete",
 				KeyEvent.VK_L, "DELETE", this);
 
-		theActionManager.add("orderstructuresasc", themeManager
+		getTheActionManager().add("orderstructuresasc", themeManager
 				.getResizableIcon("sort_ascending", defaultMenuIconSize),
 				"Sort structures by m/z in ascending order", KeyEvent.VK_A, "",
 				this);
-		theActionManager.add("orderstructuresdesc", themeManager
+		getTheActionManager().add("orderstructuresdesc", themeManager
 				.getResizableIcon("sort_descending", defaultMenuIconSize),
 				"Sort structures by m/z in descending order", KeyEvent.VK_D,
 				"", this);
 
-		theActionManager.add("selectstructure", themeManager.getResizableIcon(
+		getTheActionManager().add("selectstructure", themeManager.getResizableIcon(
 				"selectstructure", defaultMenuIconSize),
 				"Select current structure", KeyEvent.VK_S, "ctrl W", this);
-		theActionManager.add("selectall", themeManager.getResizableIcon(
+		getTheActionManager().add("selectall", themeManager.getResizableIcon(
 				"selectall", defaultMenuIconSize), "Select all", KeyEvent.VK_A,
 				"ctrl A", this);
-		theActionManager.add("selectnone", themeManager.getResizableIcon(
+		getTheActionManager().add("selectnone", themeManager.getResizableIcon(
 				"deselect", defaultMenuIconSize), "Select none", KeyEvent.VK_N,
 				"ESCAPE", this);
-		theActionManager.add("gotostart", themeManager.getResizableIcon(
+		getTheActionManager().add("gotostart", themeManager.getResizableIcon(
 				"go-first", defaultMenuIconSize),
 				"Show beginning of the canvas", KeyEvent.VK_B, "ctrl HOME",
 				this);
-		theActionManager.add("gotoend", themeManager.getResizableIcon(
+		getTheActionManager().add("gotoend", themeManager.getResizableIcon(
 				"go-last", defaultMenuIconSize), "Show end of the canvas",
 				KeyEvent.VK_E, "ctrl END", this);
 
@@ -681,134 +681,134 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		// structure
 
 		for (CoreType t : CoreDictionary.getCores()) {
-			theActionManager.add("addstructure=" + t.getName(), ThemeManager
+			getTheActionManager().add("addstructure=" + t.getName(), ThemeManager
 					.getResizableEmptyIcon(ICON_SIZE.L3), t.getDescription(),
 					-1, "", this);
 		}
 
-		theActionManager.add("addstructurestr", themeManager.getResizableIcon(
+		getTheActionManager().add("addstructurestr", themeManager.getResizableIcon(
 				"write", defaultMenuIconSize), "Add structure from string",
 				KeyEvent.VK_S, "", this);
-		theActionManager.add("addcomposition", themeManager.getResizableIcon(
+		getTheActionManager().add("addcomposition", themeManager.getResizableIcon(
 				"piechart", defaultMenuIconSize), "Add composition",
 				KeyEvent.VK_C, "", this);
 
-		theActionManager.add("bracket", themeManager.getResizableIcon(
+		getTheActionManager().add("bracket", themeManager.getResizableIcon(
 				"bracket", defaultMenuIconSize), "Add bracket", KeyEvent.VK_B,
 				"ctrl B", this);
-		theActionManager.add("repeat", themeManager.getResizableIcon("repeat",
+		getTheActionManager().add("repeat", themeManager.getResizableIcon("repeat",
 				defaultMenuIconSize), "Add repeating unit", KeyEvent.VK_U,
 				"ctrl R", this);
-		theActionManager.add("properties", themeManager.getResizableIcon(
+		getTheActionManager().add("properties", themeManager.getResizableIcon(
 				"properties", defaultMenuIconSize), "Residue properties",
 				KeyEvent.VK_P, "ctrl ENTER", this);
 
-		theActionManager.add("moveccw", themeManager.getResizableIcon(
+		getTheActionManager().add("moveccw", themeManager.getResizableIcon(
 				"rotateccw", defaultMenuIconSize),
 				"Move residue counter-clockwise", KeyEvent.VK_K,
 				"ctrl shift LEFT", this);
-		theActionManager.add("movecw", themeManager.getResizableIcon("rotatecw",
+		getTheActionManager().add("movecw", themeManager.getResizableIcon("rotatecw",
 				defaultMenuIconSize), "Move residue clockwise", KeyEvent.VK_W,
 				"ctrl shift RIGHT", this);
 
-		theActionManager.add("changeredend", themeManager.getResizableIcon(
+		getTheActionManager().add("changeredend", themeManager.getResizableIcon(
 				"changeredend", defaultMenuIconSize),
 				"Change reducing end type", KeyEvent.VK_Y, "", this);
-		theActionManager.add("massoptstruct", themeManager.getResizableIcon(
+		getTheActionManager().add("massoptstruct", themeManager.getResizableIcon(
 				"massoptions", defaultMenuIconSize),
 				"Mass options of selected structures", KeyEvent.VK_M, "", this);
 
 		// view
-		theActionManager
+		getTheActionManager()
 				.add("notation=" + GraphicOptions.NOTATION_CFG, themeManager
 						.getResizableIcon("CFG_color", defaultMenuIconSize),
 						"CFG notation", KeyEvent.VK_C, "", this);
-		theActionManager.add("notation=" + GraphicOptions.NOTATION_CFGBW,
+		getTheActionManager().add("notation=" + GraphicOptions.NOTATION_CFGBW,
 				themeManager.getResizableIcon("CFG_greyscale",
 						defaultMenuIconSize), "CFG black and white notation",
 				KeyEvent.VK_B, "", this);
-		theActionManager.add("notation=" + GraphicOptions.NOTATION_CFGLINK,
+		getTheActionManager().add("notation=" + GraphicOptions.NOTATION_CFGLINK,
 				themeManager.getResizableIcon("CFG_linkage",
 						defaultMenuIconSize),
 				"CFG with linkage placement notation", KeyEvent.VK_L, "", this);
-		theActionManager.add("notation=" + GraphicOptions.NOTATION_UOXF,
+		getTheActionManager().add("notation=" + GraphicOptions.NOTATION_UOXF,
 				themeManager.getResizableIcon("uoxf", defaultMenuIconSize),
 				"UOXF notation", KeyEvent.VK_O, "", this);
-		theActionManager.add("notation=" + GraphicOptions.NOTATION_UOXFCOL,
+		getTheActionManager().add("notation=" + GraphicOptions.NOTATION_UOXFCOL,
 				themeManager.getResizableIcon("uoxfcol", defaultMenuIconSize),
 				"UOXFCOL notation", KeyEvent.VK_O, "", this);
-		theActionManager.add("notation=" + GraphicOptions.NOTATION_TEXT,
+		getTheActionManager().add("notation=" + GraphicOptions.NOTATION_TEXT,
 				themeManager.getResizableIcon("text", defaultMenuIconSize),
 				"Text only notation", KeyEvent.VK_T, "", this);
 
-		theActionManager.add("display=" + GraphicOptions.DISPLAY_COMPACT,
+		getTheActionManager().add("display=" + GraphicOptions.DISPLAY_COMPACT,
 				ThemeManager.getResizableEmptyIcon(ICON_SIZE.L3),
 				"compact view", KeyEvent.VK_O, "", this);
-		theActionManager.add("display=" + GraphicOptions.DISPLAY_NORMAL,
+		getTheActionManager().add("display=" + GraphicOptions.DISPLAY_NORMAL,
 				ThemeManager.getResizableEmptyIcon(ICON_SIZE.L3),
 				"normal view", KeyEvent.VK_N, "", this);
-		theActionManager.add("display=" + GraphicOptions.DISPLAY_NORMALINFO,
+		getTheActionManager().add("display=" + GraphicOptions.DISPLAY_NORMALINFO,
 				ThemeManager.getResizableEmptyIcon(ICON_SIZE.L3),
 				"normal view with linkage info", KeyEvent.VK_I, "", this);
-		theActionManager.add("display=" + GraphicOptions.DISPLAY_CUSTOM,
+		getTheActionManager().add("display=" + GraphicOptions.DISPLAY_CUSTOM,
 				ThemeManager.getResizableEmptyIcon(ICON_SIZE.L3),
 				"custom view with user settings", KeyEvent.VK_U, "", this);
 
-		theActionManager.add("scale=400", ThemeManager
+		getTheActionManager().add("scale=400", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "400%", -1, "", this);
-		theActionManager.add("scale=300", ThemeManager
+		getTheActionManager().add("scale=300", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "300%", -1, "", this);
-		theActionManager.add("scale=200", ThemeManager
+		getTheActionManager().add("scale=200", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "200%", -1, "", this);
-		theActionManager.add("scale=150", ThemeManager
+		getTheActionManager().add("scale=150", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "150%", -1, "", this);
-		theActionManager.add("scale=100", ThemeManager
+		getTheActionManager().add("scale=100", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "100%", -1, "", this);
-		theActionManager.add("scale=67", ThemeManager
+		getTheActionManager().add("scale=67", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "67%", -1, "", this);
-		theActionManager.add("scale=50", ThemeManager
+		getTheActionManager().add("scale=50", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "50%", -1, "", this);
-		theActionManager.add("scale=33", ThemeManager
+		getTheActionManager().add("scale=33", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "33%", -1, "", this);
-		theActionManager.add("scale=25", ThemeManager
+		getTheActionManager().add("scale=25", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3), "25%", -1, "", this);
 
-		theActionManager.add("collapsemultipleantennae", ThemeManager
+		getTheActionManager().add("collapsemultipleantennae", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3),
 				"Collapse multiple antennae", KeyEvent.VK_A, "", this);
-		theActionManager.add("showmassescanvas", ThemeManager
+		getTheActionManager().add("showmassescanvas", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3),
 				"Show masses in the drawing canvas", KeyEvent.VK_V, "", this);
-		theActionManager.add("showmasses", ThemeManager
+		getTheActionManager().add("showmasses", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3),
 				"Show masses when exporting", KeyEvent.VK_M, "", this);
-		theActionManager.add("showredendcanvas", ThemeManager
+		getTheActionManager().add("showredendcanvas", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3),
 				"Show reducing end indicator in the drawing canvas",
 				KeyEvent.VK_R, "", this);
-		theActionManager.add("showredend", ThemeManager
+		getTheActionManager().add("showredend", ThemeManager
 				.getResizableEmptyIcon(ICON_SIZE.L3),
 				"Show reducing end indicator when exporting", KeyEvent.VK_E,
 				"", this);
 
-		theActionManager.add("orientation", getOrientationIcon(),
+		getTheActionManager().add("orientation", getOrientationIcon(),
 				"Change orientation", KeyEvent.VK_O, "", this);
 
-		theActionManager.add("displaysettings", themeManager.getResizableIcon(
+		getTheActionManager().add("displaysettings", themeManager.getResizableIcon(
 				"display", ICON_SIZE.L4), "Change display settings",
 				KeyEvent.VK_D, "", this);
 		
-		theActionManager.add("savespec",themeManager.getResizableIcon(
+		getTheActionManager().add("savespec",themeManager.getResizableIcon(
 				"savespec", ICON_SIZE.L4), "Save spectra",
 				KeyEvent.VK_D, "", this);
 
 		// help
-		theActionManager.add("about", themeManager.getResizableIcon("about",
+		getTheActionManager().add("about", themeManager.getResizableIcon("about",
 				ICON_SIZE.L4), "About", KeyEvent.VK_B, "", this);
 
 		ICON_SIZE iconSize = ICON_SIZE.L4;
 
-		ResidueRenderer rr = theGlycanRenderer.getResidueRenderer();
+		ResidueRenderer rr = getTheGlycanRenderer().getResidueRenderer();
 		for (ResidueType t : ResidueDictionary.allResidues()) {
 			ImageResizableIconReducedMem icon = new ImageResizableIconReducedMem(
 					rr.getImage(t, iconSize.getSize()), iconSize
@@ -818,50 +818,50 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					this.themeManager, null, icon);
 			eu_icon.setResizableIcon(icon);
 
-			theActionManager.add("change=" + t.getName(), eu_icon, t
+			getTheActionManager().add("change=" + t.getName(), eu_icon, t
 					.getDescription(), -1, "", this);
 
 			if (t.canHaveParent()) {
-				theActionManager.add("add=" + t.getName(), eu_icon, t
+				getTheActionManager().add("add=" + t.getName(), eu_icon, t
 						.getDescription(), -1,
 						(t.getToolbarOrder() != 0) ? ("ctrl " + t
 								.getToolbarOrder()) : "", this);
 				last = new ImageIcon(rr.getImage(t, iconSize.getSize()));
-				theActionManager.get("add=" + t.getName()).putValue(
+				getTheActionManager().get("add=" + t.getName()).putValue(
 						Action.SMALL_ICON,
 						new ImageIcon(rr.getImage(t, ICON_SIZE.L3.getSize())));
 			}
 			if (t.canHaveParent() && t.canHaveChildren())
-				theActionManager.add("insert=" + t.getName(), eu_icon, t
+				getTheActionManager().add("insert=" + t.getName(), eu_icon, t
 						.getDescription(), -1, "", this);
 			if (t.canBeReducingEnd())
-				theActionManager.add("redend=" + t.getName(), eu_icon, t
+				getTheActionManager().add("redend=" + t.getName(), eu_icon, t
 						.getDescription(), -1, "", this);
 		}
 	}
 
 	private void updateActions() {
-		theActionManager.get("undo").setEnabled(
+		getTheActionManager().get("undo").setEnabled(
 				theDoc.getUndoManager().canUndo());
-		theActionManager.get("redo").setEnabled(
+		getTheActionManager().get("redo").setEnabled(
 				theDoc.getUndoManager().canRedo());
 
-		theActionManager.get("cut").setEnabled(hasSelectedResidues());
-		theActionManager.get("copy").setEnabled(hasSelectedResidues());
-		theActionManager.get("delete").setEnabled(hasSelectedResidues());
+		getTheActionManager().get("cut").setEnabled(hasSelectedResidues());
+		getTheActionManager().get("copy").setEnabled(hasSelectedResidues());
+		getTheActionManager().get("delete").setEnabled(hasSelectedResidues());
 
-		theActionManager.get("bracket").setEnabled(hasCurrentResidue());
-		theActionManager.get("repeat").setEnabled(hasCurrentResidue());
-		theActionManager.get("properties").setEnabled(hasCurrentResidue());
+		getTheActionManager().get("bracket").setEnabled(hasCurrentResidue());
+		getTheActionManager().get("repeat").setEnabled(hasCurrentResidue());
+		getTheActionManager().get("properties").setEnabled(hasCurrentResidue());
 
 		// theActionManager.get("orientation").putValue(Action.SMALL_ICON,
 		// getOrientationIcon().);
 
-		theActionManager.get("massoptstruct").setEnabled(hasSelection());
+		getTheActionManager().get("massoptstruct").setEnabled(hasSelection());
 
-		theActionManager.get("moveccw").setEnabled(hasCurrentSelection());
+		getTheActionManager().get("moveccw").setEnabled(hasCurrentSelection());
 		// theActionManager.get("resetplace").setEnabled(hasCurrentSelection());
-		theActionManager.get("movecw").setEnabled(hasCurrentSelection());
+		getTheActionManager().get("movecw").setEnabled(hasCurrentSelection());
 
 	}
 	
@@ -879,7 +879,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private void updateResidueActions() {
 		// structure
-		ResidueRenderer rr = theGlycanRenderer.getResidueRenderer();
+		ResidueRenderer rr = getTheGlycanRenderer().getResidueRenderer();
 		ICON_SIZE iconSize = ICON_SIZE.L4;
 
 		for (ResidueType t : ResidueDictionary.allResidues()) {
@@ -891,23 +891,23 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					this.themeManager, null, icon);
 			eu_icon.setResizableIcon(icon);
 
-			theActionManager.update("change=" + t.getName(), eu_icon, t
+			getTheActionManager().update("change=" + t.getName(), eu_icon, t
 					.getDescription(), -1, "");
 
 			if (t.canHaveParent()) {
-				theActionManager.update("add=" + t.getName(), eu_icon, t
+				getTheActionManager().update("add=" + t.getName(), eu_icon, t
 						.getDescription(), -1,
 						(t.getToolbarOrder() != 0) ? ("ctrl " + t
 								.getToolbarOrder()) : "");
-				theActionManager.get("add=" + t.getName()).putValue(
+				getTheActionManager().get("add=" + t.getName()).putValue(
 						Action.SMALL_ICON,
 						new ImageIcon(rr.getImage(t, ICON_SIZE.L3.getSize())));
 			}
 			if (t.canHaveParent() && t.canHaveChildren())
-				theActionManager.update("insert=" + t.getName(), eu_icon, t
+				getTheActionManager().update("insert=" + t.getName(), eu_icon, t
 						.getDescription(), -1, "");
 			if (t.canBeReducingEnd())
-				theActionManager.update("redend=" + t.getName(), eu_icon, t
+				getTheActionManager().update("redend=" + t.getName(), eu_icon, t
 						.getDescription(), -1, "");
 		}
 
@@ -1084,7 +1084,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		for (String superclass : CoreDictionary.getSuperclasses()) {
 			JMenu class_menu = new JMenu(superclass);
 			for (CoreType t : CoreDictionary.getCores(superclass))
-				class_menu.add(theActionManager.get("addstructure="
+				class_menu.add(getTheActionManager().get("addstructure="
 						+ t.getName()));
 			if (class_menu.getItemCount() > 0)
 				add_menu.add(class_menu);
@@ -1103,7 +1103,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			JMenu class_menu = new JMenu(superclass);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
 				if (t.canHaveParent())
-					class_menu.add(theActionManager.get("add=" + t.getName()));
+					class_menu.add(getTheActionManager().get("add=" + t.getName()));
 			}
 			if (class_menu.getItemCount() > 0)
 				add_menu.add(class_menu);
@@ -1155,7 +1155,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
 				if (t.canHaveParent() && t.canHaveChildren()
 						&& t.getMaxLinkages() >= 2)
-					class_menu.add(theActionManager
+					class_menu.add(getTheActionManager()
 							.get("insert=" + t.getName()));
 			}
 			if (class_menu.getItemCount() > 0)
@@ -1174,7 +1174,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
 			JMenu class_menu = new JMenu(superclass);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass))
-				class_menu.add(theActionManager.get("change=" + t.getName()));
+				class_menu.add(getTheActionManager().get("change=" + t.getName()));
 			if (class_menu.getItemCount() > 0)
 				change_menu.add(class_menu);
 		}
@@ -1189,7 +1189,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		no_recent_residues_buttons = 0;
 		for (String typename : theWorkspace.getResidueHistory()
 				.getRecentResidues()) {
-			JButton b = new JButton(theActionManager.get("add=" + typename));
+			JButton b = new JButton(getTheActionManager().get("add=" + typename));
 			b.setText(null);
 			tb.add(b, recent_residues_index + no_recent_residues_buttons++);
 		}
@@ -1204,47 +1204,47 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		JRadioButtonMenuItem last = null;
 		ButtonGroup group = new ButtonGroup();
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=400")));
 		last.setSelected(view_opt.SCALE_CANVAS == 4.);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=300")));
 		last.setSelected(view_opt.SCALE_CANVAS == 3.);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=200")));
 		last.setSelected(view_opt.SCALE_CANVAS == 2.);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=150")));
 		last.setSelected(view_opt.SCALE_CANVAS == 1.5);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=100")));
 		last.setSelected(view_opt.SCALE_CANVAS == 1.);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=67")));
 		last.setSelected(view_opt.SCALE_CANVAS == 0.67);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=50")));
 		last.setSelected(view_opt.SCALE_CANVAS == 0.5);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=33")));
 		last.setSelected(view_opt.SCALE_CANVAS == 0.33);
 		group.add(last);
 
-		zoom_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		zoom_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("scale=25")));
 		last.setSelected(view_opt.SCALE_CANVAS == 0.25);
 		group.add(last);
@@ -1266,30 +1266,30 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		JRadioButtonMenuItem last = null;
 		ButtonGroup groupn = new ButtonGroup();
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_CFG)));
 		last.setSelected(view_opt.NOTATION.equals(GraphicOptions.NOTATION_CFG));
 		groupn.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_CFGBW)));
 		last.setSelected(view_opt.NOTATION
 				.equals(GraphicOptions.NOTATION_CFGBW));
 		groupn.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_CFGLINK)));
 		last.setSelected(view_opt.NOTATION
 				.equals(GraphicOptions.NOTATION_CFGLINK));
 		groupn.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_UOXF)));
 		last
 				.setSelected(view_opt.NOTATION
 						.equals(GraphicOptions.NOTATION_UOXF));
 		
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_UOXFCOL)));
 		last
 				.setSelected(view_opt.NOTATION
@@ -1297,7 +1297,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		
 		groupn.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("notation=" + GraphicOptions.NOTATION_TEXT)));
 		last
 				.setSelected(view_opt.NOTATION
@@ -1311,14 +1311,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		display_button_group = new ButtonGroup();
 		display_models = new HashMap<String, ButtonModel>();
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("display=" + GraphicOptions.DISPLAY_COMPACT)));
 		last.setSelected(view_opt.DISPLAY
 				.equals(GraphicOptions.DISPLAY_COMPACT));
 		display_models.put(GraphicOptions.DISPLAY_COMPACT, last.getModel());
 		display_button_group.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("display=" + GraphicOptions.DISPLAY_NORMAL)));
 		last
 				.setSelected(view_opt.DISPLAY
@@ -1326,14 +1326,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		display_models.put(GraphicOptions.DISPLAY_NORMAL, last.getModel());
 		display_button_group.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("display=" + GraphicOptions.DISPLAY_NORMALINFO)));
 		last.setSelected(view_opt.DISPLAY
 				.equals(GraphicOptions.DISPLAY_NORMALINFO));
 		display_models.put(GraphicOptions.DISPLAY_NORMALINFO, last.getModel());
 		display_button_group.add(last);
 
-		view_menu.add(last = new JRadioButtonMenuItem(theActionManager
+		view_menu.add(last = new JRadioButtonMenuItem(getTheActionManager()
 				.get("display=" + GraphicOptions.DISPLAY_CUSTOM)));
 		last
 				.setSelected(view_opt.DISPLAY
@@ -1350,20 +1350,20 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		// export
 
 		JCheckBoxMenuItem lastcb = null;
-		view_menu.add(lastcb = new JCheckBoxMenuItem(theActionManager
+		view_menu.add(lastcb = new JCheckBoxMenuItem(getTheActionManager()
 				.get("collapsemultipleantennae")));
 		lastcb.setState(view_opt.COLLAPSE_MULTIPLE_ANTENNAE);
-		view_menu.add(lastcb = new JCheckBoxMenuItem(theActionManager
+		view_menu.add(lastcb = new JCheckBoxMenuItem(getTheActionManager()
 				.get("showmassescanvas")));
 		lastcb.setState(view_opt.SHOW_MASSES_CANVAS);
-		view_menu.add(lastcb = new JCheckBoxMenuItem(theActionManager
+		view_menu.add(lastcb = new JCheckBoxMenuItem(getTheActionManager()
 				.get("showmasses")));
 		lastcb.setState(view_opt.SHOW_MASSES);
-		view_menu.add(lastcb = new JCheckBoxMenuItem(theActionManager
+		view_menu.add(lastcb = new JCheckBoxMenuItem(getTheActionManager()
 				.get("showredendcanvas")));
 		show_redend_canvas_button = lastcb;
 		lastcb.setState(view_opt.SHOW_REDEND_CANVAS);
-		view_menu.add(lastcb = new JCheckBoxMenuItem(theActionManager
+		view_menu.add(lastcb = new JCheckBoxMenuItem(getTheActionManager()
 				.get("showredend")));
 		lastcb.setState(view_opt.SHOW_REDEND);
 
@@ -1371,11 +1371,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		// orientation
 
-		view_menu.add(theActionManager.get("orientation"));
+		view_menu.add(getTheActionManager().get("orientation"));
 
 		view_menu.addSeparator();
 
-		view_menu.add(theActionManager.get("displaysettings"));
+		view_menu.add(getTheActionManager().get("displaysettings"));
 
 		return view_menu;
 	}
@@ -1398,13 +1398,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		JCommandButtonPanel panel = new JCommandButtonPanel(
 				CommandButtonDisplayState.TILE);
 		panel.addButtonGroup("Active notation");
-		panel.addButtonToLastGroup(theActionManager.get(
+		panel.addButtonToLastGroup(getTheActionManager().get(
 				"notation=" + GraphicOptions.NOTATION_CFG)
 				.getJCommandToggleButton("", this,
 						view_opt.NOTATION.equals(GraphicOptions.NOTATION_CFG),
 						ICON_SIZE.L6));
 		panel
-				.addButtonToLastGroup(theActionManager.get(
+				.addButtonToLastGroup(getTheActionManager().get(
 						"notation=" + GraphicOptions.NOTATION_CFGBW)
 						.getJCommandToggleButton(
 								"",
@@ -1412,7 +1412,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 								view_opt.NOTATION
 										.equals(GraphicOptions.NOTATION_CFGBW),
 								ICON_SIZE.L6));
-		panel.addButtonToLastGroup(theActionManager.get(
+		panel.addButtonToLastGroup(getTheActionManager().get(
 				"notation=" + GraphicOptions.NOTATION_CFGLINK)
 				.getJCommandToggleButton(
 						"",
@@ -1420,17 +1420,17 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						view_opt.NOTATION
 								.equals(GraphicOptions.NOTATION_CFGLINK),
 						ICON_SIZE.L6));
-		panel.addButtonToLastGroup(theActionManager.get(
+		panel.addButtonToLastGroup(getTheActionManager().get(
 				"notation=" + GraphicOptions.NOTATION_UOXF)
 				.getJCommandToggleButton("", this,
 						view_opt.NOTATION.equals(GraphicOptions.NOTATION_UOXF),
 						ICON_SIZE.L6));
-		panel.addButtonToLastGroup(theActionManager.get(
+		panel.addButtonToLastGroup(getTheActionManager().get(
 				"notation=" + GraphicOptions.NOTATION_UOXFCOL)
 				.getJCommandToggleButton("", this,
 						view_opt.NOTATION.equals(GraphicOptions.NOTATION_UOXFCOL),
 						ICON_SIZE.L6));
-		panel.addButtonToLastGroup(theActionManager.get(
+		panel.addButtonToLastGroup(getTheActionManager().get(
 				"notation=" + GraphicOptions.NOTATION_TEXT)
 				.getJCommandToggleButton("", this,
 						view_opt.NOTATION.equals(GraphicOptions.NOTATION_TEXT),
@@ -1453,6 +1453,17 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		zoomButton.setCommandButtonKind(CommandButtonKind.ACTION_AND_POPUP_MAIN_POPUP);
 		zoomButton.setDisplayState(CommandButtonDisplayState.TILE);
 		zoomButton.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		zoomButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				theWorkspace.getGraphicOptions().SCALE_CANVAS = 1;
+				respondToDocumentChange = true;
+				zoomButton.setText("100%");
+				repaint();
+			}
+			
+		});
 		zoomButton.setPopupCallback(new PopupPanelCallback(){
 			@Override
 			public JPopupPanel getPopupPanel(JCommandButton arg0) {
@@ -1474,7 +1485,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				
 				int scaleArray[]={300,400,200,150,100,67,50,33,25};
 				for(int scale:scaleArray){
-					JCommandMenuButton button=new JCommandMenuButton(theActionManager.get("scale="+scale).getName(),null);
+					JCommandMenuButton button=new JCommandMenuButton(getTheActionManager().get("scale="+scale).getName(),null);
 					button.addActionListener(actionListener);
 					menu.addMenuButton(button);
 				}
@@ -1491,15 +1502,15 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				new org.pushingpixels.flamingo.api.common.icon.EmptyResizableIcon(
 						10));
 
-		band3.addFlowComponent(theActionManager.get("displaysettings")
+		band3.addFlowComponent(getTheActionManager().get("displaysettings")
 				.getJCommandButton(ICON_SIZE.L4, " ", this,
 						new RichTooltip("Change display settings", " "), true));
 
 		
-		band3.addFlowComponent(theActionManager.get("explode")
+		band3.addFlowComponent(getTheActionManager().get("explode")
 				.getJCommandButton(ICON_SIZE.L4, " ", this,
 						new RichTooltip("Explode panels", " "), true));
-		band3.addFlowComponent(theActionManager.get("implode")
+		band3.addFlowComponent(getTheActionManager().get("implode")
 				.getJCommandButton(ICON_SIZE.L4, " ", this,
 						new RichTooltip("Implode panels", " "), true));
 		band3.addFlowComponent(orientationButton);
@@ -1531,23 +1542,23 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		ButtonGroup group = new ButtonGroup();
 		JCheckBox box;
 
-		band2.addFlowComponent(box = theActionManager.get(
+		band2.addFlowComponent(box = getTheActionManager().get(
 				"display=" + GraphicOptions.DISPLAY_COMPACT).getJCheckBox(
 				"Compact",
 				view_opt.DISPLAY.equals(GraphicOptions.DISPLAY_COMPACT), this));
 		group.add(box);
-		band2.addFlowComponent(box = theActionManager.get(
+		band2.addFlowComponent(box = getTheActionManager().get(
 				"display=" + GraphicOptions.DISPLAY_NORMAL).getJCheckBox(
 				"Normal",
 				view_opt.DISPLAY.equals(GraphicOptions.DISPLAY_NORMAL), this));
 		group.add(box);
-		band2.addFlowComponent(box = theActionManager.get(
+		band2.addFlowComponent(box = getTheActionManager().get(
 				"display=" + GraphicOptions.DISPLAY_NORMALINFO).getJCheckBox(
 				"Extended",
 				view_opt.DISPLAY.equals(GraphicOptions.DISPLAY_NORMALINFO),
 				this));
 		group.add(box);
-		band2.addFlowComponent(box = theActionManager.get(
+		band2.addFlowComponent(box = getTheActionManager().get(
 				"display=" + GraphicOptions.DISPLAY_CUSTOM).getJCheckBox(
 				"Custom",
 				view_opt.DISPLAY.equals(GraphicOptions.DISPLAY_CUSTOM), this));
@@ -1565,30 +1576,30 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		band4.setResizePolicies(resizePolicies4);
 
-		band4.addFlowComponent(theActionManager.get("collapsemultipleantennae")
+		band4.addFlowComponent(getTheActionManager().get("collapsemultipleantennae")
 				.getJCheckBox("Collapse multiple antennae", this));
-		band4.addFlowComponent(theActionManager.get("showmassescanvas")
+		band4.addFlowComponent(getTheActionManager().get("showmassescanvas")
 				.getJCheckBox("Masses [canvas]", this));
-		band4.addFlowComponent(theActionManager.get("showmasses").getJCheckBox(
+		band4.addFlowComponent(getTheActionManager().get("showmasses").getJCheckBox(
 				"Masses [export]", this));
-		band4.addFlowComponent(theActionManager.get("showredendcanvas")
+		band4.addFlowComponent(getTheActionManager().get("showredendcanvas")
 				.getJCheckBox("Reducing end indicator [canvas]", this));
-		band4.addFlowComponent(theActionManager.get("showredend").getJCheckBox(
+		band4.addFlowComponent(getTheActionManager().get("showredend").getJCheckBox(
 				"Reducing end indicator [export]", this));
-		band4.addFlowComponent(theActionManager.get("savespec").getJCheckBox(
+		band4.addFlowComponent(getTheActionManager().get("savespec").getJCheckBox(
 				"Save spectra [GWP File]", this));
 		
 
-		theActionManager.get("showmassescanvas").setSelected(
-				theGlycanRenderer.getGraphicOptions().SHOW_MASSES_CANVAS);
-		theActionManager.get("showmasses").setSelected(
-				theGlycanRenderer.getGraphicOptions().SHOW_MASSES);
-		theActionManager.get("showredend").setSelected(
-				theGlycanRenderer.getGraphicOptions().SHOW_REDEND);
-		theActionManager.get("showredendcanvas").setSelected(
-				theGlycanRenderer.getGraphicOptions().SHOW_REDEND_CANVAS);
-		theActionManager.get("savespec").setSelected(
-				theGlycanRenderer.getGraphicOptions().SAVE_SPECTRA_CUSTOM);
+		getTheActionManager().get("showmassescanvas").setSelected(
+				getTheGlycanRenderer().getGraphicOptions().SHOW_MASSES_CANVAS);
+		getTheActionManager().get("showmasses").setSelected(
+				getTheGlycanRenderer().getGraphicOptions().SHOW_MASSES);
+		getTheActionManager().get("showredend").setSelected(
+				getTheGlycanRenderer().getGraphicOptions().SHOW_REDEND);
+		getTheActionManager().get("showredendcanvas").setSelected(
+				getTheGlycanRenderer().getGraphicOptions().SHOW_REDEND_CANVAS);
+		getTheActionManager().get("savespec").setSelected(
+				getTheGlycanRenderer().getGraphicOptions().SAVE_SPECTRA_CUSTOM);
 		
 
 		JFlowRibbonBand band5 = new JFlowRibbonBand(
@@ -1679,7 +1690,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private void updateOrientationButton() {
 		if (orientationButton == null) {
-			orientationButton = theActionManager.get("orientation")
+			orientationButton = getTheActionManager().get("orientation")
 					.getJCommandButton(ICON_SIZE.L4, this, " ");
 		}
 		EurocarbResizableIcon iconR = getOrientationIcon();
@@ -1694,7 +1705,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				iconR.getIconProperties().id, ICON_SIZE.L4).getResizableIcon());
 
 		try {
-			theActionManager.get("orientation").putValue(
+			getTheActionManager().get("orientation").putValue(
 					Action.SMALL_ICON,
 					iconR.getThemeManager().getImageIcon(
 							iconR.getIconProperties().id, ICON_SIZE.L3));
@@ -1720,17 +1731,17 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				.getControlPanel()));
 		band2.setResizePolicies(resizePolicies);
 
-		band2.addCommandButton(theActionManager.get("undo").getJCommandButton(
+		band2.addCommandButton(getTheActionManager().get("undo").getJCommandButton(
 				ICON_SIZE.L3, "Undo", this, null), RibbonElementPriority.TOP);
-		band2.addCommandButton(theActionManager.get("redo").getJCommandButton(
+		band2.addCommandButton(getTheActionManager().get("redo").getJCommandButton(
 				ICON_SIZE.L3, "Redo", this, null), RibbonElementPriority.TOP);
-		band2.addCommandButton(theActionManager.get("cut").getJCommandButton(
+		band2.addCommandButton(getTheActionManager().get("cut").getJCommandButton(
 				ICON_SIZE.L3, "Cut", this, null), RibbonElementPriority.TOP);
-		band2.addCommandButton(theActionManager.get("copy").getJCommandButton(
+		band2.addCommandButton(getTheActionManager().get("copy").getJCommandButton(
 				ICON_SIZE.L3, "Copy", this, null), RibbonElementPriority.TOP);
-		band2.addCommandButton(theActionManager.get("paste").getJCommandButton(
+		band2.addCommandButton(getTheActionManager().get("paste").getJCommandButton(
 				ICON_SIZE.L3, "Paste", this, null), RibbonElementPriority.TOP);
-		band2.addCommandButton(theActionManager.get("delete")
+		band2.addCommandButton(getTheActionManager().get("delete")
 				.getJCommandButton(ICON_SIZE.L3, "Delete", this, null),
 				RibbonElementPriority.TOP);
 
@@ -1748,25 +1759,25 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				.getControlPanel()));
 		band3.setResizePolicies(resizePolicies);
 
-		band3.addCommandButton(theActionManager.get("orderstructuresasc")
+		band3.addCommandButton(getTheActionManager().get("orderstructuresasc")
 				.getJCommandButton(ICON_SIZE.L3, "Order ASC", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("orderstructuresdesc")
+		band3.addCommandButton(getTheActionManager().get("orderstructuresdesc")
 				.getJCommandButton(ICON_SIZE.L3, "Order DSC", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("selectstructure")
+		band3.addCommandButton(getTheActionManager().get("selectstructure")
 				.getJCommandButton(ICON_SIZE.L3, "Select", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("selectall")
+		band3.addCommandButton(getTheActionManager().get("selectall")
 				.getJCommandButton(ICON_SIZE.L3, "Select All", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("selectnone")
+		band3.addCommandButton(getTheActionManager().get("selectnone")
 				.getJCommandButton(ICON_SIZE.L3, "deselect", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("gotostart")
+		band3.addCommandButton(getTheActionManager().get("gotostart")
 				.getJCommandButton(ICON_SIZE.L3, "Start", this, null),
 				RibbonElementPriority.TOP);
-		band3.addCommandButton(theActionManager.get("gotoend")
+		band3.addCommandButton(getTheActionManager().get("gotoend")
 				.getJCommandButton(ICON_SIZE.L3, "End", this, null),
 				RibbonElementPriority.TOP);
 		return new RibbonTask("Edit", band2, band3,
@@ -1798,8 +1809,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						.getCores(superclass);
 				if (core_types.size() > 0) {
 					List<JCommandToggleButton> galleryButtonsList = new ArrayList<JCommandToggleButton>();
+					
+					JCommandToggleButtonAction temp=null;
+					
 					for (CoreType coreType : core_types) {
-						BufferedImage image=theGlycanRenderer.getImage(
+						BufferedImage image=getTheGlycanRenderer().getImage(
 								Glycan.fromString(coreType
 										.getStructure()),
 								false, false, false);
@@ -1820,9 +1834,18 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 						button.setActionCommand("addstructure="
 								+ coreType.getName());
-						galleryButtonsList.add(button);
+						System.err.println("-"+description+"-");
+						if(description.equals(" bisected fucosylated")){
+							temp=button;
+						}else if(temp!=null){
+							galleryButtonsList.add(button);
+							galleryButtonsList.add(temp);
+							temp=null;
+						}else{
+							galleryButtonsList.add(button);
+						}
 					}
-
+					
 					galleryButtons
 							.add(new StringValuePair<List<JCommandToggleButton>>(
 									superclass, galleryButtonsList));
@@ -2174,12 +2197,12 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		updateStructureRibbonGallery(STRUCTURE_GALLERY_NAME,
 				structureSelectionBand);
 
-		structureSelectionBand.addCommandButton(theActionManager.get(
+		structureSelectionBand.addCommandButton(getTheActionManager().get(
 				"addstructurestr").getJCommandButton(ICON_SIZE.L3, "Write",
 				this, new RichTooltip(" ", "Import structure from string")),
 				RibbonElementPriority.TOP);
 
-		structureSelectionBand.addCommandButton(theActionManager.get(
+		structureSelectionBand.addCommandButton(getTheActionManager().get(
 				"addcomposition").getJCommandButton(ICON_SIZE.L3,
 				"Create composition", this, new RichTooltip("Open", " ")),
 				RibbonElementPriority.TOP);
@@ -2203,15 +2226,15 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						10));
 		ThemeManager.setDefaultResizePolicy(band);
 
-		band.addCommandButton(theActionManager.get("bracket")
+		band.addCommandButton(getTheActionManager().get("bracket")
 				.getJCommandButton(ICON_SIZE.L3, "Bracket", this,
 						new RichTooltip("Add bracket ", "Insert bracket")),
 				RibbonElementPriority.TOP);
-		band.addCommandButton(theActionManager.get("repeat").getJCommandButton(
+		band.addCommandButton(getTheActionManager().get("repeat").getJCommandButton(
 				ICON_SIZE.L3, "Repeat", this,
 				new RichTooltip("Add repeat", "Add repeat unit")),
 				RibbonElementPriority.TOP);
-		band.addCommandButton(theActionManager.get("moveccw")
+		band.addCommandButton(getTheActionManager().get("moveccw")
 				.getJCommandButton(
 						ICON_SIZE.L3,
 						"Rotate CCW",
@@ -2219,12 +2242,12 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						new RichTooltip("Rotate residue",
 								"Rotate residue counter-clockwise")),
 				RibbonElementPriority.TOP);
-		band.addCommandButton(theActionManager.get("movecw").getJCommandButton(
+		band.addCommandButton(getTheActionManager().get("movecw").getJCommandButton(
 				ICON_SIZE.L3, "Rotate CW", this,
 				new RichTooltip("Rotate residue", "Rotate residue clockwise")),
 				RibbonElementPriority.TOP);
 
-		band.addCommandButton(theActionManager.get("properties")
+		band.addCommandButton(getTheActionManager().get("properties")
 				.getJCommandButton(
 						ICON_SIZE.L3,
 						"Properties",
@@ -2232,7 +2255,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						new RichTooltip("Residue Properties",
 								"Get residue properties")),
 				RibbonElementPriority.TOP);
-		band.addCommandButton(theActionManager.get("massoptstruct")
+		band.addCommandButton(getTheActionManager().get("massoptstruct")
 				.getJCommandButton(
 						ICON_SIZE.L3,
 						"Mass options",
@@ -2294,27 +2317,27 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		JMenu edit_menu = new JMenu("Edit");
 		edit_menu.setMnemonic(KeyEvent.VK_E);
-		edit_menu.add(theActionManager.get("undo"));
-		edit_menu.add(theActionManager.get("redo"));
+		edit_menu.add(getTheActionManager().get("undo"));
+		edit_menu.add(getTheActionManager().get("redo"));
 		edit_menu.addSeparator();
-		edit_menu.add(theActionManager.get("cut"));
-		edit_menu.add(theActionManager.get("copy"));
-		edit_menu.add(theActionManager.get("paste"));
-		edit_menu.add(theActionManager.get("delete"));
+		edit_menu.add(getTheActionManager().get("cut"));
+		edit_menu.add(getTheActionManager().get("copy"));
+		edit_menu.add(getTheActionManager().get("paste"));
+		edit_menu.add(getTheActionManager().get("delete"));
 		edit_menu.addSeparator();
-		edit_menu.add(theActionManager.get("orderstructuresasc"));
-		edit_menu.add(theActionManager.get("orderstructuresdesc"));
+		edit_menu.add(getTheActionManager().get("orderstructuresasc"));
+		edit_menu.add(getTheActionManager().get("orderstructuresdesc"));
 		edit_menu.addSeparator();
-		edit_menu.add(theActionManager.get("selectstructure"));
-		edit_menu.add(theActionManager.get("selectall"));
-		edit_menu.add(theActionManager.get("selectnone"));
-		edit_menu.add(theActionManager.get("gotostart"));
-		edit_menu.add(theActionManager.get("gotoend"));
+		edit_menu.add(getTheActionManager().get("selectstructure"));
+		edit_menu.add(getTheActionManager().get("selectall"));
+		edit_menu.add(getTheActionManager().get("selectnone"));
+		edit_menu.add(getTheActionManager().get("gotostart"));
+		edit_menu.add(getTheActionManager().get("gotoend"));
 		edit_menu.addSeparator();
-		edit_menu.add(theActionManager.get("navup"));
-		edit_menu.add(theActionManager.get("navdown"));
-		edit_menu.add(theActionManager.get("navleft"));
-		edit_menu.add(theActionManager.get("navright"));
+		edit_menu.add(getTheActionManager().get("navup"));
+		edit_menu.add(getTheActionManager().get("navdown"));
+		edit_menu.add(getTheActionManager().get("navleft"));
+		edit_menu.add(getTheActionManager().get("navright"));
 		// edit_menu.addSeparator();
 		// edit_menu.add(theActionManager.get("screenshot"));
 
@@ -2326,8 +2349,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		JMenu structure_menu = new JMenu("Structure");
 		structure_menu.setMnemonic(KeyEvent.VK_S);
 
-		structure_menu.add(theActionManager.get("addcomposition"));
-		structure_menu.add(theActionManager.get("addstructurestr"));
+		structure_menu.add(getTheActionManager().get("addcomposition"));
+		structure_menu.add(getTheActionManager().get("addstructurestr"));
 		structure_menu.add(createAddStructureMenu());
 
 		structure_menu.addSeparator();
@@ -2337,20 +2360,20 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		structure_menu.add(createInsertResidueMenu());
 		structure_menu.add(createChangeResidueTypeMenu());
 		// structure_menu.add(createChangeRedEndMenu());
-		structure_menu.add(theActionManager.get("bracket"));
-		structure_menu.add(theActionManager.get("repeat"));
+		structure_menu.add(getTheActionManager().get("bracket"));
+		structure_menu.add(getTheActionManager().get("repeat"));
 
 		structure_menu.addSeparator();
 
-		structure_menu.add(theActionManager.get("properties"));
-		structure_menu.add(theActionManager.get("changeredend"));
-		structure_menu.add(theActionManager.get("massoptstruct"));
+		structure_menu.add(getTheActionManager().get("properties"));
+		structure_menu.add(getTheActionManager().get("changeredend"));
+		structure_menu.add(getTheActionManager().get("massoptstruct"));
 
 		structure_menu.addSeparator();
 
-		structure_menu.add(theActionManager.get("moveccw"));
+		structure_menu.add(getTheActionManager().get("moveccw"));
 		// structure_menu.add(theActionManager.get("resetplace"));
-		structure_menu.add(theActionManager.get("movecw"));
+		structure_menu.add(getTheActionManager().get("movecw"));
 
 		return structure_menu;
 	}
@@ -2415,16 +2438,16 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		menu.setDoubleBuffered(true);
 
 		// edit actions
-		menu.add(theActionManager.get("cut"));
-		menu.add(theActionManager.get("copy"));
-		menu.add(theActionManager.get("paste"));
-		menu.add(theActionManager.get("delete"));
+		menu.add(getTheActionManager().get("cut"));
+		menu.add(getTheActionManager().get("copy"));
+		menu.add(getTheActionManager().get("paste"));
+		menu.add(getTheActionManager().get("delete"));
 
 		menu.addSeparator();
 
 		// add actions
 		if (!hasCurrentSelection()) {
-			menu.add(theActionManager.get("addcomposition"));
+			menu.add(getTheActionManager().get("addcomposition"));
 			menu.add(createAddStructureMenu());
 		}
 		if (!hasCurrentLinkage()) {
@@ -2456,15 +2479,15 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			menu.add(changeResidueMenu);
 			
 			// menu.add(createChangeRedEndMenu());
-			menu.add(theActionManager.get("bracket"));
-			menu.add(theActionManager.get("repeat"));
+			menu.add(getTheActionManager().get("bracket"));
+			menu.add(getTheActionManager().get("repeat"));
 
 			if (change_properties) {
 				menu.addSeparator();
 
-				menu.add(theActionManager.get("properties"));
-				menu.add(theActionManager.get("changeredend"));
-				menu.add(theActionManager.get("massoptstruct"));
+				menu.add(getTheActionManager().get("properties"));
+				menu.add(getTheActionManager().get("changeredend"));
+				menu.add(getTheActionManager().get("massoptstruct"));
 			}
 		}
 
@@ -2472,9 +2495,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		if (hasCurrentSelection()) {
 			menu.addSeparator();
 
-			menu.add(theActionManager.get("moveccw"));
+			menu.add(getTheActionManager().get("moveccw"));
 			// menu.add(theActionManager.get("resetplace"));
-			menu.add(theActionManager.get("movecw"));
+			menu.add(getTheActionManager().get("movecw"));
 		}
 		
 
@@ -2487,15 +2510,15 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);
 
-		toolbar.add(theActionManager.get("undo"));
-		toolbar.add(theActionManager.get("redo"));
+		toolbar.add(getTheActionManager().get("undo"));
+		toolbar.add(getTheActionManager().get("redo"));
 
 		toolbar.addSeparator();
 
-		toolbar.add(theActionManager.get("cut"));
-		toolbar.add(theActionManager.get("copy"));
-		toolbar.add(theActionManager.get("paste"));
-		toolbar.add(theActionManager.get("delete"));
+		toolbar.add(getTheActionManager().get("cut"));
+		toolbar.add(getTheActionManager().get("copy"));
+		toolbar.add(getTheActionManager().get("paste"));
+		toolbar.add(getTheActionManager().get("delete"));
 
 		return toolbar;
 	}
@@ -2509,7 +2532,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				.iterator(); i.hasNext();) {
 			ResidueType t = i.next();
 			if (t.canHaveParent()) {
-				toolbar.add(theActionManager.get("add=" + t.getName()));
+				toolbar.add(getTheActionManager().get("add=" + t.getName()));
 			}
 		}
 
@@ -2522,19 +2545,19 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		toolbar.addSeparator();
 
-		toolbar.add(theActionManager.get("bracket"));
-		toolbar.add(theActionManager.get("repeat"));
-		toolbar.add(theActionManager.get("properties"));
+		toolbar.add(getTheActionManager().get("bracket"));
+		toolbar.add(getTheActionManager().get("repeat"));
+		toolbar.add(getTheActionManager().get("properties"));
 
 		toolbar.addSeparator();
 
-		toolbar.add(theActionManager.get("moveccw"));
+		toolbar.add(getTheActionManager().get("moveccw"));
 		// toolbar.add(theActionManager.get("resetplace"));
-		toolbar.add(theActionManager.get("movecw"));
+		toolbar.add(getTheActionManager().get("movecw"));
 
 		toolbar.addSeparator();
 
-		toolbar.add(theActionManager.get("orientation"));
+		toolbar.add(getTheActionManager().get("orientation"));
 
 		return toolbar;
 	}
@@ -2692,7 +2715,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	// JComponent
 
 	public Dimension getPreferredSize() {
-		return theGlycanRenderer.computeSize(all_structures_bbox);
+		return getTheGlycanRenderer().computeSize(all_structures_bbox);
 	}
 
 	public Dimension getMinimumSize() {
@@ -2714,7 +2737,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * Return a screenshot of the component
 	 */
 	public void getScreenshot() {
-		ClipUtils.setContents(new GlycanSelection(theGlycanRenderer, theDoc
+		ClipUtils.setContents(new GlycanSelection(getTheGlycanRenderer(), theDoc
 				.getStructures()));
 	}
 
@@ -2731,14 +2754,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 */
 	public void copy() {
 		Collection<Glycan> sel = theDoc.extractView(selected_residues);
-		ClipUtils.setContents(new GlycanSelection(theGlycanRenderer, sel));
+		ClipUtils.setContents(new GlycanSelection(getTheGlycanRenderer(), sel));
 	}
 
 	/**
 	 * Copy all selected structures to the clipboard
 	 */
 	public void copySelectedStructures() {
-		ClipUtils.setContents(new GlycanSelection(theGlycanRenderer,
+		ClipUtils.setContents(new GlycanSelection(getTheGlycanRenderer(),
 				getSelectedStructures()));
 	}
 
@@ -2746,7 +2769,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 * Copy all structures to the clipboard
 	 */
 	public void copyAllStructures() {
-		ClipUtils.setContents(new GlycanSelection(theGlycanRenderer, theDoc
+		ClipUtils.setContents(new GlycanSelection(getTheGlycanRenderer(), theDoc
 				.getStructures()));
 	}
 
@@ -2842,22 +2865,22 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		g.getClipBounds(clipRect);
 
 		// set scale
-		theGlycanRenderer.getGraphicOptions().setScale(
-				theGlycanRenderer.getGraphicOptions().SCALE_CANVAS);
+		getTheGlycanRenderer().getGraphicOptions().setScale(
+				getTheGlycanRenderer().getGraphicOptions().SCALE_CANVAS);
 
 		// draw
-		boolean show_masses = is_printing ? theGlycanRenderer
-				.getGraphicOptions().SHOW_MASSES : theGlycanRenderer
+		boolean show_masses = is_printing ? getTheGlycanRenderer()
+				.getGraphicOptions().SHOW_MASSES : getTheGlycanRenderer()
 				.getGraphicOptions().SHOW_MASSES_CANVAS;
-		boolean show_redend = is_printing ? theGlycanRenderer
-				.getGraphicOptions().SHOW_REDEND : theGlycanRenderer
+		boolean show_redend = is_printing ? getTheGlycanRenderer()
+				.getGraphicOptions().SHOW_REDEND : getTheGlycanRenderer()
 				.getGraphicOptions().SHOW_REDEND_CANVAS;
 
-		all_structures_bbox = theGlycanRenderer.computeBoundingBoxes(theDoc
+		all_structures_bbox = getTheGlycanRenderer().computeBoundingBoxes(theDoc
 				.getStructures(), show_masses, show_redend, thePosManager,
 				theBBoxManager);
 		for (Glycan s : theDoc.getStructures())
-			theGlycanRenderer.paint(g2d, s, selected_residues,
+			getTheGlycanRenderer().paint(g2d, s, selected_residues,
 					selected_linkages, show_masses, show_redend, thePosManager,
 					theBBoxManager);
 
@@ -2873,12 +2896,12 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		// dispose graphic object
 		g2d.dispose();
 
-		theGlycanRenderer.getGraphicOptions().setScale(
-				theGlycanRenderer.getGraphicOptions().SCALE);
+		getTheGlycanRenderer().getGraphicOptions().setScale(
+				getTheGlycanRenderer().getGraphicOptions().SCALE);
 	}
 
 	private void paintSelection(Graphics2D g2d, boolean show_redend) {
-		GraphicOptions theGraphicOptions = theGlycanRenderer
+		GraphicOptions theGraphicOptions = getTheGlycanRenderer()
 				.getGraphicOptions();
 
 		Collection<Glycan> sel_structures = theDoc.findStructuresWith(
@@ -3996,7 +4019,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 				ResidueSelectorDialog rsd = new ResidueSelectorDialog(
 						theParent, "Select ending point",
 						"Select ending point of the repetition", structure,
-						end_points, false, theGlycanRenderer);
+						end_points, false, getTheGlycanRenderer());
 
 				rsd.setVisible(true);
 				if (!rsd.isCanceled())
@@ -4213,7 +4236,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 */
 	public void setShowRedendCanvas(boolean f) {
 		theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS = f;
-		theActionManager.get("showredendcanvas").setSelected(f);
+		getTheActionManager().get("showredendcanvas").setSelected(f);
 		this.respondToDocumentChange = true;
 		repaint();
 	}
@@ -4322,6 +4345,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			theWorkspace.getGraphicOptions().SHOW_MASSES = ((JCheckBox) e
 					.getSource()).isSelected();
 			this.respondToDocumentChange = true;
+			
+			theActionManager.get("showmasses").setSelected(
+					this.theGlycanRenderer.getGraphicOptions().SHOW_MASSES);
+			
 			repaint();
 		} else if (action.equals("showredendcanvas")) {
 			theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS = ((JCheckBox) e
@@ -4332,6 +4359,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			theWorkspace.getGraphicOptions().SHOW_REDEND = ((JCheckBox) e
 					.getSource()).isSelected();
 			this.respondToDocumentChange = true;
+			
+			theActionManager.get("showredend").setSelected(
+					this.theGlycanRenderer.getGraphicOptions().SHOW_REDEND);
+			
 			repaint();
 		}else if(action.equals("savespec")){
 			theWorkspace.getGraphicOptions().SAVE_SPECTRA_CUSTOM= ((JCheckBox) e
@@ -4447,13 +4478,13 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 */
 	public void showSelection() {
 		// update bounding boxes
-		boolean show_masses = is_printing ? theGlycanRenderer
-				.getGraphicOptions().SHOW_MASSES : theGlycanRenderer
+		boolean show_masses = is_printing ? getTheGlycanRenderer()
+				.getGraphicOptions().SHOW_MASSES : getTheGlycanRenderer()
 				.getGraphicOptions().SHOW_MASSES_CANVAS;
-		boolean show_redend = is_printing ? theGlycanRenderer
-				.getGraphicOptions().SHOW_REDEND : theGlycanRenderer
+		boolean show_redend = is_printing ? getTheGlycanRenderer()
+				.getGraphicOptions().SHOW_REDEND : getTheGlycanRenderer()
 				.getGraphicOptions().SHOW_REDEND_CANVAS;
-		theGlycanRenderer.computeBoundingBoxes(theDoc.getStructures(),
+		getTheGlycanRenderer().computeBoundingBoxes(theDoc.getStructures(),
 				show_masses, show_redend, thePosManager, theBBoxManager);
 
 		//
@@ -4706,5 +4737,21 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		for(UIActionListener uiActionListener:uiActionListenerList){
 			uiActionListener.implode();
 		}
+	}
+
+	public void setTheActionManager(ActionManager theActionManager) {
+		this.theActionManager = theActionManager;
+	}
+
+	public ActionManager getTheActionManager() {
+		return theActionManager;
+	}
+
+	public void setTheGlycanRenderer(GlycanRenderer theGlycanRenderer) {
+		this.theGlycanRenderer = theGlycanRenderer;
+	}
+
+	public GlycanRenderer getTheGlycanRenderer() {
+		return theGlycanRenderer;
 	}
 }

@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -91,6 +92,9 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 	 * The listeners.
 	 */
 	protected EventListenerList listenerList = new EventListenerList();
+	
+	static protected HashMap<String,ImageResizableIconReducedMem> imageCache=new HashMap<String,ImageResizableIconReducedMem>();
+	
 
 	/**
 	 * Returns the icon for the specified URL.
@@ -103,13 +107,24 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 	 */
 	public static ImageResizableIconReducedMem getIcon(URL location,
 			Dimension initialDim) {
-		try {
-			return new ImageResizableIconReducedMem(location.openStream(),
-					(int) initialDim.getWidth(), (int) initialDim.getHeight());
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			return null;
+		String key=location.toString()+"-"+initialDim.getWidth()+"-"+initialDim.getHeight();
+		if(imageCache.containsKey(key)){
+			//System.err.println("Hit cache! "+location);
+			return imageCache.get(key);
+		}else{
+			try {
+				ImageResizableIconReducedMem test=new ImageResizableIconReducedMem(location.openStream(),
+						(int) initialDim.getWidth(), (int) initialDim.getHeight());
+				imageCache.put(key, test);
+				return test;
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				return null;
+			}
 		}
+		
+		
+		
 	}
 
 	/**
@@ -254,6 +269,7 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 		SwingWorker<BufferedImage, Void> worker = new SwingWorker<BufferedImage, Void>() {
 			@Override
 			protected BufferedImage doInBackground() throws Exception {
+				//System.err.println("running in background!");
 				if (imageInputStream != null) {
 					synchronized (imageInputStream) {
 						if (originalImage == null) {

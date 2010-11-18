@@ -428,8 +428,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		// create menus
 		theEditMenu = createEditMenu();
-		theStructureMenu = createStructureMenu();
-		theViewMenu = createViewMenu();
+		
+		if(!enableRibbons){
+			theStructureMenu = createStructureMenu();
+			theViewMenu = createViewMenu();
+		}
 
 		if (enableRibbons) {
 			int restoreOrientation=theWorkspace.getGraphicOptions().ORIENTATION;
@@ -1834,7 +1837,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 						button.setActionCommand("addstructure="
 								+ coreType.getName());
-						System.err.println("-"+description+"-");
 						if(description.equals(" bisected fucosylated")){
 							temp=button;
 						}else if(temp!=null){

@@ -132,7 +132,7 @@ public abstract class BaseDocument {
      */
     public javax.swing.ImageIcon getIcon() {
     	try {
-			return FileUtils.themeManager.getImageIcon("basedoc",ICON_SIZE.SMALL);
+			return FileUtils.themeManager.getImageIcon("basedoc",ICON_SIZE.L2);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

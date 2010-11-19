@@ -27,6 +27,7 @@ public class ThemeManager {
 	}
 	
 	public static ThemeManager defaultManager;
+	
 	protected List<ICON_PATH> iconPaths;
 	protected Class clazz;
 	
@@ -192,7 +193,7 @@ public class ThemeManager {
 	 */
 	public static ImageIcon getEmptyIcon(ICON_SIZE iconSize) {
 		if(iconSize==null){
-			iconSize=ICON_SIZE.SMALL;
+			iconSize=ICON_SIZE.L2;
 		}
 		return new ImageIcon(new BufferedImage(iconSize.getSize(), iconSize.getSize(), BufferedImage.TYPE_INT_ARGB));
 	}

@@ -1582,7 +1582,7 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		band4.addFlowComponent(getTheActionManager().get("collapsemultipleantennae")
 				.getJCheckBox("Collapse multiple antennae", this));
 		band4.addFlowComponent(getTheActionManager().get("showmassescanvas")
-				.getJCheckBox("Masses", this));
+				.getJCheckBox("Mass information", this));
 		band4.addFlowComponent(getTheActionManager().get("showredendcanvas")
 				.getJCheckBox("Reducing end indicator", this));
 
@@ -2422,7 +2422,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			return cachedMenus.get(key);
 		}
 		
-		System.err.println("Creating menu!!!!");
 		JPopupMenu menu = new JPopupMenu();
 
 		menu.setDoubleBuffered(true);

@@ -109,12 +109,23 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 			Dimension initialDim) {
 		String key=location.toString()+"-"+initialDim.getWidth()+"-"+initialDim.getHeight();
 		if(imageCache.containsKey(key)){
-			//System.err.println("Hit cache! "+location);
-			return imageCache.get(key);
+			if(location.toString().contains("database_annotate"))
+				System.err.println("Hit cache! "+location.toString()+"-"+initialDim.getWidth()+"-"+initialDim.getHeight());
+			ImageResizableIconReducedMem test=imageCache.get(key);
+			ImageResizableIconReducedMem test1=null;
+			try {
+				test1 = new ImageResizableIconReducedMem(location.openStream(),
+						(int) initialDim.getWidth(), (int) initialDim.getHeight(),false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			test1.cachedImages=test.cachedImages;
+			return test1;
 		}else{
 			try {
 				ImageResizableIconReducedMem test=new ImageResizableIconReducedMem(location.openStream(),
-						(int) initialDim.getWidth(), (int) initialDim.getHeight());
+						(int) initialDim.getWidth(), (int) initialDim.getHeight(),true);
 				imageCache.put(key, test);
 				return test;
 			} catch (IOException ioe) {
@@ -122,9 +133,6 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 				return null;
 			}
 		}
-		
-		
-		
 	}
 
 	/**
@@ -137,7 +145,7 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 	 * @param h
 	 *            The height of the icon.
 	 */
-	public ImageResizableIconReducedMem(InputStream inputStream, int w, int h) {
+	public ImageResizableIconReducedMem(InputStream inputStream, int w, int h,boolean preSize) {
 		this.imageInputStream = inputStream;
 		this.width = w;
 		this.height = h;
@@ -149,7 +157,10 @@ public class ImageResizableIconReducedMem implements Icon, AsynchronousLoading,
 				return size() > 5;
 			};
 		};
-		this.presize(this.width, this.height);
+		
+		if(preSize){
+			this.presize(this.width, this.height);
+		}
 	}
 
 	/**

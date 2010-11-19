@@ -133,6 +133,7 @@ public class ICON_PATH {
 	
 
 	public void parseCacheFile(String file) throws IOException {
+		//System.err.println("parse1");
 		try {
 			URL url = new URL(file);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -177,6 +178,7 @@ public class ICON_PATH {
 			log.warn("ICON_PATH[parseCacheFile]: Missing theme cache file "
 					+ file + " for path " + this.iconPath);
 		}
+		//System.err.println("parse2");
 	}
 
 	public void parseCacheFile() throws IOException {

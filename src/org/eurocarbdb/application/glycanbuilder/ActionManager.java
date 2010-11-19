@@ -85,7 +85,7 @@ public class ActionManager {
 	public GlycanAction add(String action, EurocarbResizableIcon i, String label, int mnemonic,
 			String accelerator, ActionListener l) {
 		if (i == null) {
-			i = ThemeManager.getResizableEmptyIcon(ICON_SIZE.TINY);
+			i = ThemeManager.getResizableEmptyIcon(ICON_SIZE.L1);
 		}
 		GlycanAction a = theActions.get(action);
 		if (a == null){
@@ -150,7 +150,7 @@ public class ActionManager {
 		// TODO Auto-generated method stub
 		EurocarbResizableIcon iconR;
 		if (icon == null) {
-			iconR = ThemeManager.getResizableEmptyIcon(ICON_SIZE.TINY);
+			iconR = ThemeManager.getResizableEmptyIcon(ICON_SIZE.L1);
 		}else{
 			iconR = new EurocarbResizableIcon();
 			iconR.iconProperties=null;
@@ -172,7 +172,7 @@ public class ActionManager {
 		// TODO Auto-generated method stub
 		EurocarbResizableIcon iconR;
 		if (icon == null) {
-			iconR = ThemeManager.getResizableEmptyIcon(ICON_SIZE.TINY);
+			iconR = ThemeManager.getResizableEmptyIcon(ICON_SIZE.L1);
 		}else{
 			iconR = new EurocarbResizableIcon();
 			iconR.iconProperties=null;

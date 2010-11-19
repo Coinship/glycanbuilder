@@ -4,8 +4,8 @@
 package org.eurocarbdb.application.glycanbuilder;
 
 public enum ICON_SIZE {
-	TINY(16),
-	SMALL(22),
+	L1(16),
+	L2(22),
 	L3(24),
 	L4(32),
 	L5(48),

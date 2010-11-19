@@ -1582,27 +1582,15 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		band4.addFlowComponent(getTheActionManager().get("collapsemultipleantennae")
 				.getJCheckBox("Collapse multiple antennae", this));
 		band4.addFlowComponent(getTheActionManager().get("showmassescanvas")
-				.getJCheckBox("Masses [canvas]", this));
-		band4.addFlowComponent(getTheActionManager().get("showmasses").getJCheckBox(
-				"Masses [export]", this));
+				.getJCheckBox("Masses", this));
 		band4.addFlowComponent(getTheActionManager().get("showredendcanvas")
-				.getJCheckBox("Reducing end indicator [canvas]", this));
-		band4.addFlowComponent(getTheActionManager().get("showredend").getJCheckBox(
-				"Reducing end indicator [export]", this));
-		band4.addFlowComponent(getTheActionManager().get("savespec").getJCheckBox(
-				"Save spectra [GWP File]", this));
-		
+				.getJCheckBox("Reducing end indicator", this));
 
 		getTheActionManager().get("showmassescanvas").setSelected(
 				getTheGlycanRenderer().getGraphicOptions().SHOW_MASSES_CANVAS);
-		getTheActionManager().get("showmasses").setSelected(
-				getTheGlycanRenderer().getGraphicOptions().SHOW_MASSES);
-		getTheActionManager().get("showredend").setSelected(
-				getTheGlycanRenderer().getGraphicOptions().SHOW_REDEND);
 		getTheActionManager().get("showredendcanvas").setSelected(
 				getTheGlycanRenderer().getGraphicOptions().SHOW_REDEND_CANVAS);
-		getTheActionManager().get("savespec").setSelected(
-				getTheGlycanRenderer().getGraphicOptions().SAVE_SPECTRA_CUSTOM);
+		
 		
 
 		JFlowRibbonBand band5 = new JFlowRibbonBand(
@@ -4348,9 +4336,6 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					.getSource()).isSelected();
 			this.respondToDocumentChange = true;
 			
-			theActionManager.get("showmasses").setSelected(
-					this.theGlycanRenderer.getGraphicOptions().SHOW_MASSES);
-			
 			repaint();
 		} else if (action.equals("showredendcanvas")) {
 			theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS = ((JCheckBox) e
@@ -4362,11 +4347,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 					.getSource()).isSelected();
 			this.respondToDocumentChange = true;
 			
-			theActionManager.get("showredend").setSelected(
-					this.theGlycanRenderer.getGraphicOptions().SHOW_REDEND);
-			
 			repaint();
 		}else if(action.equals("savespec")){
+			System.err.println("Save spectra found");
 			theWorkspace.getGraphicOptions().SAVE_SPECTRA_CUSTOM= ((JCheckBox) e
 					.getSource()).isSelected();
 		}else if (action.equals("orientation")) {

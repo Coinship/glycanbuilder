@@ -29,7 +29,7 @@ import javax.swing.*;
 /**
    This class contains the information about the graphic style of a
    residue in a certain notation. The style specify shape, colors and
-   text. The style will be used by the {@link ResidueRenderer}
+   text. The style will be used by the {@link ResidueRendererAWT}
    instances to render a residue. The identifier of the style must be
    the same as the corresponding {@link ResidueType}.
 

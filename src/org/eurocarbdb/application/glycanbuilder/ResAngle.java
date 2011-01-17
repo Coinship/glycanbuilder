@@ -25,7 +25,7 @@ package org.eurocarbdb.application.glycanbuilder;
    expressed in degrees.
    
    @see PositionManager
-   @see GlycanRenderer
+   @see GlycanRendererAWT
    @author Alessio Ceroni (a.ceroni@imperial.ac.uk)
 */
 

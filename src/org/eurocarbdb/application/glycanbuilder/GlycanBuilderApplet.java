@@ -122,7 +122,7 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		LogUtils.setGraphicalReport(true);
 
 		// create the default workspace
-		theWorkspace = new BuilderWorkspace(null, false);
+		theWorkspace = new BuilderWorkspace(null, false,new GlycanRendererAWT());
 
 		// create singletons
 		theDoc = theWorkspace.getStructures();

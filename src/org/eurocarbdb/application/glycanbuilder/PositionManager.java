@@ -26,7 +26,7 @@ import java.util.*;
    Objects of this class are used to compute and store the position of
    a residue around its parent during the rendering process.
 
-   @see GlycanRenderer
+   @see GlycanRendererAWT
    @author Alessio Ceroni (a.ceroni@imperial.ac.uk)
 */
 

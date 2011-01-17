@@ -36,7 +36,7 @@ public class ConvertGWS
     public static final String toFormat( String format_name, String gws_sequence )
     throws Exception
     {
-        BuilderWorkspace theWorkspace = new BuilderWorkspace( null, false );
+        BuilderWorkspace theWorkspace = new BuilderWorkspace( null, false,new GlycanRendererAWT() );
         GlycanDocument theDoc = theWorkspace.getStructures(); 
         
         theDoc.fromString( gws_sequence, false );

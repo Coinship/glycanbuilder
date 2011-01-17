@@ -44,6 +44,8 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 	// style
 	protected ResiduePlacementDictionary theResiduePlacementDictionary;
+	
+
 	protected ResidueStyleDictionary theResidueStyleDictionary;
 	protected LinkageStyleDictionary theLinkageStyleDictionary;
 
@@ -66,9 +68,18 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	 * Empty constructor. Initialize the dictionaries from the default files and
 	 * set all the options to their default values.
 	 */
-	public BuilderWorkspace() {
+	public BuilderWorkspace(GlycanRenderer glycanRenderer) {
 		super(false);
+		
 		init();
+		
+		theGlycanRenderer=glycanRenderer;
+		
+		theGlycanRenderer.setGraphicOptions(theGraphicOptions);
+		theGlycanRenderer
+				.setResiduePlacementDictionary(theResiduePlacementDictionary);
+		theGlycanRenderer.setResidueStyleDictionary(theResidueStyleDictionary);
+		theGlycanRenderer.setLinkageStyleDictionary(theLinkageStyleDictionary);
 	}
 
 	/**
@@ -82,11 +93,19 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	 *            if <code>true</code> create a configuration file from the
 	 *            default value in case the file does not exists
 	 */
-	public BuilderWorkspace(String config_file, boolean create) {
+	public BuilderWorkspace(String config_file, boolean create,GlycanRenderer glycanRenderer) {
 		super(false);
 
+		theGlycanRenderer=glycanRenderer;
+		
 		init(config_file, create, false);
 		init();
+		
+		theGlycanRenderer.setGraphicOptions(theGraphicOptions);
+		theGlycanRenderer
+				.setResiduePlacementDictionary(theResiduePlacementDictionary);
+		theGlycanRenderer.setResidueStyleDictionary(theResidueStyleDictionary);
+		theGlycanRenderer.setLinkageStyleDictionary(theLinkageStyleDictionary);
 	}
 
 	// base document
@@ -181,13 +200,7 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		// initialize documents
 		theStructures = new GlycanDocument(this);
 
-		// initialize renderers
-		theGlycanRenderer = new GlycanRenderer();
-		theGlycanRenderer.setGraphicOptions(theGraphicOptions);
-		theGlycanRenderer
-				.setResiduePlacementDictionary(theResiduePlacementDictionary);
-		theGlycanRenderer.setResidueStyleDictionary(theResidueStyleDictionary);
-		theGlycanRenderer.setLinkageStyleDictionary(theLinkageStyleDictionary);
+		
 	}
 
 	protected void retrieveFromConfiguration() {
@@ -555,6 +568,33 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		w_node.appendChild(theStructures.toXML(document));
 
 		return w_node;
+	}
+	
+	public ResiduePlacementDictionary getTheResiduePlacementDictionary() {
+		return theResiduePlacementDictionary;
+	}
+
+	public void setTheResiduePlacementDictionary(
+			ResiduePlacementDictionary theResiduePlacementDictionary) {
+		this.theResiduePlacementDictionary = theResiduePlacementDictionary;
+	}
+
+	public ResidueStyleDictionary getTheResidueStyleDictionary() {
+		return theResidueStyleDictionary;
+	}
+
+	public void setTheResidueStyleDictionary(
+			ResidueStyleDictionary theResidueStyleDictionary) {
+		this.theResidueStyleDictionary = theResidueStyleDictionary;
+	}
+
+	public LinkageStyleDictionary getTheLinkageStyleDictionary() {
+		return theLinkageStyleDictionary;
+	}
+
+	public void setTheLinkageStyleDictionary(
+			LinkageStyleDictionary theLinkageStyleDictionary) {
+		this.theLinkageStyleDictionary = theLinkageStyleDictionary;
 	}
 
 }

@@ -132,7 +132,7 @@ public class GlycanSelection implements Transferable {
 	 * @param _data
 	 *            the data to be put in the clipboard
 	 */
-	public GlycanSelection(Data _data, GlycanRenderer _glycanRenderer,
+	public GlycanSelection(Data _data, GlycanRendererAWT _glycanRenderer,
 			Collection<Glycan> _structures) {
 		theData = _data;
 		theGlycanRenderer = _glycanRenderer;
@@ -275,7 +275,7 @@ public class GlycanSelection implements Transferable {
 	 * stored in the object
 	 */
 	public String getSVG() {
-		return SVGUtils.getVectorGraphics(theGlycanRenderer, theStructures,
+		return SVGUtils.getVectorGraphics((GlycanRendererAWT) theGlycanRenderer, theStructures,
 				theGlycanRenderer.getGraphicOptions().SHOW_MASSES,
 				theGlycanRenderer.getGraphicOptions().SHOW_MASSES);
 	}

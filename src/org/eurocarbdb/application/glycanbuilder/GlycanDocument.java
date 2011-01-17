@@ -410,7 +410,7 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 	 * residues that are drawn at the same position.
 	 * 
 	 * @see Residue#addChild
-	 * @see GlycanRenderer
+	 * @see GlycanRendererAWT
 	 * @see BBoxManager
 	 */
 	public Residue addResidue(Residue current, Vector<Residue> linked,
@@ -463,7 +463,7 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 	 * position.
 	 * 
 	 * @see Residue#addChild
-	 * @see GlycanRenderer
+	 * @see GlycanRendererAWT
 	 * @see BBoxManager
 	 */
 	public Residue insertResidueBefore(Residue current, Vector<Residue> linked,
@@ -529,7 +529,7 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 	 * that are drawn at the same position.
 	 * 
 	 * @see Residue#setType
-	 * @see GlycanRenderer
+	 * @see GlycanRendererAWT
 	 * @see BBoxManager
 	 */
 	public boolean changeResidueType(Residue current, Vector<Residue> linked,
@@ -1331,7 +1331,7 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 		fromString(str, merge, false, new GWSParser());
 	}
 
-	protected void fromString(String str, boolean merge, boolean fire,
+	public void fromString(String str, boolean merge, boolean fire,
 			GlycanParser parser) throws Exception {
 		if (merge)
 			addStructures(parseString(str, parser), fire);

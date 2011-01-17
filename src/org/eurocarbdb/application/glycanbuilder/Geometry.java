@@ -276,22 +276,22 @@ public class Geometry {
     return angle;
     }
 
-    static protected boolean isDown(double angle) {
+    static public boolean isDown(double angle) {
     angle = normalize(angle);
     return (angle>=-0.75*Math.PI && angle<-0.25*Math.PI);
     }
 
-    static protected boolean isRight(double angle) {
+    static public boolean isRight(double angle) {
     angle = normalize(angle);
     return (angle>=-0.25*Math.PI && angle<0.25*Math.PI);
     }
 
-    static protected boolean isUp(double angle) {
+    static public boolean isUp(double angle) {
     angle = normalize(angle);
     return (angle>=0.25*Math.PI && angle<0.75*Math.PI);
     }
     
-    static protected boolean isLeft(double angle) {
+    static public boolean isLeft(double angle) {
     angle = normalize(angle);
     return (angle>=0.75*Math.PI || angle<-0.75*Math.PI);
     }

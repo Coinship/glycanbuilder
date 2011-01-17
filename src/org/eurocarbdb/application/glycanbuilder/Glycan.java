@@ -868,7 +868,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
     return true;
     }
     
-    protected void removeUnpairedRepetitions() {
+    public void removeUnpairedRepetitions() {
     removeUnpairedRepetitions(root);
     removeUnpairedRepetitions(bracket);
     }
@@ -883,7 +883,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
         removeUnpairedRepetitions(cur.getChildAt(i));
     }
 
-    protected Vector<Glycan> splitMultipleRoots() {
+    public Vector<Glycan> splitMultipleRoots() {
     Vector<Glycan> new_structures = new Vector<Glycan>();
     while(root.getNoChildren()>1) {
         // remove one child from the root

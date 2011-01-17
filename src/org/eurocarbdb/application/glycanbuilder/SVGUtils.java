@@ -97,7 +97,7 @@ public class SVGUtils   {
        @param gr the GlycanRenderer used to render the structures
        @param structures the structures to be rendered
      */
-    static public String getVectorGraphics(GlycanRenderer gr, Collection<Glycan> structures) {
+    static public String getVectorGraphics(GlycanRendererAWT gr, Collection<Glycan> structures) {
     return getVectorGraphics(gr, structures, false, false);
     }
     
@@ -111,7 +111,7 @@ public class SVGUtils   {
        @param show_redend <code>true</code> if the reducing end marker
        should be included in the graphical representation
      */
-    static public String getVectorGraphics(GlycanRenderer gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend) {
+    static public String getVectorGraphics(GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend) {
     if( structures == null )
         structures = new Vector<Glycan>();
 
@@ -303,7 +303,7 @@ public class SVGUtils   {
 
         // paint
         for( Glycan s : structures ) 
-        gr.paint(g2d,s,null,null,show_masses,show_redend,posManager,bboxManager);
+        gr.paint(new DefaultPaintable(g2d),s,null,null,show_masses,show_redend,posManager,bboxManager);
 
         // transcode
         return transcode(g2d,all_dim,transcoder);
@@ -428,7 +428,7 @@ public class SVGUtils   {
        @param format the graphical format to be used
        @return <code>true</code> if the file was successfully created
      */
-    static public boolean export(GlycanRenderer gr, String filename, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) {
+    static public boolean export(GlycanRendererAWT gr, String filename, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) {
     return export(gr,filename,structures,show_masses,show_redend,1.,format);
     }
     
@@ -446,7 +446,7 @@ public class SVGUtils   {
        @param format the graphical format to be used       
        @return <code>true</code> if the file was successfully created
      */
-    static public boolean export(GlycanRenderer gr, String filename, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) {
+    static public boolean export(GlycanRendererAWT gr, String filename, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) {
     try {
         OutputStream os = new FileOutputStream(filename);
         export(os,gr,structures,show_masses,show_redend,scale,format);
@@ -470,8 +470,12 @@ public class SVGUtils   {
        should be included in the graphical representation
        @param format the graphical format to be used
     */
-    static public byte[] export(GlycanRenderer gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) {
+    static public byte[] export(GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) {
     return export(gr,structures,show_masses,show_redend,1.,format);
+    }
+    
+    static public byte[] export(GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) {
+    	return export(gr, structures, show_masses, show_redend, scale, format, new PositionManager(), new BBoxManager());
     }
 
     /**
@@ -486,10 +490,10 @@ public class SVGUtils   {
        @param scale the scaling factor to be applied to the image     
        @param format the graphical format to be used
     */
-    static public byte[] export(GlycanRenderer gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) {
+    static public byte[] export(GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format,PositionManager posManager,BBoxManager bboxManager) {
     try {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        export(bos,gr,structures,show_masses,show_redend,scale,format);
+        export(bos,gr,structures,show_masses,show_redend,scale,format,posManager,bboxManager);
         return bos.toByteArray();
     }
     catch(Exception e) {
@@ -511,8 +515,12 @@ public class SVGUtils   {
        @param format the graphical format to be used
        @throws Exception if the format is not supported
     */
-    static public void export(OutputStream os, GlycanRenderer gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) throws Exception {
+    static public void export(OutputStream os, GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, String format) throws Exception {
     export(os,gr,structures,show_masses,show_redend,1.,format);
+    }
+    
+    static public void export(OutputStream os, GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) throws Exception {
+    	export(os, gr, structures, show_masses, show_redend, scale, format, new PositionManager(), new BBoxManager());
     }
 
     /**
@@ -529,7 +537,7 @@ public class SVGUtils   {
        @param format the graphical format to be used
        @throws Exception if the format is not supported
     */
-    static public void export(OutputStream os, GlycanRenderer gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format) throws Exception {
+    static public void export(OutputStream os, GlycanRendererAWT gr, Collection<Glycan> structures, boolean show_masses, boolean show_redend, double scale, String format,PositionManager posManager,BBoxManager bboxManager) throws Exception {
     if( format.equals("svg") )
         os.write(getVectorGraphics(gr,structures,show_masses,show_redend).getBytes());
     else if( format.equals("pdf") )        
@@ -539,7 +547,7 @@ public class SVGUtils   {
     else if( format.equals("eps") )
         os.write(getEPSGraphics(gr,structures,show_masses,show_redend));
     else if( format.equals("bmp") || format.equals("png") || format.equals("jpg") )        
-        javax.imageio.ImageIO.write(gr.getImage(structures,true,show_masses,show_redend,scale),format,os);
+        javax.imageio.ImageIO.write(gr.getImage(structures,true,show_masses,show_redend,scale,posManager,bboxManager),format,os);
     else
         throw new Exception("Unrecognized graphic format: " + format);    
     }

@@ -97,7 +97,7 @@ class ResidueSelector extends JComponent implements  MouseListener, MouseMotionL
     current_residue = null;
     selected_residues = new HashSet<Residue>();
 
-    theGlycanRenderer = new GlycanRenderer();
+    theGlycanRenderer = new GlycanRendererAWT();
     thePosManager  = new PositionManager();
     theBBoxManager = new BBoxManager();
     structure_bbox = null;
@@ -166,7 +166,7 @@ class ResidueSelector extends JComponent implements  MouseListener, MouseMotionL
 
     // draw        
     structure_bbox = theGlycanRenderer.computeBoundingBoxes(new Union<Glycan>(theStructure),false,true,thePosManager,theBBoxManager);    
-    theGlycanRenderer.paint(g2d,theStructure,selected_residues,null,active_residues,false,true,thePosManager,theBBoxManager);
+    theGlycanRenderer.paint(new DefaultPaintable(g2d),theStructure,selected_residues,null,active_residues,false,true,thePosManager,theBBoxManager);
     revalidate();
 
     // dispose graphic object

@@ -551,7 +551,7 @@ public class Residue {
     /**
        Return <code>true</code> if the residue has a preferred
        placement position for displaying.
-       @see GlycanRenderer
+       @see GlycanRendererAWT
        @see BBoxManager
      */
     public boolean hasPreferredPlacement() {
@@ -560,7 +560,7 @@ public class Residue {
     
     /**
        Clear the preferred placement position for displaying.
-       @see GlycanRenderer
+       @see GlycanRendererAWT
        @see BBoxManager
      */
     public void resetPreferredPlacement() {
@@ -569,7 +569,7 @@ public class Residue {
 
     /**
        Set the preferred placement position for displaying.
-       @see GlycanRenderer
+       @see GlycanRendererAWT
        @see BBoxManager
      */
     public void setPreferredPlacement(ResiduePlacement new_place) {
@@ -578,7 +578,7 @@ public class Residue {
 
     /**
        Return the preferred placement position for displaying.
-       @see GlycanRenderer
+       @see GlycanRendererAWT
        @see BBoxManager
      */
     public ResiduePlacement getPreferredPlacement() {

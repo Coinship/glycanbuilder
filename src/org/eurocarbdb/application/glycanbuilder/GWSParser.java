@@ -157,7 +157,7 @@ public class GWSParser implements GlycanParser {
     return ret;
     }
 
-    static protected String writeResidueType(Residue r) {
+    static public String writeResidueType(Residue r) {
     String str = "";
 
     if( r.isBracket() )
@@ -189,7 +189,7 @@ public class GWSParser implements GlycanParser {
     return str;
     }
 
-    static protected String writeSubtree(Residue r, boolean ordered ) {
+    static public String writeSubtree(Residue r, boolean ordered ) {
     
     //------------
     // write type
@@ -232,11 +232,11 @@ public class GWSParser implements GlycanParser {
     return str;
     }
 
-    static protected String writeSubtree(Linkage l, boolean ordered) {
+    static public String writeSubtree(Linkage l, boolean ordered) {
     return ("--" + toStringLinkage(l) + writeSubtree(l.getChildResidue(),ordered));
     }
 
-    static protected String toStringLinkage(Linkage link) {        
+    static public String toStringLinkage(Linkage link) {        
     StringBuilder sb = new StringBuilder();
     for( Iterator<Bond> i=link.getBonds().iterator(); i.hasNext(); ) {
         Bond b = i.next();
@@ -261,7 +261,7 @@ public class GWSParser implements GlycanParser {
     return sb.toString();
     }
 
-    static protected Residue readSubtree(String str, boolean accept_empty) throws Exception {    
+    static public Residue readSubtree(String str, boolean accept_empty) throws Exception {    
     if( str.length()==0 ) {
         if( accept_empty ) 
         return null;
@@ -374,7 +374,7 @@ public class GWSParser implements GlycanParser {
 
     
     
-    static protected Linkage readSubtreeLinkage(String str) throws Exception {
+    static public Linkage readSubtreeLinkage(String str) throws Exception {
     
     Matcher m = link_pattern.matcher(str);
     if( !m.lookingAt() ) 

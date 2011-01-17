@@ -81,7 +81,7 @@ public class GlycanBuilder extends JFrame implements ActionListener, BaseDocumen
     LogUtils.setGraphicalReport(true);       
 
     // create the default workspace
-    theWorkspace = new BuilderWorkspace(FileUtils.getRootDir() + "/config.xml",true);
+    theWorkspace = new BuilderWorkspace(FileUtils.getRootDir() + "/config.xml",true,new GlycanRendererAWT());
     theWorkspace.setAutoSave(true);
 
     // create singletons 
@@ -748,7 +748,7 @@ public class GlycanBuilder extends JFrame implements ActionListener, BaseDocumen
             setLastExportedFile(filename);
         return true;
         }
-        else if( SVGUtils.export(theWorkspace.getGlycanRenderer(),filename,theDoc.getStructures(),theWorkspace.getGraphicOptions().SHOW_MASSES,theWorkspace.getGraphicOptions().SHOW_REDEND,format) ) {
+        else if( SVGUtils.export((GlycanRendererAWT) theWorkspace.getGlycanRenderer(),filename,theDoc.getStructures(),theWorkspace.getGraphicOptions().SHOW_MASSES,theWorkspace.getGraphicOptions().SHOW_REDEND,format) ) {
         setLastExportedFile(filename);
         return true;
         }        

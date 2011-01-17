@@ -31,7 +31,7 @@ import java.util.regex.*;
    This class contains the information about the graphic style of a
    linkage in a certain notation. The style specify line type, line
    shape, and which linkage information should be shown. The style
-   will be used by the {@link LinkageRenderer} instances to render a
+   will be used by the {@link LinkageRendererAWT} instances to render a
    linkage. The style will be matched against parent reside, child
    residue and linkage information according to the rules defined by a
    {@link LinkageMatcher}

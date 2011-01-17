@@ -39,10 +39,10 @@ import org.apache.batik.svggen.*;
 import org.apache.batik.ext.awt.g2d.GraphicContext;
 
 
-class SVGGlycanRenderer extends GlycanRenderer {
+class SVGGlycanRenderer extends GlycanRendererAWT {
 
 
-    public SVGGlycanRenderer(GlycanRenderer src) {
+    public SVGGlycanRenderer(GlycanRendererAWT src) {
     theResidueRenderer = src.theResidueRenderer;
     theLinkageRenderer = src.theLinkageRenderer;
     theResiduePlacementDictionary = src.theResiduePlacementDictionary;
@@ -63,7 +63,7 @@ class SVGGlycanRenderer extends GlycanRenderer {
     paintBracket(g2d,structure,structure.getBracket(),selected_residues,selected_linkages,posManager,bboxManager);
     if( show_mass ) {
         g2d.addGroup("m",structure,null);
-        displayMass(g2d,structure,show_redend,bboxManager);
+        displayMass(new DefaultPaintable(g2d),structure,show_redend,bboxManager);
     }        
     }
 
@@ -88,13 +88,13 @@ class SVGGlycanRenderer extends GlycanRenderer {
         if( child_bbox!=null && !posManager.isOnBorder(child) ) {
         g2d.addGroup("l",structure,node,child);
         boolean selected = (selected_residues.contains(node) && selected_residues.contains(child)) || selected_linkages.contains(link);
-        theLinkageRenderer.paintEdge(g2d,link,selected,node_bbox,border_bbox,child_bbox,child_border_bbox);                
+        theLinkageRenderer.paintEdge(new DefaultPaintable(g2d),link,selected,node_bbox,border_bbox,child_bbox,child_border_bbox);                
         }        
     }
     
     // paint node
     g2d.addGroup("r",structure,node);
-    theResidueRenderer.paint(g2d,node,selected_residues.contains(node),posManager.isOnBorder(node),parent_bbox,node_bbox,support_bbox,posManager.getOrientation(node));
+    theResidueRenderer.paint(new DefaultPaintable(g2d),node,selected_residues.contains(node),posManager.isOnBorder(node),parent_bbox,node_bbox,support_bbox,posManager.getOrientation(node));
     
     // paint children
     for(Linkage link : node.getChildrenLinkages() ) 
@@ -109,7 +109,7 @@ class SVGGlycanRenderer extends GlycanRenderer {
 
         if( child_bbox!=null && !posManager.isOnBorder(child) ) {
         g2d.addGroup("li",structure,node,child);
-        theLinkageRenderer.paintInfo(g2d,link,node_bbox,border_bbox,child_bbox,child_border_bbox);                        
+        theLinkageRenderer.paintInfo(new DefaultPaintable(g2d),link,node_bbox,border_bbox,child_bbox,child_border_bbox);                        
         }
     }
     }
@@ -124,7 +124,7 @@ class SVGGlycanRenderer extends GlycanRenderer {
 
     // paint bracket
     g2d.addGroup("b",structure,bracket);
-    theResidueRenderer.paint(g2d,bracket,selected_residues.contains(bracket),false,parent_bbox,bracket_bbox,support_bbox,posManager.getOrientation(bracket));
+    theResidueRenderer.paint(new DefaultPaintable(g2d),bracket,selected_residues.contains(bracket),false,parent_bbox,bracket_bbox,support_bbox,posManager.getOrientation(bracket));
 
     // paint antennae
     for( Linkage link : bracket.getChildrenLinkages() ) {
@@ -140,7 +140,7 @@ class SVGGlycanRenderer extends GlycanRenderer {
         if( !posManager.isOnBorder(child) ) {
             g2d.addGroup("l",structure,bracket,child);
             boolean selected = (selected_residues.contains(bracket) && selected_residues.contains(child)) || selected_linkages.contains(link);
-            theLinkageRenderer.paintEdge(g2d,link,selected,node_bbox,node_bbox,child_bbox,child_border_bbox);
+            theLinkageRenderer.paintEdge(new DefaultPaintable(g2d),link,selected,node_bbox,node_bbox,child_bbox,child_border_bbox);
         }
         
         // paint child
@@ -149,11 +149,11 @@ class SVGGlycanRenderer extends GlycanRenderer {
         // paint info
         if( !posManager.isOnBorder(child) ) {
             g2d.addGroup("li",structure,bracket,child);
-            theLinkageRenderer.paintInfo(g2d,link,node_bbox,node_bbox,child_bbox,child_border_bbox);
+            theLinkageRenderer.paintInfo(new DefaultPaintable(g2d),link,node_bbox,node_bbox,child_bbox,child_border_bbox);
         }
 
         if( quantity>1 ) 
-            paintQuantity(g2d,child,quantity,bboxManager);        
+            paintQuantity(new DefaultPaintable(g2d),child,quantity,bboxManager);        
         }                
     }    
     }

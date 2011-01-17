@@ -32,7 +32,7 @@ import java.util.regex.*;
    This class contains the information about the placement of a
    residue around its parent in a certain notation. The placement
    information will be used by the {@link BookingManager} and {@link
-   GlycanRenderer} instances to decide the position of a residue. The
+   GlycanRendererAWT} instances to decide the position of a residue. The
    placement will define a set of possible position around the parent
    residue as a list of {@link ResAngle} values. The placement will be
    matched against parent reside, child residue and linkage
@@ -204,7 +204,7 @@ public class ResiduePlacement {
     /**
        Return <code>true</code> if the residue should be placed on the
        border of its parent
-       @see GlycanRenderer
+       @see GlycanRendererAWT
      */
     public boolean isOnBorder() {
     return on_border;
@@ -213,7 +213,7 @@ public class ResiduePlacement {
     /**
        Return <code>true</code> if all the residues in the subtree
        should be placed in position 0
-       @see GlycanRenderer
+       @see GlycanRendererAWT
      */
     public boolean isSticky() {
     return sticky;

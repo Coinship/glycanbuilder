@@ -1252,6 +1252,16 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 		return toString(structures, new GlycoCTParser(false));
 	}
 
+	/**
+	 * Return a GlycoCTCondensed representation of the structures contained in the
+	 * document.
+	 * 
+	 * @see GlycoCTParser
+	 */
+	public String toGlycoCTCondensed() {
+		return toString(structures, new GlycoCTCondensedParser(false));
+	}
+	
 	protected void fromGlycoCT(String str, boolean merge, boolean fire,
 			boolean tolerate) throws Exception {
 		fromString(str, merge, fire, new GlycoCTParser(tolerate));

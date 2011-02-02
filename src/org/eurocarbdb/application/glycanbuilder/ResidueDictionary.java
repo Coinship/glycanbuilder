@@ -112,7 +112,7 @@ public class ResidueDictionary {
     return all_residues.iterator();
     }
     
-    protected static Collection<ResidueType> directResidues() {
+    public static Collection<ResidueType> directResidues() {
     return direct_residues.values();
     }
 

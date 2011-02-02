@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public interface GlycanRenderer {
+	public abstract void setRenderMode(GlycanRendererMode mode);
+	
+	public abstract GlycanRendererMode getRenderMode();
 
 	/**
 	 * Return the residue renderer used by this object.

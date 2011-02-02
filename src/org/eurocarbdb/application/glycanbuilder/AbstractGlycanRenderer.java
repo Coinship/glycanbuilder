@@ -32,6 +32,8 @@ public abstract class AbstractGlycanRenderer implements GlycanRenderer{
 	protected LinkageStyleDictionary theLinkageStyleDictionary;
 
 	protected GraphicOptions theGraphicOptions;
+	
+	protected GlycanRendererMode theRendererMode=GlycanRendererMode.DRAWING;
 
 	/**
 	 * Empty constructor.
@@ -74,6 +76,16 @@ public abstract class AbstractGlycanRenderer implements GlycanRenderer{
 	
 	abstract protected void initialiseRenderers();
 
+	@Override
+	public void setRenderMode(GlycanRendererMode mode){
+		theRendererMode=mode;
+	}
+	
+	@Override
+	public GlycanRendererMode getRenderMode(){
+		return theRendererMode;
+	}
+	
 	// ---
 
 	/* (non-Javadoc)
@@ -354,18 +366,22 @@ public abstract class AbstractGlycanRenderer implements GlycanRenderer{
 		}
 
 		// compute bounding boxes;
-		Rectangle all_bbox = new Rectangle(theGraphicOptions.MARGIN_TOP,
-				theGraphicOptions.MARGIN_LEFT, 0, 0);
+		Rectangle all_bbox = new Rectangle(theGraphicOptions.MARGIN_TOP,theGraphicOptions.MARGIN_LEFT, 0, 0);
 		int cur_top = theGraphicOptions.MARGIN_TOP;
+		int cur_left=theGraphicOptions.MARGIN_LEFT;
 		for (Iterator<Glycan> i = structures.iterator(); i.hasNext();) {
 			// compute glycan bbox
 			Rectangle glycan_bbox = computeBoundingBoxes(i.next(),
-					theGraphicOptions.MARGIN_LEFT, cur_top, show_masses,
+					cur_left, cur_top, show_masses,
 					show_redend, posManager, bboxManager);
 
 			all_bbox = Geometry.union(all_bbox, glycan_bbox);
-			cur_top = Geometry.bottom(all_bbox)
-					+ theGraphicOptions.STRUCTURES_SPACE;
+			
+			if(theRendererMode==GlycanRendererMode.DRAWING){
+				cur_top=Geometry.bottom(all_bbox) + theGraphicOptions.STRUCTURES_SPACE;
+			}else if(theRendererMode==GlycanRendererMode.TOOLBAR){
+				cur_left=Geometry.right(all_bbox) + theGraphicOptions.STRUCTURES_SPACE;
+			}
 		}
 
 		return all_bbox;

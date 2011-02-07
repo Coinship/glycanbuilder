@@ -58,6 +58,10 @@ public class GlycanRendererAWT extends AbstractGlycanRenderer {
 	public GlycanRendererAWT() {
 		super();
 	}
+	
+	public GlycanRendererAWT(AbstractGlycanRenderer src) {
+		super(src);
+	}
 
 	public GlycanRendererAWT(GlycanRendererAWT src) {
 		super(src);

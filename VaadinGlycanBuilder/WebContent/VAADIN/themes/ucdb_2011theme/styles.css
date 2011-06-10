@@ -1,0 +1,428 @@
+@import url(../reindeer/styles.css);
+
+.v-table-cell-content-odd-even-neutral {
+	background-color: white;
+}
+
+.v-table-row-odd-even-neutral {
+	background-color: white;
+}
+
+.toolbar .v-nativebutton {
+	display: block;
+	width: 65px;
+	height: 55px;
+	background: transparent;
+	border: thin;
+	text-align: center;
+}
+
+.toolbar .v-nativebutton img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 5px;
+	width: 30px;
+}
+
+.toolbar .v-nativebutton span {
+	font-size: x-small;
+	text-shadow: #fafafa 1px 1px 0;
+}
+
+.no-v-scroll {
+	overflow-y: hidden !important;
+}
+
+.v-scroll {
+	overflow-y: scroll !important;
+}
+
+.v-panel-content-no-v-scroll {
+	overflow-y: hidden !important;
+}
+
+.v-panel-content-glycan_canvas .v-verticallayout {
+	background-color: #CCF
+}
+
+.v-horizontallayout-2nd_linkage_panel {
+	width: 200px !important;
+}
+
+.v-horizontallayout-2nd_linkage_panel>div {
+	width: 200px !important;
+}
+
+.v-horizontallayout-2nd_linkage_panel>div  div {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.v-horizontallayout-1st_linkage_panel {
+	width: 370px !important;
+}
+
+.v-horizontallayout-1st_linkage_panel>div {
+	width: 370px !important;
+}
+
+.v-horizontallayout-1st_linkage_panel>div  div {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.gwt-RichTextToolbar {
+	display: none;
+}
+
+.v-view {
+	width: 100%;
+	height:100%;
+	
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	
+	overflow-y:hidden;
+	overflow-x:hidden;	
+}
+
+.v-generated-body {
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-top-level-container {
+	
+}
+
+.igg-content-level-container {
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
+    width:100%;
+    max-height:95%;
+    height:95% !important;
+    
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.igg-header {
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
+    width:auto;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.igg-footer {
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
+    width:100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.igg-default-page-layout {
+	background-color: white;
+	padding: 8pt;
+	
+	box-sizing:	border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-header-one {
+	font-size: large;
+	font-weight: bold;
+	margin: 2pt;
+	text-decoration: underline;
+}
+
+.igg-header-two {
+	font-size: meduim;
+	font-weight: bold;
+	margin: 2pt;
+	text-decoration: underline;
+}
+
+.igg-header-three {
+	font-size: meduim;
+	margin: 2pt;
+}
+
+.igg-structure-panel {
+	border: 1pt;
+	border-style: solid;
+	border-color: maroon;;
+	background-color: #FFFFCC;
+	padding: 8pt;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    margin-left:25px !important;
+    margin-right:25px !important;
+}
+
+.igg-composition-panel {
+	margin-left:25px !important;
+    margin-right:25px !important;
+}
+
+.igg-bc-panel {
+	margin: 2pt;
+}
+
+.igg-bc-panel ul{
+	padding-left:25px;
+}
+
+.igg-bc-panel li{
+	list-style-position: inside;
+}
+
+.igg-left-panel {
+	width: 80% !important;
+	overflow-y:auto !important;
+	overflow-x:none !important;
+	float:left;
+}
+
+.igg-left-panel > div {
+	width:100% !important;
+	box-sizing: border-box !important;
+	-moz-box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+    
+}
+
+.igg-right-panel {
+	margin: 2pt;
+	width: auto !important;
+	height: auto !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-right-panel > div {
+	width:100% !important;
+	box-sizing: border-box !important;
+	-moz-box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+    
+}
+
+.v-csslayout {
+	height:100%;	
+	box-sizing:inherit;
+	-moz-box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+	overflow-y:inherit;
+	overflow-x:inherit;
+	width:inherit;
+}
+
+.v-csslayout-margin {
+	height:100%;	
+	box-sizing:inherit;
+	-moz-box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+	overflow-y:inherit;
+	overflow-x:inherit;
+	width:inherit;
+}
+
+.v-csslayout-container {
+	height:100%;	
+	box-sizing:inherit;
+	-moz-box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+	overflow-y:inherit;
+	overflow-x:inherit;
+	width:inherit;
+}
+
+.v-panel {
+	height:100%;	
+	box-sizing:inherit;
+	-moz-box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+	overflow-y:inherit;
+	overflow-x:inherit;
+	width:inherit;
+}
+
+.v-panel-content {
+	height:100%;
+	box-sizing:inherit;
+	-moz-box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+	overflow-y:inherit;
+	overflow-x:inherit;
+	width:inherit;
+}
+
+.v-panel-content-igg-default-content-panel {
+	overflow-y:inherit !important;
+	overflow-x:inherit !important;
+}
+
+.igg-auto-fit-panel {
+	height:auto;	
+}
+
+.igg-auto-fit-label {
+	white-space: normal;
+	
+	margin:0;
+	
+	line-height: 1.7;  /* Override the default v-label, value of 18px*/
+}
+
+.igg-glycan-sequence-table {
+	width:inherit;
+	height:100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-glycan-sequence-table .v-table-body {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-glycan-sequence-table .v-table-body-noselection {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-glycan-sequence-table .v-table-header-wrap {
+	width:inherit !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-glycan-sequence-table .igg-reference-panel {
+	height:100px;
+	overflow-y:auto;	
+}
+
+.igg-glycan-sequence-table .igg-glycan-image {
+	
+}
+
+
+.igg-structure-search-layout {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+    overflow:hidden;
+}
+
+.igg-search-tabsheet {
+	width: 100% !important;
+	height: 100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.v-tabsheet-content-igg-search-tabsheet {
+	width: 100% !important;
+	height: 100% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.v-tabsheet-content-igg-search-tabsheet .v-tabsheet-tabsheetpanel {
+	width: 100% !important;
+	height: 100% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.v-tabsheet-content-igg-search-tabsheet .v-tabsheet-tabsheetpanel > div{
+	width: 100% !important;
+	height: 100% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-glycan-builder {
+	width: 100% !important;
+	height: 100% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-glycan-builder-toolbar-panel {
+	width: 100% !important;
+	height: auto !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    background-color:white;
+}
+
+.igg-glycan-builder-linkage-toolbar-panel {
+	width: 100% !important;
+	height: auto !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-glycan-builder-canvas-container {
+	width: 100% !important;
+	height: 100% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    overflow:auto;
+    background-color: #CCF;
+}
+
+.igg-clickable{
+	cursor:pointer;
+	cursor:hand;
+}
+
+.igg-center {
+ display:inline;
+ margin-left:auto;
+ margin-right:auto;
+}
+
+
+/* 
+	- Glycan images placed on the right panel will almost always be to large.
+	- They are therefore scaled by the parent containers width.
+	- Note that we don't scale on the server, as we are trying to create a fluid 
+	  layout.
+*/
+.igg-right-panel .igg-glycan-linkage-image img{
+	width:100%;	
+}

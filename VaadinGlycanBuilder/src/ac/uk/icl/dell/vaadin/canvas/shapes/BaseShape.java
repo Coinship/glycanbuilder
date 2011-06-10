@@ -460,8 +460,6 @@ public abstract class BaseShape {
 				yPos=y2; last=true;
 			}
 			
-			System.err.println("linto: "+xPos+"|"+yPos);
-			
 			canvas.lineTo(xPos, yPos);
 			
 			xPos+=xGap;
@@ -470,7 +468,6 @@ public abstract class BaseShape {
 			if(last){
 				break;
 			}else{
-				System.err.println("movto: "+xPos+"|"+yPos);
 				canvas.moveTo(xPos, yPos);
 			}
 		}

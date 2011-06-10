@@ -26,6 +26,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.datatransfer.Transferable;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,7 +58,9 @@ import org.eurocarbdb.application.glycanbuilder.SVGUtils;
 import org.eurocarbdb.application.glycanbuilder.TerminalDictionary;
 import org.eurocarbdb.application.glycanbuilder.TextUtils;
 
-public class GlycanCanvas implements DocumentChangeListener{
+public class GlycanCanvas implements DocumentChangeListener, Serializable{
+	private static final long serialVersionUID=3243669659305552904L;
+	
 	protected HashMap<Rectangle,Residue> boundingBoxes=new HashMap<Rectangle,Residue>();
 	protected BBoxManager theBBoxManager;
 	protected PositionManager posManager;

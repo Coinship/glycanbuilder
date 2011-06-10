@@ -290,7 +290,7 @@ public class GlycoCTParser implements GlycanParser {
     }
     
 
-    static private Glycan fromSugar(Sugar sugar, MonosaccharideConversion converter, GlycoVisitorFromGlycoCT visitor, MassOptions default_mass_opt, boolean tolerate_unknown_residues) throws Exception {    
+    static public Glycan fromSugar(Sugar sugar, MonosaccharideConversion converter, GlycoVisitorFromGlycoCT visitor, MassOptions default_mass_opt, boolean tolerate_unknown_residues) throws Exception {    
 
     if( sugar==null ) 
         return null;    

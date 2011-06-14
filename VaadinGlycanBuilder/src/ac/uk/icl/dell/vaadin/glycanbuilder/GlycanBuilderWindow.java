@@ -19,7 +19,8 @@
 */
 package ac.uk.icl.dell.vaadin.glycanbuilder;
 
-import ac.uk.icl.dell.vaadin.menu.IGGHeaderMenu;
+
+import ac.uk.icl.dell.vaadin.SimpleFileMenu;
 
 import com.vaadin.Application;
 import com.vaadin.ui.CssLayout;
@@ -34,7 +35,7 @@ public class GlycanBuilderWindow extends Application{
 		setMainWindow(mainWindow);
 		setTheme("ucdb_2011theme");
 		
-		IGGHeaderMenu menu=new IGGHeaderMenu();
+		SimpleFileMenu menu=new SimpleFileMenu();
 		
 		GlycanBuilder builder=new GlycanBuilder(menu);
 		

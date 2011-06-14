@@ -21,8 +21,8 @@ package ac.uk.icl.dell.vaadin.navigator7;
 
 import org.vaadin.navigator7.window.PageWrapper;
 
+import ac.uk.icl.dell.vaadin.SimpleFileMenu;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
-import ac.uk.icl.dell.vaadin.menu.IGGHeaderMenu;
 import ac.uk.icl.dell.vaadin.navigator7.common.HeaderFooterFluidAppLevelWindow;
 
 import com.vaadin.ui.Component;
@@ -31,7 +31,7 @@ import com.vaadin.ui.Label;
 public class IGGAppLevelWindow  extends HeaderFooterFluidAppLevelWindow{
 	private static final long serialVersionUID=1916786084379459856L;
 	
-	private IGGHeaderMenu theMainMenu;
+	private SimpleFileMenu theMainMenu;
 
 	public IGGAppLevelWindow(){
 		setSizeFull();
@@ -41,7 +41,7 @@ public class IGGAppLevelWindow  extends HeaderFooterFluidAppLevelWindow{
 	
 	@Override
 	protected Component createHeader() {
-		return theMainMenu=new IGGHeaderMenu();
+		return theMainMenu=new SimpleFileMenu();
 	}
 
 	@Override

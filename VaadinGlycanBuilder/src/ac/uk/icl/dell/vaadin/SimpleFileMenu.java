@@ -17,18 +17,21 @@
 *   
 *   @author David R. Damerell (david@nixbioinf.org)
 */
-package ac.uk.icl.dell.vaadin.menu;
+package ac.uk.icl.dell.vaadin;
+
+import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
+import ac.uk.icl.dell.vaadin.menu.DynamicMenuImpl;
 
 import com.vaadin.ui.MenuBar;
 
-public class IGGHeaderMenu extends DynamicMenuImpl implements ApplicationMenu{
+public class SimpleFileMenu extends DynamicMenuImpl implements ApplicationMenu{
 	private static final long serialVersionUID=4968428219495753712L;
 	
 	private MenuItem fileMenuItem;
 	private MenuItem editMenuItem;
 	private MenuItem viewMenuItem;
 	
-	public IGGHeaderMenu(){
+	public SimpleFileMenu(){
 		fileMenuItem=addItem("File",null);
 		editMenuItem=addItem("Edit",null);
 		viewMenuItem=addItem("View",null);

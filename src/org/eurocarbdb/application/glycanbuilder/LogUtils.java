@@ -33,21 +33,20 @@ import org.apache.log4j.Logger;
 */
 
 public class LogUtils {
-
-    private static boolean graphical_report = false;
-    private static Frame theOwner = null;    
-    private static boolean hasLastError = false;
-    private static String lastError = "";
-    private static String lastErrorStack = "";
-  
     private LogUtils() {}
+    
+    private static LoggerStorageIndex loggerStorageIndex=new LoggerStorageIndexImpl();
+    
+    public static void setLookupLogger(LoggerStorageIndex loggerStorageIndex){
+    	LogUtils.loggerStorageIndex=loggerStorageIndex;
+    }
 
     /**
        Specify if the logger should display a dialog with a report of
        the error
      */
     static public void setGraphicalReport(boolean flag) {
-    graphical_report = flag;
+    	loggerStorageIndex.getLogger().setGraphicalReport(flag);
     }
 
     /**
@@ -55,7 +54,7 @@ public class LogUtils {
        with a report of the error
      */
     static public boolean getGraphicReport() {
-    return graphical_report;
+    	return loggerStorageIndex.getLogger().getGraphicalReport();
     }
     
 
@@ -63,30 +62,30 @@ public class LogUtils {
        Set the frame used to display the report dialog
      */
     static public void setReportOwner(Frame owner) {
-    theOwner = owner;
+    	loggerStorageIndex.getLogger().setFrameOwner(owner);
     }
 
     /**
        Return the frame used to display the report dialog
      */
     static public Frame getReportOwner() {
-    return theOwner;
+    	return loggerStorageIndex.getLogger().getFrameOwner();
     }
 
     /**
        Clear the information relative to the last occurred error
      */
     static public void clearLastError() {
-    hasLastError = false;
-    lastError = "";
-    lastErrorStack = "";
+    	loggerStorageIndex.getLogger().setHasLastError(false);
+    	loggerStorageIndex.getLogger().setLastError("");
+    	loggerStorageIndex.getLogger().setLastStackError("");
     }
 
     /**
        Return <code>true</code> if an error has been recently reported
      */
     static public boolean hasLastError() {
-    return hasLastError;
+    	return loggerStorageIndex.getLogger().getHasLastError();
     }
 
     /**
@@ -94,7 +93,7 @@ public class LogUtils {
        reported
      */
     static public String getLastError() {
-    return lastError;
+    	return loggerStorageIndex.getLogger().getLastError();
     }
 
     /**
@@ -102,7 +101,7 @@ public class LogUtils {
        error reported
      */
     static public String getLastErrorStack() {
-    return lastErrorStack;
+    	return loggerStorageIndex.getLogger().getLastStackError();
     }
 
     /**
@@ -117,9 +116,9 @@ public class LogUtils {
        a given exception
      */
     static public String getErrorStack(Exception e) {
-    StringWriter sw = new StringWriter();
-    e.printStackTrace(new PrintWriter(sw));       
-    return sw.getBuffer().toString();
+    	StringWriter sw = new StringWriter();
+    	e.printStackTrace(new PrintWriter(sw));       
+    	return sw.getBuffer().toString();
     }
 
     /**
@@ -127,25 +126,29 @@ public class LogUtils {
        exception. Show a report dialog if needed.
      */
     static public void report(Exception e) {
-    if( e==null ) {
-        clearLastError();
-        return;
-    }
+    	if( e==null ) {
+    		clearLastError();
+    		return;
+    	}
         
-    hasLastError = true;
+    	loggerStorageIndex.getLogger().setHasLastError(true);
+    	loggerStorageIndex.getLogger().setLastError(getError(e));
+    	
+    	if(loggerStorageIndex.getLogger().getLastError()==null){
+    		loggerStorageIndex.getLogger().setLastError("");
+    	}
+    	
+    	loggerStorageIndex.getLogger().setLastStackError(getErrorStack(e));
+    
+    	if(loggerStorageIndex.getLogger().getLastStackError()==null){
+    		loggerStorageIndex.getLogger().setLastStackError("");
+    	}
 
-    lastError = getError(e);
-    if( lastError==null )
-        lastError = "";
 
-    lastErrorStack = getErrorStack(e);
-    if( lastErrorStack==null )
-        lastErrorStack = "";
-
-    if( graphical_report ) {
-        new ReportDialog(theOwner,lastErrorStack).setVisible(true);
-    } else {
-        Logger.getLogger( LogUtils.class ).error("Error in GlycanBuilder",e);
-    }
+    	if(loggerStorageIndex.getLogger().getGraphicalReport()) {
+    		new ReportDialog(loggerStorageIndex.getLogger().getFrameOwner(),loggerStorageIndex.getLogger().getLastStackError()).setVisible(true);
+    	} else {
+    		Logger.getLogger( LogUtils.class ).error("Error in GlycanBuilder",e);
+    	}
     }
 }

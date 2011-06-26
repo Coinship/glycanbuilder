@@ -1329,6 +1329,10 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 
 		return str;
 	}
+	
+	public void fromString(String str, String format) throws Exception{
+		setStructures(parseString(str,GlycanParserFactory.getParser(format)),false);
+	}
 
 	/**
 	 * Add the structures parsed from the input string.

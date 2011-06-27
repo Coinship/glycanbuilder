@@ -433,10 +433,18 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 	 * Return the structures encoded into a string in the internal format
 	 */
 	public String getDocument() {
+		if(theDoc.getNoStructures()==0){
+			return "";
+		}
+		
 		return theDoc.toString();
 	}
 	
 	public String getDocument(String format){
+		if(theDoc.getNoStructures()==0){
+			return "";
+		}
+		
 		return theDoc.toString(format);
 	}
 	

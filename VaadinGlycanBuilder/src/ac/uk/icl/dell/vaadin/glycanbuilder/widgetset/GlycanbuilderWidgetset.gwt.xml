@@ -22,4 +22,8 @@
     <inherits name="org.vaadin.hezamu.canvas.widgetset.CanvastestWidgetset" />
 
     <inherits name="org.vaadin.hene.popupbutton.widgetset.PopupbuttonWidgetset" />
+
+    <inherits name="ac.uk.icl.dell.vaadin.enhancedcanvas.demo.widgetset.CanvastestWidgetset" />
+
+    <inherits name="ac.uk.icl.dell.gwt.EnhancedcanvasWidgetset" />
 </module>

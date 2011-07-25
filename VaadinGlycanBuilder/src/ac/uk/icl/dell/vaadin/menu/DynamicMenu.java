@@ -33,4 +33,12 @@ public interface DynamicMenu{
 	public void restoreState(MenuBar.MenuItem item, Object obj);
 	
 	public void removeMenuItem(MenuBar.MenuItem item);
+	
+	public void setup();
+
+	boolean isModified();
+
+	void refresh();
+
+	void setModified();
 }

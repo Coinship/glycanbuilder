@@ -25,10 +25,32 @@ import java.util.List;
 
 import com.vaadin.ui.MenuBar;
 
-public class DynamicMenuImpl extends MenuBar implements DynamicMenu{
+public abstract class DynamicMenuImpl extends MenuBar implements DynamicMenu{
 	private static final long serialVersionUID=-1297565156689183635L;
+	protected boolean modified=false;
 	
 	HashMap<Object,HashSet<MenuItem>> stateMap=new HashMap<Object,HashSet<MenuItem>>();
+	
+	@Override
+	public void setModified(){
+		modified=true;
+	}
+	
+	@Override
+	public boolean isModified(){
+		return modified;
+	}
+	
+	@Override
+	public void refresh(){
+		if(modified){
+			removeItems();
+
+			setup();
+
+			modified=false;
+		}
+	}
 	
 	@Override
 	public synchronized void saveState(MenuItem item, Object obj) {

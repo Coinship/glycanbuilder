@@ -69,6 +69,7 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 	
 	public GlycanBuilder(ApplicationMenu appMenu){
 		theAppMenu=appMenu;
+		theAppMenu.setModified();
 		
 		setSizeUndefined();
 		

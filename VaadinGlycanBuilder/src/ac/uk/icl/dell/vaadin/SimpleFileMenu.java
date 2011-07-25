@@ -32,13 +32,7 @@ public class SimpleFileMenu extends DynamicMenuImpl implements ApplicationMenu{
 	private MenuItem viewMenuItem;
 	
 	public SimpleFileMenu(){
-		fileMenuItem=addItem("File",null);
-		editMenuItem=addItem("Edit",null);
-		viewMenuItem=addItem("View",null);
-		
-		fileMenuItem.setVisible(false);
-		editMenuItem.setVisible(false);
-		viewMenuItem.setVisible(false);
+		setup();
 	}
 
 	@Override
@@ -59,5 +53,16 @@ public class SimpleFileMenu extends DynamicMenuImpl implements ApplicationMenu{
 	@Override
 	public MenuBar getMenuBar() {
 		return this;
+	}
+
+	@Override
+	public void setup() {
+		fileMenuItem=addItem("File",null);
+		editMenuItem=addItem("Edit",null);
+		viewMenuItem=addItem("View",null);
+		
+		fileMenuItem.setVisible(false);
+		editMenuItem.setVisible(false);
+		viewMenuItem.setVisible(false);
 	}
 }

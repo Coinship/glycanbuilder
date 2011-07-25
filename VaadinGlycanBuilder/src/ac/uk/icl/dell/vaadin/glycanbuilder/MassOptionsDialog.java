@@ -45,7 +45,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 	GridLayout layout=new GridLayout(11,11);
 	Collection<Glycan> glycans;
 	
-	MassOptionsDialog(Collection<Glycan> glycans, MassOptions massOptions){
+	public MassOptionsDialog(Collection<Glycan> glycans, MassOptions massOptions){
 		setContent(layout);
 		this.glycans=glycans;
 		

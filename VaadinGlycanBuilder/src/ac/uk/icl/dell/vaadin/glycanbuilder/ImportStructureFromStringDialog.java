@@ -52,6 +52,9 @@ public class ImportStructureFromStringDialog extends Panel {
 		initComponents();
 		installClickListeners();
 		layoutComponents();
+		
+		setSizeUndefined();
+		getContent().setSizeUndefined();
 	}
 	private String sequence;
 	private void initComponents(){
@@ -72,6 +75,8 @@ public class ImportStructureFromStringDialog extends Panel {
 		});
 		
 		ok=new NativeButton("Import");
+		
+		
 	}
 	
 	private void installClickListeners(){

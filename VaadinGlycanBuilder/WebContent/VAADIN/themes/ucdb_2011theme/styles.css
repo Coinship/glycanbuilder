@@ -393,6 +393,7 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+    background-color:white;
 }
 
 .igg-glycan-builder-canvas-container {
@@ -403,6 +404,20 @@
     -webkit-box-sizing: border-box;
     overflow:auto;
     background-color: #CCF;
+}
+
+.igg-glycan-builder-canvas-addbar-container {
+	width: 100% !important;
+	height: auto !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    overflow:auto;
+    background-color: #CCF;
+}
+
+.v-canvas {
+	outline: 0;
 }
 
 .igg-clickable{
@@ -425,4 +440,19 @@
 */
 .igg-right-panel .igg-glycan-linkage-image img{
 	width:100%;	
+}
+
+.igg-mass-options-panel {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+.igg-mass-options-panel-item {
+/* 	padding-right: 3px; */
+/* 	padding-top:3px;	 */
 }

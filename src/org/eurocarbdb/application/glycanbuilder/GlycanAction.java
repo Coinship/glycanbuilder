@@ -37,6 +37,7 @@ import com.opensymphony.webwork.components.URL;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.*;
 
 /**
@@ -90,6 +91,7 @@ public class GlycanAction extends AbstractAction {
 			String accelerator, ActionListener l) {
 		setEnabled(true);
 		putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
+	
 		putValue(Action.ACTION_COMMAND_KEY, action);
 		putValue(Action.MNEMONIC_KEY, mnemonic);
 		putValue(Action.NAME, label);

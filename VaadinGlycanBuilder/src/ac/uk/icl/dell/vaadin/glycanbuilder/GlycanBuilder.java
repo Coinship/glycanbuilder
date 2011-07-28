@@ -163,6 +163,9 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		canvasLayout.setWidth("100%");
 		canvasLayout.setHeight("25px");
 		
+		CssLayout layout=new CssLayout();
+		layout.addStyleName("igg-glycan-builder-canvas-addbar-container");
+		
 		theResidueCanvas=new VaadinGlycanCanvas();
 		theResidueCanvas.setBackgroundColor("#CCF");
 		theResidueCanvas.setWidth("100%");
@@ -171,12 +174,15 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		theResidueCanvas.automaticHeightAdjust(false);
 		theResidueCanvas.theCanvas.theGlycanRenderer.getGraphicOptions().MARGIN_TOP=2;
 		
-		canvasLayout.addComponent(theResidueCanvas);
+		layout.addComponent(theResidueCanvas);
+		
+		//canvasLayout.addComponent(layout);
 		
 		//panel.setContent(canvasLayout);
 		//panel.setScrollable(false);
 		
-		addComponent(theResidueCanvas);
+		//addComponent(theResidueCanvas);
+		addComponent(layout);
 		
 		final VaadinGlycanCanvas finalCanvas=theResidueCanvas;
 		finalCanvas.enableResidueToolBarMode();

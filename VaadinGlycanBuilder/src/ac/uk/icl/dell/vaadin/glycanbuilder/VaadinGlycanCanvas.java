@@ -218,7 +218,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		importWindow.setCaption("Import from sequence");
-		importWindow.setWidth("400px");
+		//importWindow.setWidth("400px");
 		
 		final CanvasImport canvasImport=new CanvasImport();
 		importWindow.getContent().addComponent(canvasImport);
@@ -244,6 +244,9 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		});
 		
+		importWindow.setSizeUndefined();
+		importWindow.getContent().setSizeUndefined();
+		
 		final Window importFromStringWindow=new Window(){
 			/**
 			 * 
@@ -255,7 +258,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		importFromStringWindow.setCaption("Import sequence from string");
-		importFromStringWindow.setWidth("400px");
+		//importFromStringWindow.setWidth("400px");
 		
 		final ImportStructureFromStringDialog importStructureStringDialog=new ImportStructureFromStringDialog(theCanvas);
 		
@@ -280,6 +283,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		importFromStringWindow.center();
 		importFromStringWindow.setVisible(false);
 		
+		importFromStringWindow.setSizeUndefined();
+		importFromStringWindow.getContent().setSizeUndefined();
 		
 		@SuppressWarnings("unused")
 		MenuBar.MenuItem importFromStringMenu=parent.addItem("Import from string", new Command(){
@@ -763,8 +768,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		massOptionsDialog.setSizeUndefined();
 		massOptionsDialog.getContent().setSizeUndefined();
 	}
-	
-	
 	
 	public void enableResidueToolBarMode(){
 		theCanvas.theGlycanRenderer.setRenderMode(GlycanRendererMode.TOOLBAR);

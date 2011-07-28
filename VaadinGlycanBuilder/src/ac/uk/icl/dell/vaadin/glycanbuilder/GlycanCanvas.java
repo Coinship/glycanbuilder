@@ -389,11 +389,17 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 			if (t != null
 					&& t.isDataFlavorSupported(GlycanSelection.glycoFlavor)) {
 				String content = TextUtils.consume((InputStream) t.getTransferData(GlycanSelection.glycoFlavor));
-				for(Residue selectedResidue:selectedResidues){
-					theDoc.addStructures(selectedResidue, theDoc
-							.parseString(content));
-				}
 				
+				if(selectedResidues.size()==0){
+					for(Glycan glycan:theDoc.parseString(content)){
+						theDoc.addStructure(glycan);
+					}
+				}else{
+					for(Residue selectedResidue:selectedResidues){
+						theDoc.addStructures(selectedResidue, theDoc
+								.parseString(content));
+					}
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -743,7 +749,7 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	 * Add a bracket residue to the structure with the focus
 	 */
 	public void addBracket() {
-		Residue bracket = theDoc.addBracket(getCurrentResidue());
+		Residue bracket = theDoc.addBracket(getSelectedResiduesList().iterator().next());
 		if (bracket != null){
 			setSelection(bracket);
 			documentUpdated();

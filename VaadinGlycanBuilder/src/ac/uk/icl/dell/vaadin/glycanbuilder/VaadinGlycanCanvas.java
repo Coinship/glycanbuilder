@@ -737,13 +737,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		((VerticalLayout) massOptionsDialog.getContent()).setComponentAlignment(dialog, Alignment.MIDDLE_CENTER);
 		
 		massOptionsDialog.setVisible(false);
-		massOptionsDialog.setWidth("600px");
-		massOptionsDialog.setHeight("400px");
-		
-		
-		
+		//massOptionsDialog.setWidth("600px");
+		//massOptionsDialog.setHeight("400px");
 		
 		massOptionsDialog.center();
+		
+		final Boolean attached=false;
 		
 		parent.addItem("Mass options",new Command(){
 			/**
@@ -753,10 +752,16 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				getWindow().addWindow(massOptionsDialog);
+				if(massOptionsDialog.getParent()==null){
+					getWindow().addWindow(massOptionsDialog);
+				}
+				
 				massOptionsDialog.setVisible(true);	
 			}
 		});
+		
+		massOptionsDialog.setSizeUndefined();
+		massOptionsDialog.getContent().setSizeUndefined();
 	}
 	
 	

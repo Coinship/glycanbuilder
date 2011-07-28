@@ -42,7 +42,7 @@ import com.vaadin.ui.TextField;
 public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.MassInput{
 	private static final long serialVersionUID=8707959087794407560L;
 	
-	GridLayout layout=new GridLayout(11,11);
+	GridLayout layout=new GridLayout(12,12);
 	Collection<Glycan> glycans;
 	
 	public MassOptionsDialog(Collection<Glycan> glycans, MassOptions massOptions){
@@ -260,6 +260,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 	Select naIonCountSelect, exNAIonCountSelect;
 	Select liIonCountSelect, exLIIonCountSelect;
 	Select kIonCountSelect, exKIonCountSelect;
+	Select clIonCountSelect, exClIonCountSelect;
 	private MassOptionsConfigurator config;
 	
 	@Override
@@ -316,6 +317,11 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		exKIonCountSelect=new Select("ext. #K ions");
 		exKIonCountSelect.setNewItemsAllowed(false);
 		
+		clIonCountSelect=new Select("#Cl ions");
+		clIonCountSelect.setNewItemsAllowed(false);
+		exClIonCountSelect=new Select("ext. #Cl ions");
+		exClIonCountSelect.setNewItemsAllowed(false);
+		
 		//column,row
 		layout.addComponent(new Label("Isotope"),0,0,0,0);
 		layout.addComponent(isotopeSelect,1,0,1,0);
@@ -330,7 +336,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		layout.addComponent(new Label("mass"),1,4,1,4);
 		layout.addComponent(otherMassField,2,4,2,4);
 		
-		layout.addComponent(new Label("Negative mode"),0,5,0,5);
+		layout.addComponent(new Label("Substract mode"),0,5,0,5);
 		layout.addComponent(negativeModeField,1,5,1,5);
 		
 		layout.addComponent(hIonCountSelect,0,6,0,6);
@@ -346,6 +352,10 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		layout.addComponent(kIonCountSelect,0,9,0,9);
 		
 		layout.addComponent(exKIonCountSelect,1,9,1,9);
+		
+		layout.addComponent(clIonCountSelect,0,10,0,10);
+		
+		layout.addComponent(exClIonCountSelect,1,10,1,10);
 		
 		NativeButton update=new NativeButton("Save");
 		update.addListener(new ClickListener(){
@@ -363,7 +373,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 			}
 		});
 		
-		layout.addComponent(update,0,10,0,10);
+		layout.addComponent(update,0,11,0,11);
 	}
 	
 	public void addAllItems(AbstractSelect select,Object [] objects){
@@ -394,5 +404,35 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		for(MassOptionListener listener:massOptionListeners){
 			listener.massOptions(massOptions,structures);
 		}
+	}
+
+	@Override
+	public int getCLIonCount() {
+		return MassOptionsDialog.getValueAsInt(clIonCountSelect);
+	}
+
+	@Override
+	public int getexCLIonCount() {
+		return MassOptionsDialog.getValueAsInt(exClIonCountSelect);
+	}
+
+	@Override
+	public void setCLIonRange(Object[] list) {
+		addAllItems(clIonCountSelect,list);
+	}
+
+	@Override
+	public void setexCLIonRange(Object[] list) {
+		addAllItems(exClIonCountSelect,list);
+	}
+
+	@Override
+	public void setCLIonCount(int count) {
+		clIonCountSelect.setValue(count);
+	}
+
+	@Override
+	public void setexCLIonCount(int count) {
+		exClIonCountSelect.setValue(count);
 	}
 }

@@ -211,6 +211,8 @@ public class IonCloud {
 			return this.and(charge, MassUtils.na_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_K))
 			return this.and(charge, MassUtils.k_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_CL))
+			return this.and(charge, MassUtils.cl_ion.getMass(), quantity);
 		return this.clone();
 	}
 
@@ -226,6 +228,8 @@ public class IonCloud {
 			add(charge, MassUtils.na_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_K))
 			add(charge, MassUtils.k_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_CL))
+			add(charge, MassUtils.cl_ion.getMass(), quantity);
 	}
 
 	/**
@@ -240,6 +244,8 @@ public class IonCloud {
 			set(charge, MassUtils.na_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_K))
 			set(charge, MassUtils.k_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_CL))
+			set(charge, MassUtils.cl_ion.getMass(), quantity);
 	}
 
 	/**
@@ -268,8 +274,6 @@ public class IonCloud {
 		if (ions.get(charge_name) == 0)
 			ions.remove(charge_name);
 
-		
-		
 		// update count
 		ionsRelCount += quantity;
 		ionsNum = Math.abs(ionsRelCount);
@@ -311,6 +315,10 @@ public class IonCloud {
 			this.set(MassOptions.ION_K, other.get(MassOptions.ION_K));
 			changed = true;
 		}
+		if (!skip_undetermined || other.get(MassOptions.ION_CL) != 999) {
+			this.set(MassOptions.ION_CL, other.get(MassOptions.ION_CL));
+			changed = true;
+		}
 
 		return changed;
 	}
@@ -341,6 +349,7 @@ public class IonCloud {
 		this.merge(MassOptions.ION_NA, other);
 		this.merge(MassOptions.ION_LI, other);
 		this.merge(MassOptions.ION_K, other);
+		this.merge(MassOptions.ION_CL, other);
 	}
 
 	/**
@@ -403,6 +412,8 @@ public class IonCloud {
 				ret.add(MassUtils.na_ion, num);
 			else if (charge.equals(MassOptions.ION_K))
 				ret.add(MassUtils.k_ion, num);
+			else if (charge.equals(MassOptions.ION_CL))
+				ret.add(MassUtils.cl_ion, num);
 		}
 		return ret;
 	}
@@ -508,5 +519,4 @@ public class IonCloud {
 
 		return sb.toString();
 	}
-
 }

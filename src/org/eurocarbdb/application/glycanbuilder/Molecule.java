@@ -98,7 +98,8 @@ public class Molecule {
     if( i!=init.length() )
         throw new Exception("Invalid format: " + init);
 
-    if( charges>0 ) {
+    if( charges!=0) {
+    	//negative charges will add mass and positive remove mass (obvious but worth stating)
         main_mass -= charges * MassUtils.electron.getMainMass();
         avg_mass -= charges * MassUtils.electron.getAverageMass();    
     }

@@ -74,6 +74,9 @@ public class MassUtils {
 	/** A chlorine ion. */
 	public static Molecule cl_ion;
 
+	/** A H2PO4 ion */
+	public static Molecule h2po4_ion;
+	
 	static {
 		atoms = new HashMap<String, Atom>();
 		atom_main_isotope = new HashMap<Atom, Isotope>();
@@ -98,6 +101,8 @@ public class MassUtils {
 			na_ion = new Molecule("Na+");
 			k_ion = new Molecule("K+");
 			cl_ion = new Molecule("Cl-");
+			
+			h2po4_ion = new Molecule("H2PO4-");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);

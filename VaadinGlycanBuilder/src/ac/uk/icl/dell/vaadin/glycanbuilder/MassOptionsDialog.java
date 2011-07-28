@@ -42,7 +42,7 @@ import com.vaadin.ui.TextField;
 public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.MassInput{
 	private static final long serialVersionUID=8707959087794407560L;
 	
-	GridLayout layout=new GridLayout(12,12);
+	GridLayout layout=new GridLayout(13,13);
 	Collection<Glycan> glycans;
 	
 	public MassOptionsDialog(Collection<Glycan> glycans, MassOptions massOptions){
@@ -261,6 +261,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 	Select liIonCountSelect, exLIIonCountSelect;
 	Select kIonCountSelect, exKIonCountSelect;
 	Select clIonCountSelect, exClIonCountSelect;
+	Select h2po4IonCountSelect, exH2po4IonCountSelect;
 	private MassOptionsConfigurator config;
 	
 	@Override
@@ -322,6 +323,11 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		exClIonCountSelect=new Select("ext. #Cl ions");
 		exClIonCountSelect.setNewItemsAllowed(false);
 		
+		h2po4IonCountSelect=new Select("#H2PO4 ions");
+		h2po4IonCountSelect.setNewItemsAllowed(false);
+		exH2po4IonCountSelect=new Select("ext. #H2PO4 ions");
+		exH2po4IonCountSelect.setNewItemsAllowed(false);
+		
 		//column,row
 		layout.addComponent(new Label("Isotope"),0,0,0,0);
 		layout.addComponent(isotopeSelect,1,0,1,0);
@@ -357,6 +363,10 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		
 		layout.addComponent(exClIonCountSelect,1,10,1,10);
 		
+		layout.addComponent(h2po4IonCountSelect,0,11,0,11);
+		
+		layout.addComponent(exH2po4IonCountSelect,1,11,1,11);
+		
 		NativeButton update=new NativeButton("Save");
 		update.addListener(new ClickListener(){
 			private static final long serialVersionUID=-6188200798103156691L;
@@ -373,7 +383,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 			}
 		});
 		
-		layout.addComponent(update,0,11,0,11);
+		layout.addComponent(update,0,12,0,12);
 	}
 	
 	public void addAllItems(AbstractSelect select,Object [] objects){
@@ -434,5 +444,35 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 	@Override
 	public void setexCLIonCount(int count) {
 		exClIonCountSelect.setValue(count);
+	}
+	
+	@Override
+	public int getH2PO4IonCount() {
+		return MassOptionsDialog.getValueAsInt(h2po4IonCountSelect);
+	}
+
+	@Override
+	public int getexH2PO4IonCount() {
+		return MassOptionsDialog.getValueAsInt(exH2po4IonCountSelect);
+	}
+
+	@Override
+	public void setH2PO4IonRange(Object[] list) {
+		addAllItems(h2po4IonCountSelect,list);
+	}
+
+	@Override
+	public void setexH2PO4IonRange(Object[] list) {
+		addAllItems(exH2po4IonCountSelect,list);
+	}
+
+	@Override
+	public void setH2PO4IonCount(int count) {
+		h2po4IonCountSelect.setValue(count);
+	}
+
+	@Override
+	public void setexH2PO4IonCount(int count) {
+		exH2po4IonCountSelect.setValue(count);
 	}
 }

@@ -139,11 +139,13 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
         field_no_li_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,10,true)));
     field_no_k_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,10,true)));
     field_no_cl_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,10,true)));
+    field_no_h2po4_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,10,true)));
 
         field_ex_na_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,50,true)));
         field_ex_li_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,50,true)));
     field_ex_k_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,50,true)));
     field_ex_cl_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,50,true)));
+    field_ex_h2po4_ions.setModel(new javax.swing.SpinnerListModel(generateValues(0,50,true)));
 
     // set selections
     field_isotope.setSelectedItem(common_options.ISOTOPE);
@@ -172,11 +174,13 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     setValue(field_no_li_ions,Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_LI)));
     setValue(field_no_k_ions,Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_K)));
     setValue(field_no_cl_ions,Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_CL)));
+    setValue(field_no_h2po4_ions,Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_H2PO4)));
 
     setValue(field_ex_na_ions,common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_NA));
     setValue(field_ex_li_ions,common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_LI));
     setValue(field_ex_k_ions,common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_K));
     setValue(field_ex_cl_ions,common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_CL));
+    setValue(field_ex_h2po4_ions,common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_H2PO4));
     }
 
 
@@ -193,10 +197,12 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     tp.addComponent(field_no_li_ions);
     tp.addComponent(field_no_k_ions);
     tp.addComponent(field_no_cl_ions);
+    tp.addComponent(field_no_h2po4_ions);
     tp.addComponent(field_ex_na_ions);
     tp.addComponent(field_ex_li_ions);
     tp.addComponent(field_ex_k_ions);
     tp.addComponent(field_ex_cl_ions);
+    tp.addComponent(field_ex_h2po4_ions);
     tp.addComponent(button_ok);
     tp.addComponent(button_cancel);
     this.setFocusTraversalPolicy(tp);
@@ -240,6 +246,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     common_options.ION_CLOUD.set(MassOptions.ION_LI,multiplier*getValue(field_no_li_ions));
     common_options.ION_CLOUD.set(MassOptions.ION_K,multiplier*getValue(field_no_k_ions));
     common_options.ION_CLOUD.set(MassOptions.ION_CL,multiplier*getValue(field_no_cl_ions));
+    common_options.ION_CLOUD.set(MassOptions.ION_H2PO4,multiplier*getValue(field_no_h2po4_ions));
     
     //Number of Hydrogens that are lost because of neutral exchanges
     common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H,-getValue(field_ex_na_ions)-getValue(field_ex_li_ions)-getValue(field_ex_k_ions));
@@ -247,6 +254,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_LI,getValue(field_ex_li_ions));
     common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_K,getValue(field_ex_k_ions));
     common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_CL,getValue(field_ex_cl_ions));
+    common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H2PO4,getValue(field_ex_h2po4_ions));
     return true;
     }
     
@@ -286,19 +294,23 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabelCLNo = new javax.swing.JLabel();
+        jLabelH2PO4No = new javax.swing.JLabel();
         field_no_h_ions = new javax.swing.JSpinner();
         field_no_na_ions = new javax.swing.JSpinner();
         field_no_li_ions = new javax.swing.JSpinner();
         field_no_k_ions = new javax.swing.JSpinner();
         field_no_cl_ions = new javax.swing.JSpinner();
+        field_no_h2po4_ions = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabelCLExtNo = new javax.swing.JLabel();
+        jLabelH2PO4ExtNo = new javax.swing.JLabel();
         field_ex_na_ions = new javax.swing.JSpinner();
         field_ex_li_ions = new javax.swing.JSpinner();
         field_ex_k_ions = new javax.swing.JSpinner();
         field_ex_cl_ions = new javax.swing.JSpinner();
+        field_ex_h2po4_ions = new javax.swing.JSpinner();
         jLabel11 = new javax.swing.JLabel();
         field_negative_mode = new javax.swing.JCheckBox();
         jLabel12 = new javax.swing.JLabel();
@@ -338,6 +350,8 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
         jLabel8.setText("# K ions");
         
         jLabelCLNo.setText("# Cl ions");
+        
+        jLabelH2PO4No.setText("# H2PO4 ions");
 
         jLabel6.setText("ex. Na ions");
 
@@ -346,6 +360,8 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
         jLabel10.setText("ex. K ions");
         
         jLabelCLExtNo.setText("ex. Cl ions");
+        
+        jLabelH2PO4ExtNo.setText("ex. H2PO4 ions");
 
         jLabel11.setText("Subtract mode");
 
@@ -403,6 +419,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
                             .add(jLabel11)
                             .add(jLabel8)
                             .add(jLabelCLNo)
+                            .add(jLabelH2PO4No)
                             .add(jLabel7)
                             .add(jLabel5)
                             .add(jLabel4))
@@ -414,7 +431,8 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
                                     .add(field_no_h_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                     .add(field_no_li_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                     .add(field_no_k_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                                    .add(field_no_cl_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                                    .add(field_no_cl_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .add(field_no_h2po4_ions, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                                 .add(12, 12, 12))
                             .add(layout.createSequentialGroup()
                                 .add(field_negative_mode)
@@ -427,7 +445,11 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
                              .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                                 .add(jLabelCLExtNo)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 19, Short.MAX_VALUE)
-                                .add(field_ex_cl_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))   
+                                .add(field_ex_cl_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                                .add(jLabelH2PO4ExtNo)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 19, Short.MAX_VALUE)
+                                .add(field_ex_h2po4_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 80, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))   
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                     .add(jLabel6)
@@ -505,6 +527,13 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
                     .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                         .add(field_no_cl_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(jLabelCLNo)))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(jLabelH2PO4ExtNo)
+                        .add(field_ex_h2po4_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(field_no_h2po4_ions, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jLabelH2PO4No)))        
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jSeparator3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -531,6 +560,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     private javax.swing.JSpinner field_ex_li_ions;
     private javax.swing.JSpinner field_ex_na_ions;
     private javax.swing.JSpinner field_ex_cl_ions;
+    private javax.swing.JSpinner field_ex_h2po4_ions;
     private javax.swing.JComboBox field_isotope;
     private javax.swing.JCheckBox field_negative_mode;
     private javax.swing.JSpinner field_no_h_ions;
@@ -538,6 +568,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     private javax.swing.JSpinner field_no_li_ions;
     private javax.swing.JSpinner field_no_na_ions;
     private javax.swing.JSpinner field_no_cl_ions;
+    private javax.swing.JSpinner field_no_h2po4_ions;
     private javax.swing.JTextField field_other_mass;
     private javax.swing.JTextField field_other_name;
     private javax.swing.JComboBox field_reducingend;
@@ -556,6 +587,8 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelCLNo;
     private javax.swing.JLabel jLabelCLExtNo;
+    private javax.swing.JLabel jLabelH2PO4No;
+    private javax.swing.JLabel jLabelH2PO4ExtNo;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator3;
     // End of variables declaration//GEN-END:variables

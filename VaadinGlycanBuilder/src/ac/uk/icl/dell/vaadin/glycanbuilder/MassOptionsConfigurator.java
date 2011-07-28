@@ -109,12 +109,14 @@ public  class MassOptionsConfigurator {
         common_options.ION_CLOUD.set(MassOptions.ION_LI,multiplier*inputDevice.getLIIonCount());
         common_options.ION_CLOUD.set(MassOptions.ION_K,multiplier*inputDevice.getKIonCount());
         common_options.ION_CLOUD.set(MassOptions.ION_CL,multiplier*inputDevice.getCLIonCount());
+        common_options.ION_CLOUD.set(MassOptions.ION_H2PO4,multiplier*inputDevice.getH2PO4IonCount());
     
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H,-inputDevice.getexNAIonCount()-inputDevice.getexLIIonCount()-inputDevice.getexKIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_NA,inputDevice.getexNAIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_LI,inputDevice.getexLIIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_K,inputDevice.getexKIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_CL,inputDevice.getexCLIonCount());
+        common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H2PO4,inputDevice.getexH2PO4IonCount());
         
         return true;
     }
@@ -132,11 +134,13 @@ public  class MassOptionsConfigurator {
     	inputDevice.setLIIonRange(generateValues(0,10,true));
     	inputDevice.setKIonRange(generateValues(0,10,true));
     	inputDevice.setCLIonRange(generateValues(0,10,true));
+    	inputDevice.setH2PO4IonRange(generateValues(0,10,true));
 
     	inputDevice.setexNAIonRange(generateValues(0,50,true));
     	inputDevice.setexLIIonRange(generateValues(0,50,true));
     	inputDevice.setexKIonRange(generateValues(0,50,true));
     	inputDevice.setexCLIonRange(generateValues(0,50,true));
+    	inputDevice.setexH2PO4IonRange(generateValues(0,50,true));
 
     	inputDevice.setSelectedIsotope(common_options.ISOTOPE);
     	inputDevice.setSelectedDerivatization(common_options.DERIVATIZATION);
@@ -162,11 +166,13 @@ public  class MassOptionsConfigurator {
         inputDevice.setLIIonCount(Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_LI)));
         inputDevice.setKIonCount(Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_K)));
         inputDevice.setCLIonCount(Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_CL)));
+        inputDevice.setH2PO4IonCount(Math.abs(common_options.ION_CLOUD.get(MassOptions.ION_H2PO4)));
 
         inputDevice.setexNAIonCount(common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_NA));
         inputDevice.setexLIIonCount(common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_LI));
         inputDevice.setexKIonCount(common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_K));
         inputDevice.setexCLIonCount(common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_CL));
+        inputDevice.setexH2PO4IonCount(common_options.NEUTRAL_EXCHANGES.get(MassOptions.ION_H2PO4));
     }
     
     
@@ -191,11 +197,13 @@ public  class MassOptionsConfigurator {
          int getLIIonCount();
          int getKIonCount();
          int getCLIonCount();
+         int getH2PO4IonCount();
         
          int getexNAIonCount();
          int getexLIIonCount();
          int getexKIonCount();
          int getexCLIonCount();
+         int getexH2PO4IonCount();
         
          void initComponents();
         
@@ -208,11 +216,13 @@ public  class MassOptionsConfigurator {
          void setLIIonRange(Object[] list);
          void setKIonRange(Object[] list);
          void setCLIonRange(Object[] list);
+         void setH2PO4IonRange(Object[] list);
         
          void setexNAIonRange(Object[] list);
          void setexLIIonRange(Object[] list);
          void setexKIonRange(Object[] list);
          void setexCLIonRange(Object[] list);
+         void setexH2PO4IonRange(Object[] list);
         
          void setSelectedIsotope(String isotope);
          void setSelectedDerivatization(String derivatization);
@@ -226,11 +236,13 @@ public  class MassOptionsConfigurator {
          void setLIIonCount(int count);
          void setKIonCount(int count);
          void setCLIonCount(int count);
+         void setH2PO4IonCount(int count);
         
          void setexNAIonCount(int count);
          void setexLIIonCount(int count);
          void setexKIonCount(int count);
          void setexCLIonCount(int count);
+         void setexH2PO4IonCount(int count);
         
          void enableIsotopField(boolean enable);
          void enableOtherMassField(boolean enable);

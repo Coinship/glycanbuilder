@@ -85,6 +85,8 @@ public class MassOptions {
 	public static final String ION_K = "K";
 
 	public static final String ION_CL = "Cl";
+	
+	public static final String ION_H2PO4 = "H2PO4";
 
 	// pojo
 
@@ -204,12 +206,13 @@ public class MassOptions {
 			ION_CLOUD.set(MassOptions.ION_LI, 999);
 			ION_CLOUD.set(MassOptions.ION_K, 999);
 			ION_CLOUD.set(MassOptions.ION_CL, 999);
+			ION_CLOUD.set(MassOptions.ION_H2PO4, 999);
 
 			NEUTRAL_EXCHANGES.set(MassOptions.ION_H, 999);
 			NEUTRAL_EXCHANGES.set(MassOptions.ION_NA, 999);
 			NEUTRAL_EXCHANGES.set(MassOptions.ION_LI, 999);
 			NEUTRAL_EXCHANGES.set(MassOptions.ION_K, 999);
-			NEUTRAL_EXCHANGES.set(MassOptions.ION_CL, 999);
+			NEUTRAL_EXCHANGES.set(MassOptions.ION_H2PO4, 999);
 		}
 	}
 

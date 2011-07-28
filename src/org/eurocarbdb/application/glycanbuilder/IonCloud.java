@@ -213,6 +213,8 @@ public class IonCloud {
 			return this.and(charge, MassUtils.k_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_CL))
 			return this.and(charge, MassUtils.cl_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_H2PO4))
+			return this.and(charge, MassUtils.h2po4_ion.getMass(), quantity);
 		return this.clone();
 	}
 
@@ -230,6 +232,8 @@ public class IonCloud {
 			add(charge, MassUtils.k_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_CL))
 			add(charge, MassUtils.cl_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_H2PO4))
+			add(charge, MassUtils.h2po4_ion.getMass(), quantity);
 	}
 
 	/**
@@ -246,6 +250,8 @@ public class IonCloud {
 			set(charge, MassUtils.k_ion.getMass(), quantity);
 		else if (charge.equals(MassOptions.ION_CL))
 			set(charge, MassUtils.cl_ion.getMass(), quantity);
+		else if (charge.equals(MassOptions.ION_H2PO4))
+			set(charge, MassUtils.h2po4_ion.getMass(), quantity);
 	}
 
 	/**
@@ -319,6 +325,10 @@ public class IonCloud {
 			this.set(MassOptions.ION_CL, other.get(MassOptions.ION_CL));
 			changed = true;
 		}
+		if (!skip_undetermined || other.get(MassOptions.ION_H2PO4) != 999) {
+			this.set(MassOptions.ION_H2PO4, other.get(MassOptions.ION_H2PO4));
+			changed = true;
+		}
 
 		return changed;
 	}
@@ -350,6 +360,7 @@ public class IonCloud {
 		this.merge(MassOptions.ION_LI, other);
 		this.merge(MassOptions.ION_K, other);
 		this.merge(MassOptions.ION_CL, other);
+		this.merge(MassOptions.ION_H2PO4, other);
 	}
 
 	/**
@@ -414,6 +425,8 @@ public class IonCloud {
 				ret.add(MassUtils.k_ion, num);
 			else if (charge.equals(MassOptions.ION_CL))
 				ret.add(MassUtils.cl_ion, num);
+			else if (charge.equals(MassOptions.ION_H2PO4))
+				ret.add(MassUtils.h2po4_ion, num);
 		}
 		return ret;
 	}

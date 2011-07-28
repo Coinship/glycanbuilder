@@ -50,6 +50,8 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		this.glycans=glycans;
 		
 		config = new MassOptionsConfigurator(glycans, massOptions, this);
+		
+		layout.addStyleName("igg-mass-options-panel");
 	}
 
 	@Override
@@ -267,14 +269,17 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 	@Override
 	public void initComponents() {
 		isotopeSelect=new Select();
+		isotopeSelect.addStyleName("igg-mass-options-panel-item");
 		isotopeSelect.setNullSelectionAllowed(false);
 		isotopeSelect.setNewItemsAllowed(false);
 		
 		derivatizationSelect=new Select();
+		derivatizationSelect.addStyleName("igg-mass-options-panel-item");
 		derivatizationSelect.setNullSelectionAllowed(false);
 		derivatizationSelect.setNewItemsAllowed(false);
 		
 		reducingEndSelect=new Select();
+		reducingEndSelect.addStyleName("igg-mass-options-panel-item");
 		reducingEndSelect.setNullSelectionAllowed(false);
 		reducingEndSelect.setImmediate(true);
 		reducingEndSelect.setNewItemsAllowed(false);
@@ -296,36 +301,50 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		
 		
 		otherNameField=new TextField();
+		otherNameField.addStyleName("igg-mass-options-panel-item");
 		otherMassField=new TextField();
+		otherMassField.addStyleName("igg-mass-options-panel-item");
 		
 		negativeModeField=new CheckBox();
+		negativeModeField.addStyleName("igg-mass-options-panel-item");
 	
 		hIonCountSelect=new Select("#H ions");
+		hIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		hIonCountSelect.setNewItemsAllowed(false);
 		
 		naIonCountSelect=new Select("#Na ions");
+		naIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		naIonCountSelect.setNewItemsAllowed(false);
 		exNAIonCountSelect=new Select("ext. #Na ions");
+		exNAIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		exNAIonCountSelect.setNewItemsAllowed(false);
 		
 		liIonCountSelect=new Select("#Li ions");
+		liIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		liIonCountSelect.setNewItemsAllowed(false);
 		exLIIonCountSelect=new Select("ext. #Li ions");
+		exLIIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		exLIIonCountSelect.setNewItemsAllowed(false);
 		
 		kIonCountSelect=new Select("#K ions");
+		kIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		kIonCountSelect.setNewItemsAllowed(false);
 		exKIonCountSelect=new Select("ext. #K ions");
+		exKIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		exKIonCountSelect.setNewItemsAllowed(false);
 		
 		clIonCountSelect=new Select("#Cl ions");
+		clIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		clIonCountSelect.setNewItemsAllowed(false);
 		exClIonCountSelect=new Select("ext. #Cl ions");
+		exClIonCountSelect.addStyleName("igg-mass-options-panel-item");
 		exClIonCountSelect.setNewItemsAllowed(false);
 		
 		h2po4IonCountSelect=new Select("#H2PO4 ions");
+		h2po4IonCountSelect.addStyleName("igg-mass-options-panel-item");
 		h2po4IonCountSelect.setNewItemsAllowed(false);
 		exH2po4IonCountSelect=new Select("ext. #H2PO4 ions");
+		exH2po4IonCountSelect.addStyleName("igg-mass-options-panel-item");
 		exH2po4IonCountSelect.setNewItemsAllowed(false);
 		
 		//column,row

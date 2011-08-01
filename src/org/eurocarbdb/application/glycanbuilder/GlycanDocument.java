@@ -22,6 +22,7 @@ package org.eurocarbdb.application.glycanbuilder;
 
 import java.awt.*;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -1331,7 +1332,40 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 	}
 	
 	public void fromString(String str, String format) throws Exception{
-		setStructures(parseString(str,GlycanParserFactory.getParser(format)),false);
+		setStructures(parseString(str,GlycanParserFactory.getParser(format)),true);
+	}
+	
+	public void fromURL(final String resourceLocation, final String format) throws Exception{
+		java.security.AccessController.doPrivileged(
+					    new java.security.PrivilegedAction<String>() {
+					        public String run() {
+					        	try{
+					        		InputStream inStream=null;
+
+					        		URL url=new URL(resourceLocation);
+					        		inStream=url.openStream();
+
+					        		BufferedReader reader=new BufferedReader(new InputStreamReader(inStream));
+
+					        		StringBuffer buffer=new StringBuffer();
+
+					        		String line;
+					        		while((line=reader.readLine())!=null){
+					        			buffer.append(line+"\n");
+					        		}
+
+					        		fromString(buffer.toString(),format);
+					        	}catch(Exception ex){
+					        		LogUtils.report(ex);
+					        	}
+					        	
+					        	return null;
+					        }
+					    }
+		);
+		
+		
+		
 	}
 
 	/**

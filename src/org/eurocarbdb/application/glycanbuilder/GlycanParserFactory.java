@@ -128,7 +128,7 @@ public class GlycanParserFactory {
     else if( format.compareToIgnoreCase("glycoct_condensed")==0 ) 
         return new GlycoCTParser(false);
 
-    throw new Exception("Unsupported format " + format);
+    throw new Exception("Unsupported format-"+format+"-");
     }
     
     static public GlycanParser getParser(GlycanSequenceFormat glycanSequenceFormat) throws Exception{

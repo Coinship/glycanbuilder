@@ -464,6 +464,18 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 	public void setDocument(String src) {
 		setDocument(src, "gws");
 	}
+	
+	public void setDocumentFromUrl(String url, String format){
+		try {
+			theDoc.init();
+			
+			theDoc.fromURL(url, format);
+			
+			theDoc.setChanged(false);
+		} catch (Exception e) {
+			LogUtils.report(e);
+		}
+	}
 
 	/**
 	 * Return the flag that specify if the linkage information should be
@@ -584,5 +596,12 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		else if (action.equals("about"))
 			onAbout();
 	}
-
+	
+	public Set<String> getImportFormats(){
+		return GlycanParserFactory.getImportFormats().keySet();
+	}
+	
+	public Set<String> getExportFormats(){
+		return GlycanDocument.getExportFormats().keySet();
+	}
 }

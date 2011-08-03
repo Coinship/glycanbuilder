@@ -1356,11 +1356,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		theCanvas.selectIntersectingRectangles(x, y, width, height, mouseMoved);
 		
-		if(theCanvas.getCurrentResidue().isRepetition()){
-			System.err.println("HERE: "+theCanvas.hasSelectedResidues());
-		}
-		
-		if(selectedResidue==theCanvas.getCurrentResidue() && selectedResidue.isRepetition()){
+		if(theCanvas.getCurrentResidue()!=null && selectedResidue==theCanvas.getCurrentResidue() && selectedResidue.isRepetition()){
 			final Window window=new Window("Repeatition options");
 			Panel panel=new Panel();
 			

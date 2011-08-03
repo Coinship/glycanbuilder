@@ -26,4 +26,6 @@
     <inherits name="ac.uk.icl.dell.vaadin.enhancedcanvas.demo.widgetset.CanvastestWidgetset" />
 
     <inherits name="ac.uk.icl.dell.gwt.EnhancedcanvasWidgetset" />
+
+    <inherits name="org.vaadin.weelayout.WeelayoutWidgetset" />
 </module>

@@ -20,6 +20,8 @@
 
 package org.eurocarbdb.application.glycanbuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Vector;
@@ -479,19 +481,20 @@ public class IonCloud {
 				for (; i < str_buffer.length
 						&& Character.isDigit(str_buffer[i]); i++)
 					count.append(str_buffer[i]);
-			} else
+			} else 
 				count.append('1');
 
 			if (i == str_buffer.length)
 				throw new Exception("Invalid string format: <" + str + ">");
 
-			if (Character.isLetter(str_buffer[i])) {
+			//Changed from isLetter to isLetterOrDigit, 03/08/11 David R. Damerell (david@nixbioinf.org)
+			if (Character.isLetterOrDigit(str_buffer[i])) {
 				for (; i < str_buffer.length
-						&& Character.isLetter(str_buffer[i]); i++)
+						&& Character.isLetterOrDigit(str_buffer[i]); i++)
 					ion.append(str_buffer[i]);
 			} else
 				throw new Exception("Invalid string format: <" + str + ">");
-
+			
 			this.add(ion.toString(), Integer.valueOf(count.toString()));
 		}
 	}
@@ -506,7 +509,6 @@ public class IonCloud {
 		StringBuilder sb = new StringBuilder();
 
 		// first positives then negatives
-
 		for (Map.Entry<String, Integer> entry : ions.entrySet()) {
 			if (entry.getValue() > 0) {
 				if (sb.length() > 0)

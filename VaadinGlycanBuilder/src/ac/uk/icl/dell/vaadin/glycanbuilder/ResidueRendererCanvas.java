@@ -39,6 +39,8 @@ import org.eurocarbdb.application.glycanbuilder.ResidueType;
 import org.vaadin.damerell.canvas.BasicCanvas;
 import org.vaadin.damerell.canvas.BasicCanvas.TextInfo;
 
+import com.google.gwt.dom.client.Style.Position;
+
 import ac.uk.icl.dell.vaadin.canvas.shapes.Bracket;
 import ac.uk.icl.dell.vaadin.canvas.shapes.Circle;
 import ac.uk.icl.dell.vaadin.canvas.shapes.Diamond;
@@ -153,9 +155,16 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 				painted=true;
 			}else if(style.getShape().equals("startrep")){
 				new SquareBracket(orientation.opposite().getAngle(),x,y,w,h,style,canvas,selected).paint();
+				
 				painted=true;
 			}else if(style.getShape().equals("endrep")){
 				new SquareBracket(orientation.getAngle(),x,y,w,h,style,canvas,selected).paint();
+				
+				if(node.getMinRepetitions()!=-1 && node.getMaxRepetitions()!=-1){
+					paintText(paintable, 0.3f, String.valueOf(node.getMinRepetitions()), cur_bbox, orientation, style,Position.TOP);
+					paintText(paintable, 0.3f, String.valueOf(node.getMaxRepetitions()), cur_bbox, orientation, style,Position.BOTTOM);
+				}
+
 				painted=true;
 			}else{
 				//System.err.println("Style: "+style.getShape());
@@ -217,5 +226,54 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 		}
 		
 		canvas.restoreContext();
+	}
+	
+	public void paintText(Paintable paintable, float scale, String text, Rectangle cur_bbox, ResAngle orientation, ResidueStyle style,Position position){
+		BasicCanvas canvas=(BasicCanvas)paintable.getObject();
+		
+		double x=cur_bbox.x;
+		double y=cur_bbox.y;
+		
+		canvas.saveContext();
+		canvas.setLineWidth(2.0);
+		canvas.beginPath();
+		
+		TextInfo info=canvas.getRequiredScale(scale, 0.05, cur_bbox.width,cur_bbox.width, text);
+		ResAngle angle=theGraphicOptions.getOrientationAngle();
+		
+		double rotate=0;
+//		if( !(angle.equals(0) || orientation.equals(180))){
+//			rotate=-Math.PI/2.0; 
+//			info=canvas.getRequiredScale(scale, 0.05, cur_bbox.height,cur_bbox.height, text);
+//			canvas.renderText(text, x,y, rotate, info.scale);
+//		}else{
+			System.err.println("Angle: "+angle);
+		
+			if(position==Position.TOP){
+				if(angle.getIntAngle()==-90){
+					canvas.renderText(text, x+cur_bbox.width-(info.width/2), y+(cur_bbox.height/2), rotate, info.scale);
+				}else{
+					canvas.renderText(text, x+(40*info.scale), y, rotate, info.scale);
+				}
+			}else if(position==Position.BOTTOM){
+				if(angle.getIntAngle()==-90){
+					canvas.renderText(text, x+(40*info.scale)-info.width, y+(cur_bbox.height/2), rotate, info.scale);
+				}else if(angle.getIntAngle()==90){
+					canvas.renderText(text, x+cur_bbox.width-(30*info.scale)-info.width, y, rotate, info.scale);
+				}else{
+					canvas.renderText(text, x+(40*info.scale), y+cur_bbox.height-(12*info.scale)-(10*info.scale), rotate, info.scale);
+				}
+			}
+//		}
+	
+		Color colour=style.getTextColor();
+		canvas.setStrokeStyle(colour.getRed(),colour.getGreen(), colour.getBlue());
+		
+		canvas.stroke();
+		canvas.restoreContext();
+	}
+	
+	public enum Position {
+		TOP(),BOTTOM();
 	}
 }

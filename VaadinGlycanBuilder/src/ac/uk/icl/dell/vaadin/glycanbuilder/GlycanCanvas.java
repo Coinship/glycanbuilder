@@ -478,8 +478,7 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 		
 		List<Residue> selected=new ArrayList<Residue>();
 		for(Residue residue:theBBoxManager.current_bboxes.keySet()){
-			
-			
+
 			Rectangle rec=theBBoxManager.current_bboxes.get(residue);
 			
 			if(mouseMoved){

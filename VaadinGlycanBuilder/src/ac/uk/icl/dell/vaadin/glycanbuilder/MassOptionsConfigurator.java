@@ -108,10 +108,19 @@ public  class MassOptionsConfigurator {
         common_options.ION_CLOUD.set(MassOptions.ION_NA,multiplier*inputDevice.getNAIonCount());
         common_options.ION_CLOUD.set(MassOptions.ION_LI,multiplier*inputDevice.getLIIonCount());
         common_options.ION_CLOUD.set(MassOptions.ION_K,multiplier*inputDevice.getKIonCount());
-        common_options.ION_CLOUD.set(MassOptions.ION_CL,multiplier*inputDevice.getCLIonCount());
-        common_options.ION_CLOUD.set(MassOptions.ION_H2PO4,multiplier*inputDevice.getH2PO4IonCount());
+        
+        //Always set quantity of ions positive when adding negatively charged ions to cloud
+        common_options.ION_CLOUD.set(MassOptions.ION_CL,1*inputDevice.getCLIonCount());
+        common_options.ION_CLOUD.set(MassOptions.ION_H2PO4,1*inputDevice.getH2PO4IonCount());
     
-        common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H,-inputDevice.getexNAIonCount()-inputDevice.getexLIIonCount()-inputDevice.getexKIonCount());
+        common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_H,
+        		-inputDevice.getexNAIonCount()
+        		-inputDevice.getexLIIonCount()
+        		-inputDevice.getexKIonCount()
+        		-inputDevice.getexCLIonCount()
+        		-inputDevice.getexH2PO4IonCount()
+        );
+        
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_NA,inputDevice.getexNAIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_LI,inputDevice.getexLIIonCount());
         common_options.NEUTRAL_EXCHANGES.set(MassOptions.ION_K,inputDevice.getexKIonCount());

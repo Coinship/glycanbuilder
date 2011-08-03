@@ -57,6 +57,8 @@ import org.vaadin.damerell.canvas.font.Font;
 import org.vaadin.damerell.canvas.font.Font.FONT;
 import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.navigator7.NavigableApplication;
+import org.vaadin.weelayout.WeeLayout;
+import org.vaadin.weelayout.WeeLayout.Direction;
 
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
 import ac.uk.icl.dell.vaadin.MessageDialogBox;
@@ -83,6 +85,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -964,7 +967,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			field_second_parent_position.setMultiSelect(true);
 			field_second_parent_position.setEnabled(false);
 		
-			if(current != null && (!current.isSpecial() || current.isCleavage())){
+			if(current != null && (!current.isSpecial() || current.isCleavage() || current.isStartRepetition())){
 				linkagePanel.setVisible(true);
 				
 				Linkage parent_link = current.getParentLinkage();
@@ -1349,7 +1352,88 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	
 	@Override
 	public void recieveSelectionUpdate(double x, double y, double width,double height,boolean mouseMoved) {
+		final Residue selectedResidue=theCanvas.getCurrentResidue();
+		
 		theCanvas.selectIntersectingRectangles(x, y, width, height, mouseMoved);
+		
+		if(theCanvas.getCurrentResidue().isRepetition()){
+			System.err.println("HERE: "+theCanvas.hasSelectedResidues());
+		}
+		
+		if(selectedResidue==theCanvas.getCurrentResidue() && selectedResidue.isRepetition()){
+			final Window window=new Window("Repeatition options");
+			Panel panel=new Panel();
+			
+			WeeLayout layout=new WeeLayout(org.vaadin.weelayout.WeeLayout.Direction.VERTICAL);
+			
+			final TextField minRep=new TextField("Minimum");
+			final TextField maxRep=new TextField("Maximum");
+			NativeButton okBut=new NativeButton("Ok");
+			NativeButton cancelBut=new NativeButton("Cancel");
+			
+			minRep.setImmediate(true);
+			maxRep.setImmediate(true);
+			
+			minRep.setValue(String.valueOf(selectedResidue.getMinRepetitions()));
+			maxRep.setValue(String.valueOf(selectedResidue.getMaxRepetitions()));
+		
+			okBut.addListener(new ClickListener(){
+				private static final long serialVersionUID = -408364885359729326L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					String minRepNum=(String) minRep.getValue();
+					String maxRepNum=(String) maxRep.getValue();
+					
+					boolean valid=true;
+					
+					try{
+						Integer.parseInt(minRepNum);
+						Integer.parseInt(maxRepNum);
+					}catch(NumberFormatException ex){
+						valid=false;
+					}
+					
+					if(valid){
+						selectedResidue.setMinRepetitions((String) minRep.getValue());
+						selectedResidue.setMaxRepetitions((String) maxRep.getValue());
+						
+						theCanvas.documentUpdated();
+					}
+					
+					getWindow().removeWindow(window);
+				}
+			});
+			
+			cancelBut.addListener(new ClickListener(){
+				private static final long serialVersionUID = -657746118918366530L;
+
+				@Override
+				public void buttonClick(ClickEvent event) {
+					getWindow().removeWindow(window);
+				}
+			});
+			
+			layout.addComponent(minRep, Alignment.TOP_CENTER);
+			layout.addComponent(maxRep, Alignment.MIDDLE_CENTER);
+			
+			WeeLayout buttonLayout=new WeeLayout(Direction.HORIZONTAL);
+			buttonLayout.addComponent(okBut, Alignment.TOP_CENTER);
+			buttonLayout.addComponent(cancelBut, Alignment.TOP_CENTER);
+			
+			layout.addComponent(buttonLayout, Alignment.BOTTOM_CENTER);
+			
+			//panel.setContent(layout);
+			//panel.getContent().setSizeUndefined();
+			
+			window.center();
+			window.getContent().addComponent(layout);
+			
+			window.getContent().setSizeUndefined();
+			window.setSizeUndefined();
+			
+			getWindow().addWindow(window);
+		}
 	}
 
 	@Override

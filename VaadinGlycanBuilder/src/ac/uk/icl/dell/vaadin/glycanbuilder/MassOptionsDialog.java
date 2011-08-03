@@ -361,7 +361,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		layout.addComponent(new Label("mass"),1,4,1,4);
 		layout.addComponent(otherMassField,2,4,2,4);
 		
-		layout.addComponent(new Label("Substract mode"),0,5,0,5);
+		layout.addComponent(new Label("Negative mode"),0,5,0,5);
 		layout.addComponent(negativeModeField,1,5,1,5);
 		
 		layout.addComponent(hIonCountSelect,0,6,0,6);

@@ -2737,11 +2737,11 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		copy();
 		delete();
 	}
-
+	
 	/**
 	 * Copy the selected residues/structures to the clipboard
 	 */
-	public void copy() {
+	public void copy() {	
 		Collection<Glycan> sel = theDoc.extractView(selected_residues);
 		ClipUtils.setContents(new GlycanSelection(getTheGlycanRenderer(), sel));
 	}
@@ -4029,6 +4029,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	 *            the type name of the new residue to add
 	 */
 	public void onAdd(String sacc_name) {
+//		if(getCurrentResidue()!=null && getCurrentResidue().isStartRepetition() && getCurrentResidue().getChildrenLinkages().size()>0){
+//			return;
+//		}
+		
 		try {
 			Residue toadd = ResidueDictionary.newResidue(sacc_name);
 			if (theDoc.addResidue(getCurrentResidue(), getLinkedResidues(),

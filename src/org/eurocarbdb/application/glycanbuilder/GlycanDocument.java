@@ -27,6 +27,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
+
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.transform.sax.TransformerHandler;
@@ -946,6 +947,9 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 		first.insertParent(start, first.getParentLinkage().getBonds());
 
 		Residue end = ResidueDictionary.createEndRepetition();
+		
+		start.setEndRepitionResidue(end);
+		
 		last.addChild(end);
 		for (Iterator<Linkage> il = last.iterator(); il.hasNext();) {
 			Linkage child_link = il.next();
@@ -1068,8 +1072,9 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 		}
 
 		// remove unmatched repetitions
-		for (Glycan s : ret_structures)
+		for (Glycan s : ret_structures){
 			s.removeUnpairedRepetitions();
+		}
 
 		return ret_structures;
 	}
@@ -1413,9 +1418,10 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 	public Collection<Glycan> parseString(String str) throws Exception {
 		// parse structures
 		Vector<Glycan> parsed = new Vector<Glycan>();
-		for (String t : TextUtils.tokenize(str, ";"))
+		for (String t : TextUtils.tokenize(str, ";")){
 			parsed.add(GWSParser.fromString(t,
 					theWorkspace.getDefaultMassOptions()));
+		}
 		return parsed;
 	}
 

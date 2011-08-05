@@ -29,6 +29,9 @@ import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import sun.util.logging.resources.logging;
+
 import javax.xml.transform.sax.TransformerHandler;
 
 /**
@@ -462,7 +465,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 	public boolean hasRepetition() {
 		return hasRepetition(root) || hasRepetition(bracket);    
 	}
-
+	
 	private boolean hasRepetition(Residue node) {
 		if( node==null )
 			return false;
@@ -939,7 +942,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		Collection<Bond> ant_pos = link.getBonds();        
 		if( current.isSaccharide() && current.canAddChild(antenna,ant_pos) ) {
 			antennae.removeFirst();
-			Residue new_root = root.cloneSubtreeAdd(current,antenna.cloneSubtree(),ant_pos);
+			Residue new_root = root.cloneSubtreeAdd(current,antenna.cloneSubtree(),ant_pos,new ResidueHolder());
 			placeAntennae(new_root,new_root,antennae,structures);
 			antennae.addFirst(link);
 		}
@@ -1071,9 +1074,11 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
        settings.
 	 */
 	public double computeMass() {
-		if( hasRepetition() )
+		if( hasRepetition() && (areAllRepetitionsConstant(root)==false || areAllRepetitionsConstant(bracket)==false)){
+			
 			return -1.;
-		return computeMass(root) + computeMass(bracket);
+		}
+		return computeMass(root,1) + computeMass(bracket,1);
 	}
 
 	/**
@@ -1213,6 +1218,105 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		for( Linkage l : node.getChildrenLinkages() ) {
 			mass -= MassUtils.water.getMass()*l.getNoBonds(); // remove a water molecule for each bond                
 			mass += computeMass(l.getChildResidue());
+		}
+
+		return mass;
+	}
+	
+	public boolean areAllRepetitionsConstant(Residue node){
+		if(node==null)
+			return true;
+		
+		if(node.isEndRepetition() && (node.getMinRepetitions()==-1 || node.getMaxRepetitions()==-1 || (node.getMinRepetitions()!=node.getMaxRepetitions()))){
+			return false;
+		}else{
+			for(Linkage l:node.getChildrenLinkages()) {
+				if(areAllRepetitionsConstant(l.getChildResidue())==false){
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+	
+	private double computeMass(Residue node, double multipler) {
+		if( node==null )
+			return 0.;
+		
+		if(node.isStartRepetition()){
+			Residue end=node.getEndRepitionResidue();
+			if(end.getMaxRepetitions()==end.getMinRepetitions()){
+				multipler=end.getMaxRepetitions();
+			}else{
+				//will throw something here!
+			}
+		}else if(node.isEndRepetition()){
+			multipler=1;
+		}
+
+		ResidueType type = node.getType();
+		int no_bonds = node.getNoBonds();
+		
+		//repetition notes
+		//we assume a signal bond between the end of one block and the start of another
+		
+		double mass=0.;
+		
+		if(node.isRepetition()==false){
+			mass =  type.getMass();
+		}
+
+		// modify for alditol
+		if( node.isReducingEnd() && node.getType().makesAlditol() )
+			mass += 2*MassUtils.hydrogen.getMass();
+
+		if( node.isBracket() ) {
+			int no_linked_labiles = Math.min(countLabilePositions(),countDetachedLabiles());
+			mass -= (no_bonds-no_linked_labiles)*substitutionMass();
+		}
+		else if( node.isCleavage() && !node.isRingFragment() ) {
+			// cleavages have no derivatization
+			if( node.isReducingEnd() && !node.hasChildren() ) {
+				// fix for composition
+				//mass += MassOptions.H2O;    
+				mass += substitutionMass();
+			}
+		}
+		else {
+			if(node.isRepetition()==false){
+				// add groups
+				if( isDropped(type) )
+					mass -= (type.getMass() - MassUtils.water.getMass() - substitutionMass());
+				else
+					mass += ((noSubstitutions(type)-no_bonds)*substitutionMass());
+			}
+		}    
+
+		mass=mass*multipler;
+		
+		if(node.getParent()!=null && node.getParent().isStartRepetition()){
+			Residue startRepResidue=node.getParent();
+			int noBonds=startRepResidue.getLinkageAt(0).getNoBonds(); //B
+			int repetitions=startRepResidue.getEndRepitionResidue().getMaxRepetitions(); //n
+			
+			mass+=(repetitions-1)*(noBonds-1)*MassUtils.water.getMass();
+			mass+=(repetitions-2)*(noBonds-1)*substitutionMass();
+		}
+		
+		
+		// add children
+		for( Linkage l : node.getChildrenLinkages() ) {
+			if(l.getChildResidue().isRepetition()){
+				if(l.getChildResidue().isEndRepetition()){
+					//Correct for the number of bonds the final residue actually has
+					mass+=(no_bonds-(l.getChildResidue().getNoBonds()+no_bonds-2))*substitutionMass();
+				}
+			}else{
+				mass -= MassUtils.water.getMass()*l.getNoBonds()*multipler; // remove a water molecule for each bond
+			}
+			
+			mass += computeMass(l.getChildResidue(),multipler);
 		}
 
 		return mass;
@@ -1622,6 +1726,9 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		}
 		catch(Exception e) {
 			LogUtils.report(e);
+			//Logger log=Logger.getLogger("test");
+			//log.setLevel(Level.INFO);
+			//log.info("BAD:"+str);
 			return null;
 		}
 	}

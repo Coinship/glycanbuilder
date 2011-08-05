@@ -66,6 +66,10 @@ public class Residue {
     
     private ResiduePlacement preferred_placement = null;
     private boolean was_sticky = false;
+
+	private Residue endRepetitionResidue;
+
+	private Residue startRepititionResidue;
     
     // ----
 
@@ -1096,9 +1100,14 @@ public class Residue {
         return addChild(link.getChildResidue(),link.getBonds());
     }
 
+    //TODO: Investigate this further, this stop structures with repeat units from being copied 
     // cannot add to a repetition if there's already another child
-    if( this.isRepetition() && this.getNoChildren()!=0 )
-        return false;
+    
+    if(this.isStartRepetition() && this.getChildrenLinkages().size()>0)
+    	return false;
+ 
+//    if( this.isRepetition() && this.getNoChildren()!=0 )
+//        return false;
     
     // cannot add a reducing end
     if( child.isReducingEnd() && !child.canHaveParent() )
@@ -1415,41 +1424,60 @@ public class Residue {
        Create a copy of the subtree rooted at this residue.
      */
     public Residue cloneSubtree() {
-    return cloneSubtree(null,(Residue)null);
+    return cloneSubtree(null,(Residue)null,new ResidueHolder());
     }
 
     protected Residue cloneSubtree(Residue stop_el, ResidueType stop_type) {
     Residue stop = new Residue(stop_type);
     if( stop.isCleavage() && stop_el!=null )
         stop.setCleavedResidue(stop_el.cloneResidue());
-    return cloneSubtree(stop_el,stop); 
+    return cloneSubtree(stop_el,stop,new ResidueHolder()); 
     }
-
+    
     protected Residue cloneSubtree(Residue stop_el, Residue stop) {
+    	return cloneSubtree(stop_el,stop,new ResidueHolder());
+    }
+    
+    protected Residue cloneSubtree(Residue stop_el, Residue stop, ResidueHolder startRep) {
     if( this==stop_el )         
         return stop;    
 
     // clone this
     Residue clone = this.cloneResidue();
-
+    if(clone.isStartRepetition()){
+    	startRep.res=clone;
+    }else if(clone.isEndRepetition()){
+    	startRep.res.setEndRepitionResidue(clone);
+    	startRep.res=null;
+    }
+    
     // clone children
-    for( Linkage l : children_linkages )
-        clone.addChild(l.getChildResidue().cloneSubtree(stop_el,stop),l.getBonds());  
+    for( Linkage l : children_linkages ){
+        clone.addChild(l.getChildResidue().cloneSubtree(stop_el,stop,startRep),l.getBonds());
+        
+    }
     
     return clone;    
     }  
 
-    protected Residue cloneSubtreeAdd(Residue add_el, Residue toadd, char toadd_link) {
-    return cloneSubtreeAdd(add_el,toadd,Bond.single(toadd_link));
+    protected Residue cloneSubtreeAdd(Residue add_el, Residue toadd, char toadd_link,ResidueHolder startRep) {
+    return cloneSubtreeAdd(add_el,toadd,Bond.single(toadd_link),startRep);
     }
 
-    protected Residue cloneSubtreeAdd(Residue add_el, Residue toadd, Collection<Bond> toadd_bonds) {
+    protected Residue cloneSubtreeAdd(Residue add_el, Residue toadd, Collection<Bond> toadd_bonds, ResidueHolder startRep) {
     // clone this
     Residue clone = this.cloneResidue();
 
+    if(clone.isStartRepetition()){
+    	startRep.res=clone;
+    }else if(clone.isEndRepetition()){
+    	startRep.res.setEndRepitionResidue(clone);
+    	startRep.res=null;
+    }
+    
     // clone children
     for( Linkage l : children_linkages )
-        clone.addChild(l.getChildResidue().cloneSubtreeAdd(add_el,toadd,toadd_bonds),l.getBonds());  
+        clone.addChild(l.getChildResidue().cloneSubtreeAdd(add_el,toadd,toadd_bonds,startRep),l.getBonds());  
 
     // add child where necessary
     if( this==add_el && toadd!=null ) {
@@ -1459,7 +1487,25 @@ public class Residue {
     }
     
     return clone;    
-    }  
+    }
+
+	public void setEndRepitionResidue(Residue end) {
+		endRepetitionResidue=end;
+		
+		end.setStartRepetiionResidue(this);
+	}  
+	
+	public Residue getEndRepitionResidue(){
+		return endRepetitionResidue;
+	}
+	
+	public void setStartRepetiionResidue(Residue start){
+		startRepititionResidue=start;
+	}
+	
+	public Residue getStartRepetitionResidue(){
+		return startRepititionResidue;
+	}
 
     //-----------------
     // serialization    

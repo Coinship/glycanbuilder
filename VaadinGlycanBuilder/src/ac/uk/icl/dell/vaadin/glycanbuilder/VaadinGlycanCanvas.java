@@ -553,6 +553,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	}
 	
 	public void createAddResidueMenu(MenuBar.MenuItem parent) {
+		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
+		
 		MenuBar.MenuItem structureMenu=parent.addItem("Add residue", null);
 
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
@@ -569,7 +571,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 						public void menuSelected(MenuItem selectedItem) {
 							theCanvas.addResidueByNameToSelected(selectedItem.getText());
 						}		
-					});
+					}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
 				}		
 			}
 			
@@ -582,7 +584,9 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	
 	public void createInsertResidueMenu(MenuBar.MenuItem parent){
 		MenuBar.MenuItem structureMenu=parent.addItem("Insert residue", null);
-
+		
+		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
+		
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
 			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
@@ -599,8 +603,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 						public void menuSelected(MenuItem selectedItem) {
 							theCanvas.insertResidueByNameBeforeSelected(selectedItem.getText());
 						}
-						
-					});
+					}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
 					
 				}	
 			}
@@ -615,6 +618,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private void createChangeResidueMenu(MenuBar.MenuItem parent) {
 		MenuBar.MenuItem structureMenu=parent.addItem("Change residue", null);
 
+		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
+		
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
 			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)){
@@ -629,7 +634,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					public void menuSelected(MenuItem selectedItem) {
 						theCanvas.changeSelectedToResidueByName(selectedItem.getText());
 					}
-				});
+				}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
 			}
 			if(superClassMenu.getChildren()==null){
 				structureMenu.removeChild(superClassMenu);
@@ -1351,7 +1356,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			for(Component component:componentsWithResidueSelectionDependency){
 				component.setEnabled(true);
 			}
-			
+
 			for(MenuBar.MenuItem menuItem:menuItemsWithResidueSelectionDependency){
 				menuItem.setEnabled(true);
 			}

@@ -32,6 +32,7 @@ import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.GlycanCanvasUpdateListen
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
+import ac.uk.icl.dell.vaadin.menu.vaadin.MenuBar.MenuItem;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -70,6 +71,8 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 	GlycanBuilderMode glycanBuilderMode=GlycanBuilderMode.DOCKED;
 	
 	protected ApplicationMenu theAppMenu;
+
+	private MenuBar.MenuItem structureItem;
 	
 	public GlycanBuilder(ApplicationMenu appMenu){
 		theAppMenu=appMenu;
@@ -112,7 +115,16 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		theCanvas.theCanvas.addNotationListener(new NotationChangedListener() {
 			@Override
 			public void notationChanged(String notation) {
+				theCanvas.menuItemsWithResidueSelectionDependency.removeAll(structureItem.getChildren());
+				
 				theResidueCanvas.theCanvas.setNotation(notation);
+				
+				theAppMenu.getMenuBar().removeItem(structureItem);
+				menuItems.remove(structureItem);
+				
+				initStructureMenu();
+	
+				theResidueCanvas.theCanvas.fireUpdatedSelection();
 			}
 		});
 		
@@ -132,6 +144,16 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		initFileMenu();
 		initViewMenu();
 		initStructureMenu();
+	}
+	
+	public static void removeMenuItems(com.vaadin.ui.MenuBar.MenuItem structureItem2){
+		if(structureItem2!=null){
+			for(com.vaadin.ui.MenuBar.MenuItem child:structureItem2.getChildren()){
+				structureItem2.removeChild(child);
+				removeMenuItems(child);
+			}
+		}
+		
 	}
 	
 	public GlycanCanvas getGlycanCanvas(){
@@ -267,8 +289,6 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 	private void initStructureMenu(){
 		MenuBar dockMenuBar=theAppMenu.getMenuBar();
 		
-		//tmp
-		MenuBar.MenuItem structureItem;
 		if(dockMenuBar.getItems().size()>3){
 			structureItem=dockMenuBar.addItemBefore("Structure", null, null, dockMenuBar.getItems().get(2));
 		}else{

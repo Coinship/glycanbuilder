@@ -33,6 +33,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 
 import org.eurocarbdb.application.glycanbuilder.AbstractLinkageRenderer;
+import org.eurocarbdb.application.glycanbuilder.Geometry;
 import org.eurocarbdb.application.glycanbuilder.GlycanRenderer;
 import org.eurocarbdb.application.glycanbuilder.Linkage;
 import org.eurocarbdb.application.glycanbuilder.LinkageStyle;
@@ -116,15 +117,21 @@ public class LinkageRendererCanvas extends AbstractLinkageRenderer{
 			double width=theCanvas.calculateTextWidth(text, scale);		
 			Point pos = computePosition(new Dimension((int)width,(int)(12.*scale)), p, pb, c, cb, toparent, above, multiple);
  
-			//theGraphicOptions.LINKAGE_INFO_SIZE => will be the font scale factor
-			theCanvas.saveContext();
-			theCanvas.setLineWidth(1.3);
-			theCanvas.beginPath(); 
-			//This is an arbitrary correction factor, something's not compatible in computePosition with the HTML5 placement
-			theCanvas.renderText(text, pos.x, pos.y-8.2, .0,scale);
-			setStrokeColour(paintable,Color.BLACK);
-			theCanvas.stroke();
-			theCanvas.restoreContext();
+			
+			theCanvas.font("9pt Calibri");
+			theCanvas.setFillStyle("black");
+			theCanvas.textAlign("left");
+			theCanvas.fillText(text, pos.x, pos.y+2);
+			
+//			//theGraphicOptions.LINKAGE_INFO_SIZE => will be the font scale factor
+//			theCanvas.saveContext();
+//			theCanvas.setLineWidth(1.3);
+//			theCanvas.beginPath(); 
+//			//This is an arbitrary correction factor, something's not compatible in computePosition with the HTML5 placement
+//			theCanvas.renderText(text, pos.x, pos.y-8.2, .0,scale);
+//			setStrokeColour(paintable,Color.BLACK);
+//			theCanvas.stroke();
+//			theCanvas.restoreContext();
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}

@@ -76,8 +76,7 @@ public class ResidueRendererAWT extends AbstractResidueRenderer {
     	return new ImageIcon(img);
     }
 	
-    @Override
-	public Image getImage(ResidueType type, int max_y_size) {
+	public BufferedImage getBufferedImage(ResidueType type, int max_y_size) {
     	int orientation = theGraphicOptions.ORIENTATION;
         theGraphicOptions.ORIENTATION = GraphicOptions.RL;
         
@@ -99,7 +98,12 @@ public class ResidueRendererAWT extends AbstractResidueRenderer {
 
         theGraphicOptions.ORIENTATION = orientation;        
         
-        return Toolkit.getDefaultToolkit().createImage(img.getSource());
+        return img;
+    }
+	
+    @Override
+	public Image getImage(ResidueType type, int max_y_size) {        
+        return Toolkit.getDefaultToolkit().createImage(getBufferedImage(type,max_y_size).getSource());
     }
     
     @Override

@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import org.eurocarbdb.application.glycanbuilder.Residue;
 import org.vaadin.damerell.canvas.BasicCanvas.ExportListener;
+import org.vaadin.navigator7.NavigableApplication;
 
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.GlycanCanvasUpdateListener;
@@ -32,6 +33,9 @@ import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
 
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
@@ -88,6 +92,7 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		theCanvas.setHeight("100%");
 		theCanvas.enableMouseSelectionRectangle(true);
 		theCanvas.theCanvas.addResidueHistoryListener(this);	
+		
 //		
 //		panel.setSizeFull();
 //		panel.getContent().setWidth("100%");
@@ -98,6 +103,7 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		initToolBars();
 		
 		layout.addComponent(theCanvas);
+		
 		
 		addComponent(layout);
 		
@@ -141,6 +147,45 @@ public class GlycanBuilder extends CssLayout implements com.vaadin.ui.Window.Res
 		theToolBarPanel.setContent(new CssLayout());
 		theToolBarPanel.addStyleName("igg-glycan-builder-toolbar-panel");
 		
+		NavigableApplication.getCurrentNavigableAppLevelWindow().addActionHandler(new Handler(){
+			Action actionDelete = new ShortcutAction("Delete",ShortcutAction.KeyCode.DELETE, null);
+			Action actionCopy = new ShortcutAction("Copy",ShortcutAction.KeyCode.C, new int[]{ShortcutAction.ModifierKey.CTRL});
+			Action actionPaste = new ShortcutAction("Paste",ShortcutAction.KeyCode.V, new int[]{ShortcutAction.ModifierKey.CTRL});
+			Action actionCut = new ShortcutAction("Cut",ShortcutAction.KeyCode.X, new int[]{ShortcutAction.ModifierKey.CTRL});
+			Action actionSelectAll = new ShortcutAction("Select all",ShortcutAction.KeyCode.A, new int[]{ShortcutAction.ModifierKey.CTRL});
+			Action actionUnSelectAll = new ShortcutAction("UnSelect all",ShortcutAction.KeyCode.A, new int[]{ShortcutAction.ModifierKey.CTRL,ShortcutAction.ModifierKey.SHIFT});
+			
+			@Override
+			public Action[] getActions(Object target, Object sender) {
+				return new Action[]{actionDelete,actionCopy,actionPaste,actionCut,actionSelectAll,actionUnSelectAll};
+			}
+
+			@Override
+			public void handleAction(Action action, Object sender, Object target) {
+				
+				GlycanCanvas canvas=theCanvas.theCanvas;
+				if(theCanvas.theCanvas.hasSelected()){
+					if(action==actionDelete){
+						canvas.delete();
+					}else if(action==actionCopy){
+						canvas.copy();
+					}else if(action==actionCut){
+						canvas.cut();
+					}
+				}
+				
+				if(action==actionSelectAll){
+					canvas.selectAll();
+					canvas.documentUpdated();
+				}else if(action==actionUnSelectAll){
+					canvas.resetSelection();
+					canvas.documentUpdated();
+				}else if(action==actionPaste){
+					System.err.println("Paste picked up!");
+					canvas.paste();
+				}
+			}
+		});
 		
 		theCanvas.appendGeneralToolBar(theToolBarPanel);
 		

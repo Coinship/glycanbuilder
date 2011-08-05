@@ -62,18 +62,21 @@ public class GlycanRendererCanvas extends AbstractGlycanRenderer{
 		
 		Rectangle structure_all_bbox = bboxManager.getComplete(structure.getRoot(show_redend));
 
-
+		canvas.font("14pt Calibri");
+		canvas.setFillStyle("black");
+		canvas.textAlign("left");
+		canvas.fillText(getMassText(structure), Geometry.left(structure_all_bbox), Geometry.bottom(structure_all_bbox)+20);
 		
-		canvas.saveContext();
-		canvas.setLineWidth(2.0);
-		canvas.beginPath(); 
-		canvas.renderText(getMassText(structure), Geometry.left(structure_all_bbox),
-				Geometry.bottom(structure_all_bbox)+theGraphicOptions.MASS_TEXT_SPACE,0,0.5);
-		Color colour=Color.BLACK;
-		canvas.setStrokeStyle(colour.getRed(),colour.getGreen(), colour.getBlue());
-		
-		canvas.stroke();
-		canvas.restoreContext();
+//		canvas.saveContext();
+//		canvas.setLineWidth(2.0);
+//		canvas.beginPath(); 
+//		canvas.renderText(getMassText(structure), Geometry.left(structure_all_bbox),
+//				Geometry.bottom(structure_all_bbox)+theGraphicOptions.MASS_TEXT_SPACE,0,0.5);
+//		Color colour=Color.BLACK;
+//		canvas.setStrokeStyle(colour.getRed(),colour.getGreen(), colour.getBlue());
+//		
+//		canvas.stroke();
+//		canvas.restoreContext();
 	}
 
 	@Override

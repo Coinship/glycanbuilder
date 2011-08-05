@@ -1303,6 +1303,35 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		});
 		
+		final NativeButton moveCWButton=new NativeButton("Move CW");
+		
+		moveCWButton.setIcon(new ThemeResource("icons/rotatecw.png"));
+		moveCWButton.addListener(new ClickListener(){
+			private static final long serialVersionUID = -6061975045440741204L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				theCanvas.onMoveCW();
+			}
+		});
+		
+		componentsWithResidueSelectionDependency.add(moveCWButton);
+		
+		final NativeButton moveCCWButton=new NativeButton("Move CCW");
+		
+		moveCCWButton.setIcon(new ThemeResource("icons/rotateccw.png"));
+		moveCCWButton.addListener(new ClickListener(){
+			private static final long serialVersionUID = 3555726070782377309L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				theCanvas.onMoveCCW();
+			}
+		});
+		
+		componentsWithResidueSelectionDependency.add(moveCCWButton);
+		
+		
 		toolBar.addComponent(deleteButton);
 		toolBar.addComponent(copyButton);
 		toolBar.addComponent(pasteButton);
@@ -1311,6 +1340,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		toolBar.addComponent(deSelectAllButton);
 		toolBar.addComponent(bracketButton);
 		toolBar.addComponent(repeatButton);
+		toolBar.addComponent(moveCWButton);
+		toolBar.addComponent(moveCCWButton);
 		
 		theToolBarPanel.setContent(toolBar);
 	}

@@ -50,8 +50,10 @@ import org.eurocarbdb.application.glycanbuilder.Linkage;
 import org.eurocarbdb.application.glycanbuilder.LogUtils;
 import org.eurocarbdb.application.glycanbuilder.Paintable;
 import org.eurocarbdb.application.glycanbuilder.PositionManager;
+import org.eurocarbdb.application.glycanbuilder.ResAngle;
 import org.eurocarbdb.application.glycanbuilder.Residue;
 import org.eurocarbdb.application.glycanbuilder.ResidueDictionary;
+import org.eurocarbdb.application.glycanbuilder.ResiduePlacement;
 import org.eurocarbdb.application.glycanbuilder.ResidueSelectorDialog;
 import org.eurocarbdb.application.glycanbuilder.ResidueType;
 import org.eurocarbdb.application.glycanbuilder.SVGUtils;
@@ -823,5 +825,184 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 		}
 		
 		documentUpdated();
+	}
+	
+	public void onMoveCCW() {
+		Residue current = getCurrentResidue();
+		if (current == null || current.getParent() == null)
+			return;
+
+		Residue parent = current.getParent();
+		ResAngle cur_pos = posManager.getRelativePosition(current);
+
+		// try to move the children in the list
+		Residue other = getResidueBefore(parent, current, cur_pos);
+		if (other != null) {
+			moveBefore(parent, current, other);
+			updateAndMantainSelection();
+			return;
+		}
+
+		// set preferred position
+		if (!current.hasPreferredPlacement())
+			setWasSticky(current, posManager.isSticky(current));
+
+		ResAngle new_pos = null;
+		ResiduePlacement new_rp = null;
+		if (posManager.isOnBorder(current)) {
+			new_pos = (cur_pos.getIntAngle() == -90) ? new ResAngle(90)
+					: new ResAngle(-90);
+			new_rp = new ResiduePlacement(new_pos, true, false);
+		} else {
+			new_pos = (cur_pos.getIntAngle() == -90) ? new ResAngle(90)
+					: cur_pos.combine(-45);
+			new_rp = (new_pos.getIntAngle() == -90 || new_pos.getIntAngle() == 90) ? new ResiduePlacement(
+					new_pos, false, current.getWasSticky())
+					: new ResiduePlacement(new_pos, false, false);
+		}
+		setPlacement(current, new_rp);
+
+		// put residue in the correct order
+		other = getLastResidue(parent, current, new_pos);
+		moveAfter(parent, current, other);
+
+		updateAndMantainSelection();
+	}
+
+	/**
+	 * Move clockwise the display position of the residue with the focus
+	 */
+	public void onMoveCW() {
+
+		Residue current = getCurrentResidue();
+		if (current == null || current.getParent() == null)
+			return;
+
+		ResAngle cur_pos = posManager.getRelativePosition(current);
+		Residue parent = current.getParent();
+
+		// try to move the children in the list
+		Residue other = getResidueAfter(parent, current, cur_pos);
+		if (other != null) {
+			moveAfter(parent, current, other);
+			updateAndMantainSelection();
+			return;
+		}
+
+		// set preferred position
+		if (!current.hasPreferredPlacement())
+			setWasSticky(current, posManager.isSticky(current));
+
+		ResAngle new_pos = null;
+		ResiduePlacement new_rp = null;
+		if (posManager.isOnBorder(current)) {
+			new_pos = (cur_pos.getIntAngle() == -90) ? new ResAngle(90)
+					: new ResAngle(-90);
+			new_rp = new ResiduePlacement(new_pos, true, false);
+		} else {
+			new_pos = (cur_pos.getIntAngle() == 90) ? new ResAngle(-90)
+					: cur_pos.combine(45);
+			new_rp = (new_pos.getIntAngle() == -90 || new_pos.getIntAngle() == 90) ? new ResiduePlacement(
+					new_pos, false, current.getWasSticky())
+					: new ResiduePlacement(new_pos, false, false);
+		}
+		setPlacement(current, new_rp);
+
+		// put residue in the correct order
+		other = getFirstResidue(parent, current, new_pos);
+		moveBefore(parent, current, other);
+
+		updateAndMantainSelection();
+	}
+	
+	private Residue getResidueBefore(Residue parent, Residue current,
+			ResAngle cur_pos) {
+
+		Vector<Residue> linked = theBBoxManager.getLinkedResidues(current);
+		for (int i = parent.indexOf(current) - 1; i >= 0; i--) {
+			Residue other = parent.getChildAt(i);
+			if (posManager.getRelativePosition(other).equals(cur_pos)
+					&& !linked.contains(other))
+				return other;
+		}
+		return null;
+	}
+
+	private Residue getFirstResidue(Residue parent, Residue current,
+			ResAngle cur_pos) {
+		for (int i = 0; i < parent.getNoChildren(); i++) {
+			Residue other = parent.getChildAt(i);
+			if (posManager.getRelativePosition(other).equals(cur_pos)
+					&& other != current)
+				return other;
+		}
+		return null;
+	}
+
+	private Residue getLastResidue(Residue parent, Residue current,
+			ResAngle cur_pos) {
+		for (int i = parent.getNoChildren() - 1; i >= 0; i--) {
+			Residue other = parent.getChildAt(i);
+			if (posManager.getRelativePosition(other).equals(cur_pos)
+					&& other != current)
+				return other;
+		}
+		return null;
+	}
+	
+	private void moveBefore(Residue parent, Residue current, Residue other) {
+		parent.moveChildBefore(current, other);
+		for (Residue r : theBBoxManager.getLinkedResidues(current)) {
+			if (r.getParent() == parent)
+				parent.moveChildBefore(r, other);
+		}
+	}
+
+	private void moveAfter(Residue parent, Residue current, Residue other) {
+		parent.moveChildAfter(current, other);
+		for (Residue r : theBBoxManager.getLinkedResidues(current)) {
+			if (r.getParent() == parent)
+				parent.moveChildAfter(r, other);
+		}
+	}
+	
+	private void setPlacement(Residue current, ResiduePlacement new_rp) {
+		current.setPreferredPlacement(new_rp);
+		for (Residue r : theBBoxManager.getLinkedResidues(current))
+			r.setPreferredPlacement(new_rp);
+	}
+
+	private void setWasSticky(Residue current, boolean f) {
+		current.setWasSticky(f);
+		for (Residue r : theBBoxManager.getLinkedResidues(current))
+			r.setWasSticky(f);
+	}
+	
+	// ---------------
+	// visual structure rearrangement
+
+	private Residue getResidueAfter(Residue parent, Residue current,
+			ResAngle cur_pos) {
+
+		Vector<Residue> linked = theBBoxManager.getLinkedResidues(current);
+		for (int i = parent.indexOf(current) + 1; i < parent.getNoChildren(); i++) {
+			Residue other = parent.getChildAt(i);
+			if (posManager.getRelativePosition(other).equals(cur_pos)
+					&& !linked.contains(other))
+				return other;
+		}
+		return null;
+	}
+	
+	private void updateAndMantainSelection() {
+		if (currentResidue != null) {
+			Residue old_current = currentResidue;
+			theDoc.fireDocumentChanged();
+			setSelection(old_current);
+		} else if (currentLinkage != null) {
+			Linkage old_current = currentLinkage;
+			theDoc.fireDocumentChanged();
+			setSelection(old_current);
+		}
 	}
 }

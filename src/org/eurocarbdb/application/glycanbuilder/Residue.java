@@ -589,11 +589,11 @@ public class Residue {
     return preferred_placement;
     }   
 
-    protected void setWasSticky(boolean flag) {
+    public void setWasSticky(boolean flag) {
     was_sticky = flag;
     }
 
-    protected boolean getWasSticky() {
+    public boolean getWasSticky() {
     return was_sticky;
     }
 

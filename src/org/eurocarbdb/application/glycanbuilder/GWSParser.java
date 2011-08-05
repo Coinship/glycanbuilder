@@ -188,9 +188,8 @@ public class GWSParser implements GlycanParser {
     
     return str;
     }
-
-    static public String writeSubtree(Residue r, boolean ordered ) {
     
+    static public String writeSubtree(Residue r, boolean ordered ) {
     //------------
     // write type
     String str = writeResidueType(r);    
@@ -260,8 +259,14 @@ public class GWSParser implements GlycanParser {
     }        
     return sb.toString();
     }
+    
+    static public Residue readSubtree(String str, boolean accept_empty) throws Exception {
+    	return readSubtree(str, accept_empty, new ResidueHolder());
+    }
 
-    static public Residue readSubtree(String str, boolean accept_empty) throws Exception {    
+    static public Residue readSubtree(String str, boolean accept_empty, ResidueHolder startRep) throws Exception {
+    	
+    	
     if( str.length()==0 ) {
         if( accept_empty ) 
         return null;
@@ -281,10 +286,14 @@ public class GWSParser implements GlycanParser {
         if( !m.lookingAt() ) 
         throw new Exception("Invalid format for string: " + str );
         
-        if( str.charAt(0)=='[' ) 
+        if( str.charAt(0)=='[' ){ 
         ret = ResidueDictionary.createStartRepetition();       
-        else if( str.charAt(0)==']' ) 
-        ret = ResidueDictionary.createEndRepetition(m.group(1),m.group(2));        
+        startRep.res=ret;
+        }else if( str.charAt(0)==']' ) {
+        ret = ResidueDictionary.createEndRepetition(m.group(1),m.group(2));
+        startRep.res.setEndRepitionResidue(ret);
+        startRep.res=null;
+        }
         else {
         // get stereochemistry
         char ret_anom_state = '?';
@@ -354,13 +363,13 @@ public class GWSParser implements GlycanParser {
         int ind = TextUtils.findClosedParenthesis(str);
         if( ind==-1 ) throw new Exception("Invalid string format: " + str);
         
-        child_link = readSubtreeLinkage(str.substring(0,ind));
+        child_link = readSubtreeLinkage(str.substring(0,ind),startRep);
         str = str.substring(ind+1);
         nopars--;
         }
         else {
         // add last child
-        child_link = readSubtreeLinkage(str); 
+        child_link = readSubtreeLinkage(str,startRep); 
         str = "";
         }
         
@@ -374,7 +383,7 @@ public class GWSParser implements GlycanParser {
 
     
     
-    static public Linkage readSubtreeLinkage(String str) throws Exception {
+    static public Linkage readSubtreeLinkage(String str, ResidueHolder startRep) throws Exception {
     
     Matcher m = link_pattern.matcher(str);
     if( !m.lookingAt() ) 
@@ -384,7 +393,7 @@ public class GWSParser implements GlycanParser {
         // old style
 
         // parse child
-        Residue child = readSubtree(str.substring(m.end()),false);
+        Residue child = readSubtree(str.substring(m.end()),false,startRep);
 
         // create linkage
         return new Linkage(null,child,m.group(1).charAt(0));
@@ -412,7 +421,7 @@ public class GWSParser implements GlycanParser {
     }
     
     // parse child
-    Residue child = readSubtree(str.substring(m.end()),false);
+    Residue child = readSubtree(str.substring(m.end()),false,startRep);
     
     // create linkage
     Linkage ret = new Linkage(null,child);
@@ -457,6 +466,4 @@ public class GWSParser implements GlycanParser {
 
     return new ResiduePlacement(new ResAngle(Integer.parseInt(str)),false,_sticky);
     }
-   
-
 }

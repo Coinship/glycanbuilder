@@ -418,6 +418,8 @@ public class GlycoCTParser implements GlycanParser {
     end.setMinRepetitions(""+unit.getMinRepeatCount());
     end.setMaxRepetitions(""+unit.getMaxRepeatCount());
     
+    start.setEndRepitionResidue(end);
+    
     // connect end repetition to the last residue of the repeating unit
     Residue last = map.get(unit.getRepeatLinkage().getParent());
     last.addChild(end);

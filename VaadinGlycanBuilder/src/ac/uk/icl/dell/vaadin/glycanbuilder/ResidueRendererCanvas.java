@@ -194,26 +194,41 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 				}
 				
 				canvas.saveContext();
-				canvas.setLineWidth(2.0);
-				canvas.beginPath();
 				
-				TextInfo info=canvas.getRequiredScale(scale, 0.05, cur_bbox.width,cur_bbox.width, text);
+				//TextInfo info=canvas.getRequiredScale(scale, 0.05, cur_bbox.width,cur_bbox.width, text);
 				ResAngle angle=theGraphicOptions.getOrientationAngle();
+				
+				if(style.getShape()!=null){
+					canvas.font("8pt Calibri");
+				}else{
+					canvas.font("10pt Calibri");
+				}
+
+				canvas.setFillStyle("black");
+				canvas.textAlign("center");
 				
 				double rotate=0;
 				if( !(angle.equals(0) || orientation.equals(180))){
 					rotate=-Math.PI/2.0; 
-					info=canvas.getRequiredScale(scale, 0.05, cur_bbox.height,cur_bbox.height, text);
-					canvas.renderText(text, x+((cur_bbox.width)/2)-(12*info.scale)-2, y+((cur_bbox.height+info.height)/2.)-2, rotate, info.scale);
-					//canvas.renderText(text, x+((cur_bbox.height-info.width+2)/2)+(12*info.scale), y+(cur_bbox.width/2.)-(12*info.scale), rotate, info.scale);
+					//info=canvas.getRequiredScale(scale, 0.05, cur_bbox.height,cur_bbox.height, text);
+					
+					canvas.translate(pc.x+3, pc.y);
+					canvas.rotate(rotate);
+					canvas.fillText(text, 0f,0f, (float)nodeSize-20);
+					
+					
+					//canvas.renderText(text, x+((cur_bbox.width)/2)-(12*info.scale)-2, y+((cur_bbox.height+info.height)/2.)-2, rotate, info.scale);
 				}else{
-					canvas.renderText(text, x+((cur_bbox.width-info.width+2)/2), y+(cur_bbox.height/2.)-(12*info.scale), rotate, info.scale);
+					canvas.rotate(rotate);
+					canvas.fillText(text, (float)pc.x-1,(float) pc.y+3,(float) nodeSize-20);
+					
+					//canvas.renderText(text, x+((cur_bbox.width-info.width+2)/2), y+(cur_bbox.height/2.)-(12*info.scale), rotate, info.scale);
 				}
 			
 				Color colour=style.getTextColor();
 				canvas.setStrokeStyle(colour.getRed(),colour.getGreen(), colour.getBlue());
 				
-				canvas.stroke();
+//				canvas.stroke();
 				canvas.restoreContext();
 			}
 		}

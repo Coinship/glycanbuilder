@@ -1199,7 +1199,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				System.err.println("Copy");
 				theCanvas.copy();
 				pasteButton.setEnabled(true);
 			}

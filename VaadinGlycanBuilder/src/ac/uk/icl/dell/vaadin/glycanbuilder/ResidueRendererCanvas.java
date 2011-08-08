@@ -214,13 +214,13 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 					
 					canvas.translate(pc.x+3, pc.y);
 					canvas.rotate(rotate);
-					canvas.fillText(text, 0f,0f, (float)nodeSize-20);
+					canvas.fillText(text, 0f,0f, (float)cur_bbox.height);
 					
 					
 					//canvas.renderText(text, x+((cur_bbox.width)/2)-(12*info.scale)-2, y+((cur_bbox.height+info.height)/2.)-2, rotate, info.scale);
 				}else{
 					canvas.rotate(rotate);
-					canvas.fillText(text, (float)pc.x-1,(float) pc.y+3,(float) nodeSize-20);
+					canvas.fillText(text, (float)pc.x,(float) pc.y+3,(float) nodeSize);
 					
 					//canvas.renderText(text, x+((cur_bbox.width-info.width+2)/2), y+(cur_bbox.height/2.)-(12*info.scale), rotate, info.scale);
 				}

@@ -22,6 +22,7 @@ package ac.uk.icl.dell.vaadin.navigator7.common;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Layout;
 
 public abstract class HeaderFooterFluidAppLevelWindow extends FluidAppLevelWindow{
@@ -37,28 +38,36 @@ public abstract class HeaderFooterFluidAppLevelWindow extends FluidAppLevelWindo
     protected ComponentContainer createComponents() {
         CssLayout mainContainer=(CssLayout) getContent();
         mainContainer.setStyleName("igg-top-level-container");
-        mainContainer.setSizeUndefined();
+        //mainContainer.setSizeUndefined();
         
+        
+        CustomLayout layout=new CustomLayout("header_content_footer");
+        layout.setSizeUndefined();
         
         // Header
         header = createHeader();
         //header.setWidth("100%");
         
-        header.addStyleName("igg-header");
+        //header.addStyleName("igg-header");
         
-        mainContainer.addComponent(header);
+        //mainContainer.addComponent(header);
+        layout.addComponent(header,"header");
 
         // Center page area
         Layout pageBand = new CssLayout();
-        pageBand.setSizeUndefined();
-        pageBand.setStyleName("igg-content-level-container");
-        mainContainer.addComponent(pageBand);
+       // pageBand.setSizeUndefined();
+       // pageBand.setStyleName("igg-content-level-container");
+        //mainContainer.addComponent(pageBand);
+        layout.addComponent(pageBand,"content");
         
         //mainContainer.setExpandRatio(pageBand, 1f);
         
         footer=createFooter();
-        footer.addStyleName("igg-footer");
-        mainContainer.addComponent(footer);
+        //footer.addStyleName("igg-footer");
+        //mainContainer.addComponent(footer);
+        layout.addComponent(footer,"footer");
+        
+        mainContainer.addComponent(layout);
 
         return pageBand;
     }

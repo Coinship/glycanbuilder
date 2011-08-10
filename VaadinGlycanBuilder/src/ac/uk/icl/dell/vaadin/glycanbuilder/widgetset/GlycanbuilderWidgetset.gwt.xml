@@ -28,4 +28,6 @@
     <inherits name="ac.uk.icl.dell.gwt.EnhancedcanvasWidgetset" />
 
     <inherits name="org.vaadin.weelayout.WeelayoutWidgetset" />
+
+    <inherits name="com.github.wolfie.refresher.RefresherApplicationWidgetset" />
 </module>

@@ -56,7 +56,9 @@ import org.vaadin.damerell.canvas.BasicCanvas;
 import org.vaadin.damerell.canvas.font.Font;
 import org.vaadin.damerell.canvas.font.Font.FONT;
 import org.vaadin.hene.popupbutton.PopupButton;
+import org.vaadin.hezamu.canvas.Canvas.DimensionEventListener;
 import org.vaadin.navigator7.NavigableApplication;
+import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 import org.vaadin.weelayout.WeeLayout;
 import org.vaadin.weelayout.WeeLayout.Direction;
 
@@ -65,10 +67,14 @@ import ac.uk.icl.dell.vaadin.MessageDialogBox;
 import ac.uk.icl.dell.vaadin.ProducesLocalResources;
 import ac.uk.icl.dell.vaadin.glycanbuilder.MassOptionsDialog.MassOptionListener;
 
+import com.github.wolfie.refresher.Refresher;
+import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.FileResource;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Alignment;
@@ -92,7 +98,7 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.SelectionListener, GlycanCanvas.GlycanCanvasUpdateListener, GlycanCanvas.SelectionChangeListener, ProducesLocalResources, MassOptionListener{
+public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.SelectionListener, GlycanCanvas.GlycanCanvasUpdateListener, GlycanCanvas.SelectionChangeListener, ProducesLocalResources, MassOptionListener{//, DimensionEventListener{
 	private static final long serialVersionUID=-4055030966241059255L;
 	
 	private List<Component> componentsWithResidueSelectionDependency;
@@ -125,7 +131,13 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private PopupButton linkage_one_panel;
 
 	private PopupButton linkage_two_panel;
-
+	
+	float realWidth;
+	float realHeight;
+	
+	//private Long lastScreenResizeRequest;
+	private boolean waiting=false; 
+	
 	public VaadinGlycanCanvas() {
 		theCanvas=new GlycanCanvas(new GlycanRendererCanvas(),new CanvasPaintable(this));
 		theCanvas.addGlycanCanvasUpdateListener(this);
@@ -146,6 +158,37 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		theCanvas.addSelectionChangeListener(this);
 		theCanvas.theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS=false;
 		theCanvas.theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS=false;
+		
+		//addListener((DimensionEventListener)this);
+		
+		setImmediate(true);
+		
+//		refresher = new Refresher();
+//		refresher.addListener(new RefreshListener(){
+//			@Override
+//			public void refresh(Refresher source) {
+//				if(lastScreenResizeRequest!=null && System.currentTimeMillis()-lastScreenResizeRequest>650){
+//					System.out.println("Poll resize");
+//					
+//					repaintOnDimensionUpdate=true;
+//					
+//					fireDimensionEvent();
+//					lastScreenResizeRequest=null;
+//					waiting=false;
+//					
+//					refresher.setRefreshInterval(250);
+//				}else{
+//					refresher.setRefreshInterval((long)(refresher.getRefreshInterval()*1.5));
+//					System.err.println("R: "+refresher.getRefreshInterval());
+//					repaintOnDimensionUpdate=true;
+//					fireDimensionEvent();
+//				}
+//			}
+//		});
+//		
+//		refresher.setRefreshInterval(250);
+		
+	//	NavigableApplication.getCurrentNavigableAppLevelWindow().addComponent(refresher);
 	}
 
 	public void appendStructureMenu(MenuBar.MenuItem parent){
@@ -1161,6 +1204,10 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private HorizontalLayout popupLayout2;
 
 	private Property.ValueChangeListener defaultListener;
+
+	private float parentRealWidth;
+
+	private float parentRealHeight;
 	
 	public void appendLinkageToolBar(Panel theLinkageToolBarPanel){
 		linkagePanel=theLinkageToolBarPanel;
@@ -1375,13 +1422,58 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		this.automaticallyAdjustHeight=automaticallyAdjustHeight;
 	}
 	
+	private boolean needsRepaint=false;
+	
 	private void updateCanvasHeight(){
 		if(automaticallyAdjustHeight){
 			//String width=String.valueOf(getWindow().getHeight());
 			//System.err.println("Width: "+width);
-			setHeight(theCanvas.getHeight()+100+"px");
+			
+			int proposedHeight=theCanvas.getHeight();
+			if(theCanvas.theGlycanRenderer.getRenderMode()==GlycanRendererMode.TOOLBAR){
+				proposedHeight+=2;
+			}else{
+				proposedHeight+=100;
+			}
+			
+			
+			
+			
+			
+//			System.err.println(proposedHeight+"|"+realHeight+"|"+parentRealHeight);
+//			if(proposedHeight>parentRealHeight){
+//				System.err.println("Setting new height to: "+proposedHeight);
+//				
+//				
+//				
+//				
+//				
+//				
+//				
+//				setHeight(proposedHeight+"px");
+//				needsRepaint=true;
+//			}else if(proposedHeight<parentRealHeight){
+//				System.err.println("Setting new height to: "+parentRealHeight);
+//				setHeight(parentRealHeight+"px");
+//				needsRepaint=true;
+//			}
+			
+			int proposedWidth=theCanvas.getWidth();
+			
+//			System.err.println(theCanvas.theGlycanRenderer.getRenderMode()+"|"+proposedWidth+"|"+realWidth+"|"+parentRealWidth);
+//			if(proposedWidth>parentRealWidth){
+//				setWidth(proposedWidth+"px");
+//				needsRepaint=true;
+//			}else if(proposedWidth<parentRealWidth){
+//				System.err.println("Setting new width to: "+parentRealWidth);
+//				setWidth(parentRealWidth+"px");
+//				needsRepaint=true;
+//			}
+			
 			//getParent().getContent().setHeight(theCanvas.getHeight()+"px");
 			////theParentPanel.requestRepaint();
+			
+			setMinimumSize(proposedWidth, proposedHeight);
 		}
 	}
 	
@@ -1468,7 +1560,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	}
 
 	@Override
-	public void glycanCanvasUpdated() {
+	public synchronized void glycanCanvasUpdated() {
 		updateActions();
 		updateCanvasHeight();
 		requestRepaint();
@@ -1502,5 +1594,56 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		theCanvas.theWorkspace.getDefaultMassOptions().setValues(massOptions);
 		
 		theCanvas.documentUpdated();
+	}
+
+//	public volatile boolean repaintOnDimensionUpdate=false;
+
+	//private Refresher refresher;
+	
+//	@Override
+//	public synchronized void dimensionUpdate(float width, float height, Component component, float parentWidth, float parentHeight) {
+//		realWidth=width;
+//		realHeight=height;
+//		parentRealWidth=parentWidth;
+//		parentRealHeight=parentHeight;
+//		
+//		if(repaintOnDimensionUpdate){
+//			repaintOnDimensionUpdate=false;
+//			
+//			updateCanvasHeight();
+//			
+//			if(needsRepaint){
+//				needsRepaint=false;
+//				requestRepaint();
+//			}
+//		}
+//	}
+
+	public synchronized void resizeCanvas() {
+//		if(lastScreenResizeRequest==null){
+//			repaintOnDimensionUpdate=true;
+//			
+//			fireDimensionEvent();
+//			
+//			refresher.setRefreshInterval(100);
+//		}else{
+//			if(waiting==false){
+//				waiting=true;
+//				refresher.setRefreshInterval(100);
+//			}
+//		}
+//		
+//		lastScreenResizeRequest=System.currentTimeMillis();
+	}
+	
+	@Override
+	public void paintContent(PaintTarget target) throws PaintException {
+		super.paintContent(target);
+		
+		/**
+		 * - When a page is refreshed we currently don't have a method of reinstalling the client side resize repeat command
+		 * - So this is just a hack to get around this limitation
+		 */
+		updateCanvasHeight();
 	}
 }

@@ -24,6 +24,7 @@ import ac.uk.icl.dell.vaadin.SimpleFileMenu;
 
 import com.vaadin.Application;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Window;
 
 public class GlycanBuilderWindow extends Application{
@@ -37,16 +38,21 @@ public class GlycanBuilderWindow extends Application{
 		
 		SimpleFileMenu menu=new SimpleFileMenu();
 		
-		GlycanBuilder builder=new GlycanBuilder(menu);
+		CustomLayout layout=new CustomLayout("header_content_footer_layout");
+		layout.addComponent(menu, "header");
 		
-		CssLayout layout=new CssLayout();
-		layout.setSizeFull();
-		layout.setStyleName("igg-top-level-container");
 		
-		mainWindow.setSizeFull();
-		mainWindow.setContent(layout);
 		
-		mainWindow.getContent().addComponent(menu);
-		mainWindow.getContent().addComponent(builder);
+//		GlycanBuilder builder=new GlycanBuilder(menu);
+//		
+//		CssLayout layout=new CssLayout();
+//		layout.setSizeFull();
+//		layout.setStyleName("igg-top-level-container");
+//		
+//		mainWindow.setSizeFull();
+//		mainWindow.setContent(layout);
+//		
+//		mainWindow.getContent().addComponent(menu);
+//		mainWindow.getContent().addComponent(builder);
 	}
 }

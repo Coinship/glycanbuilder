@@ -97,6 +97,7 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	protected Paintable thePaintable;
 	
 	protected int height;
+	protected int width;
 	
 	@SuppressWarnings("unused")
 	private boolean residueSelected=false;
@@ -113,6 +114,10 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 
 	public int getHeight() {
 		return height;
+	}
+	
+	public int getWidth(){
+		return width;
 	}
 
 	protected HashSet<GlycanCanvasUpdateListener> glycanCanvasUpdateListeners;
@@ -577,7 +582,27 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 			}
 		}
 		
-		height=height+theWorkspace.getGraphicOptions().MARGIN_TOP+theWorkspace.getGraphicOptions().MARGIN_BOTTOM+theWorkspace.getGraphicOptions().MASS_TEXT_SPACE;
+		if(theGlycanRenderer.getRenderMode()!=GlycanRendererMode.TOOLBAR){
+			height=height+theWorkspace.getGraphicOptions().MARGIN_TOP+theWorkspace.getGraphicOptions().MARGIN_BOTTOM+theWorkspace.getGraphicOptions().MASS_TEXT_SPACE;
+		}
+		
+		if(theGlycanRenderer.getRenderMode()==GlycanRendererMode.TOOLBAR){
+			width=0;
+			for(Residue residue:theBBoxManager.complete_bboxes.keySet()){
+				Rectangle rec=theBBoxManager.complete_bboxes.get(residue);
+				width+=rec.width+theGlycanRenderer.getGraphicOptions().STRUCTURES_SPACE;
+			}
+		}else{
+			width=-1;
+			for(Residue residue:theBBoxManager.complete_bboxes.keySet()){
+				Rectangle rec=theBBoxManager.complete_bboxes.get(residue);
+				if(rec.x+rec.width > width){
+					width=rec.x+rec.width;
+				}
+			}
+		}
+		
+		
 	}
 	
 	public interface ResidueHistoryListener{

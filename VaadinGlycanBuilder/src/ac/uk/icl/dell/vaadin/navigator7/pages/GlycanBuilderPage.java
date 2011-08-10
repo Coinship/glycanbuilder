@@ -28,26 +28,31 @@ import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Panel;
 
 @Page
 public class GlycanBuilderPage implements PageWrapper{
-	CssLayout layout;
+	//CssLayout layout;
 	GlycanBuilder theGlycanBuilder;
 	
 	public GlycanBuilderPage(){
-		layout=new CssLayout();
-		
+	//	layout=new CssLayout();
+//		
 		IGGAppLevelWindow window=(IGGAppLevelWindow)IGGApplication.getCurrentNavigableAppLevelWindow();
 		theGlycanBuilder=new GlycanBuilder(window.getApplicationMenu());
 		
 		theGlycanBuilder.getVaadinGlycanCanvas().addLocalResourceWatcher(((IGGApplication)IGGApplication.getCurrent()));
 		
-		layout.setSizeUndefined();
-		layout.addComponent(theGlycanBuilder);
+		//layout.setSizeUndefined();
+		//layout.addComponent(theGlycanBuilder);
 	}
 
 	@Override
 	public Component getComponent(){
-		return layout;
+		//Panel panel=new Panel();
+		
+		
+		return theGlycanBuilder;
+		//return panel;
 	}
 }

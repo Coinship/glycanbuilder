@@ -9,7 +9,7 @@
 	</context-param>
 	<servlet>
 		<servlet-name>Glycanbuilder Application</servlet-name>
-		<servlet-class>org.vaadin.navigator7.NavigableApplicationServlet</servlet-class>
+		<servlet-class>ac.uk.icl.dell.vaadin.navigator7.IGGApplicationServlet</servlet-class>
 		<init-param>
 			<description>Vaadin application class to start</description>
 			<param-name>application</param-name>

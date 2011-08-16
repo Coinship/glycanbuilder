@@ -644,6 +644,10 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		return count;
 	}   
 
+	public boolean contains(Glycan other, boolean include_redend, boolean include_all_leafs) {
+		return contains(other, include_redend, include_all_leafs, true);
+	}
+	
 	/**
        Return <code>true</code> if this structure contain
        <code>other</code>.  A full substructure search is performed,
@@ -654,15 +658,19 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
        must contain all the leaf of the other structure.
        @see Residue#fuzzyMatch       
 	 */
-	public boolean contains(Glycan other, boolean include_redend, boolean include_all_leafs) {
+	public boolean contains(Glycan other, boolean include_redend, boolean include_all_leafs, boolean fuzzy) {
 		return (other==null ||
-				(countSubtree(this.getRoot(false),other.getRoot(false),include_redend,include_all_leafs,true)!=0 &&
-						contains(this.getBracket(),other.getBracket(),include_all_leafs)) ||
+				(countSubtree(this.getRoot(false),other.getRoot(false),include_redend,include_all_leafs,true,fuzzy)!=0 &&
+						contains(this.getBracket(),other.getBracket(),include_all_leafs,fuzzy)) ||
 						(other.getBracket()==null && (!include_redend || this.getRoot(false)==null) &&
-								countSubtree(this.getBracket(),other.getRoot(false),include_redend,include_all_leafs,true)!=0)
+								countSubtree(this.getBracket(),other.getRoot(false),include_redend,include_all_leafs,true,fuzzy)!=0)
 		);        
 	}
 
+	public int count(Glycan other, boolean include_redend, boolean include_all_leafs) {
+		return count(other, include_redend, include_all_leafs, true);
+	}
+	
 	/**
        Return the number of times this structure contain
        <code>other</code>. A full substructure search is performed,
@@ -673,24 +681,27 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
        must contain all the leaf of the other structure.
        @see Residue#fuzzyMatch       
 	 */
-	public int count(Glycan other, boolean include_redend, boolean include_all_leafs) {
+	public int count(Glycan other, boolean include_redend, boolean include_all_leafs, boolean fuzzy) {
 		if( other==null )
 			return 1;
 
-		int count = countSubtree(this.getRoot(false),other.getRoot(false),include_redend,include_all_leafs,false);
-		if( count!=0 && contains(this.getBracket(),other.getBracket(),include_all_leafs) )
+		int count = countSubtree(this.getRoot(false),other.getRoot(false),include_redend,include_all_leafs,false,fuzzy);
+		if( count!=0 && contains(this.getBracket(),other.getBracket(),include_all_leafs,fuzzy) )
 			return count;
 		else if( other.getBracket()==null && (!include_redend || this.getRoot(false)==null) )
-			return countSubtree(this.getBracket(),other.getRoot(false),include_redend,include_all_leafs,true);
+			return countSubtree(this.getBracket(),other.getRoot(false),include_redend,include_all_leafs,true,fuzzy);
 		else
 			return 0;
 	}
 
-
 	private int countSubtree(Residue container, Residue terminal, boolean include_redend, boolean include_all_leafs, boolean stop_at_first) {
+		return countSubtree(container, terminal, include_redend, include_all_leafs, stop_at_first, true);
+	}
+
+	private int countSubtree(Residue container, Residue terminal, boolean include_redend, boolean include_all_leafs, boolean stop_at_first, boolean fuzzy) {
 		int count = 0;
 
-		if( contains(container,terminal,include_all_leafs) ) {
+		if( contains(container,terminal,include_all_leafs,fuzzy) ) {
 			if( stop_at_first )        
 				return 1;    
 			count = 1;
@@ -703,7 +714,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		if( !include_redend ) {
 			// explore the tree
 			for( Linkage l : container.getChildrenLinkages() ) {
-				count += countSubtree(l.getChildResidue(),terminal,false,include_all_leafs,stop_at_first);
+				count += countSubtree(l.getChildResidue(),terminal,false,include_all_leafs,stop_at_first,fuzzy);
 				if( count!=0 && stop_at_first )                
 					return 1;    
 			}
@@ -712,14 +723,22 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 	}
 
 	private boolean contains(Linkage container, Linkage other, boolean include_all_leafs) {
-		if( !container.fuzzyMatch(other) ) {
+		return contains(container, other, include_all_leafs, true);
+	}
+	
+	private boolean contains(Linkage container, Linkage other, boolean include_all_leafs, boolean fuzzy) {
+		if( !container.match(other,fuzzy) ) {
 			//System.out.println("link mismatch " + GWSParser.toStringLinkage(container) + " " + GWSParser.toStringLinkage(other) + " at " + GWSParser.writeResidueType(container.getParentResidue()));
 			return false;
 		}
-		return contains(container.getChildResidue(), other.getChildResidue(), include_all_leafs);
+		return contains(container.getChildResidue(), other.getChildResidue(), include_all_leafs,fuzzy);
+	}
+	
+	private boolean contains(Residue container, Residue other, boolean include_all_leafs) {
+		return contains(container, other, include_all_leafs, true);
 	}
 
-	private boolean contains(Residue container, Residue other, boolean include_all_leafs) {
+	private boolean contains(Residue container, Residue other, boolean include_all_leafs, boolean fuzzy) {
 		if( other==null ) {
 			//System.out.println("other null: " + container);
 			return (container==null || !include_all_leafs);
@@ -730,7 +749,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 		}
 
 		// match current nodes
-		if( !container.fuzzyMatch(other) ) {
+		if( !container.match(other,fuzzy) ) {
 			//System.out.println("residue mismatch " + GWSParser.writeResidueType(container));
 			return false;
 		}
@@ -755,7 +774,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 			for( int l=0,i=0; l<other.getNoChildren(); l++ ) {
 				boolean contains = false;
 				for( ; i<container.getNoChildren(); i++ ) {
-					if( contains(container.getLinkageAt(i),other.getLinkageAt(indices[l]),include_all_leafs) ) {
+					if( contains(container.getLinkageAt(i),other.getLinkageAt(indices[l]),include_all_leafs,fuzzy) ) {
 						matched++;
 						i++;
 						break;        

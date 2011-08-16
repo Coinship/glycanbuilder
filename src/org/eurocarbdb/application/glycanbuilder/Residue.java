@@ -906,31 +906,43 @@ public class Residue {
     // structure navigation
     
     private boolean fuzzyMatch(char c1, char c2) {
-    return (c1==c2 || c1=='?' || c2=='?' );        
+    	return match(c1, c2, true);
     }
-
+    
+    private boolean match(char c1, char c2, boolean fuzzy) {
+    return (c1==c2 || (fuzzy && (c1=='?' || c2=='?' )));        
+    }
+    
     private boolean fuzzyMatch(ResidueType rt1, ResidueType rt2) {
-    return rt1.getName().equals(rt2.getName()) ||
-        rt1.getCompositionClass().equals(rt2.getName()) ||
-        rt1.getName().equals(rt2.getCompositionClass());    
+    	return match(rt1,rt2,true);
     }
 
+    private boolean match(ResidueType rt1, ResidueType rt2, boolean fuzzy) {
+    return rt1.getName().equals(rt2.getName()) || ( fuzzy &&(
+        rt1.getCompositionClass().equals(rt2.getName()) ||
+        rt1.getName().equals(rt2.getCompositionClass())));    
+    }
+
+    public boolean fuzzyMatch(Residue other) {
+    	return match(other,true);
+    }
+    
     /**
        Return <code>true</code> if the two residues match, considering
        undefined stereochemistry configurations and residue super
        classes as wildcards.
      */
-    public boolean fuzzyMatch(Residue other) {
+    public boolean match(Residue other, boolean fuzzy) {
     if( other==null )
         return false;
 
-    if( !fuzzyMatch(this.getType(),other.getType()) )
+    if( !match(this.getType(),other.getType(),fuzzy) )
         return false;
-    if( !fuzzyMatch(this.anomeric_state,other.anomeric_state) )
+    if( !match(this.anomeric_state,other.anomeric_state,fuzzy) )
         return false;
-    if( !fuzzyMatch(this.anomeric_carbon,other.anomeric_carbon) )
+    if( !match(this.anomeric_carbon,other.anomeric_carbon,fuzzy) )
         return false;    
-    if( !fuzzyMatch(this.chirality,other.chirality) )
+    if( !match(this.chirality,other.chirality,fuzzy) )
         return false;
     //if( !fuzzyMatch(this.ring_size,other.ring_size) )
     //return false;

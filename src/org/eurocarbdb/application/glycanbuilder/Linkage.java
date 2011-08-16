@@ -422,11 +422,15 @@ public class Linkage {
     return true;
     }    
 
+    public boolean fuzzyMatch(Linkage other) {
+    	return match(other, true);
+    }
+    
     /**
        Return <code>true</code> if the two objects are
        similar. Undefined positions are treated as wildcards.
      */
-    public boolean fuzzyMatch(Linkage other) {
+    public boolean match(Linkage other,boolean fuzzy) {
     if( other==null )
         return false;
     
@@ -439,7 +443,7 @@ public class Linkage {
         int[] indices = cg.getNext();  
         int i=0;
         for( ; i<this.bonds.size(); i++ ) {
-        if( !this.bonds.get(i).fuzzyMatch(other.bonds.get(indices[i])) )
+        if( !this.bonds.get(i).match(other.bonds.get(indices[i]),fuzzy) )
             break;
         }
         if( i==this.bonds.size() )

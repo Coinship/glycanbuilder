@@ -159,7 +159,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     else if( common_options.REDUCING_END_TYPE.isCustomType() ) {
         field_reducingend.setSelectedItem("Other...");
         field_other_name.setText(common_options.REDUCING_END_TYPE.getResidueName());
-        field_other_mass.setText("" + common_options.REDUCING_END_TYPE.getResidueMassMain());
+        field_other_mass.setText("" + (common_options.REDUCING_END_TYPE.getResidueMassMain()-MassUtils.water.getMainMass()));
     }
     else {
         field_reducingend.setSelectedItem(common_options.REDUCING_END_TYPE.getName());

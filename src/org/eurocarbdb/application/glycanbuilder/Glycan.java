@@ -362,8 +362,15 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 			return null;
 
 		//    if( ret_redend || !(root.getTypeName().equals("freeEnd") || root.getTypeName().equals("redEnd") || root.getTypeName().equals("#attach")) )
-		if( ret_redend || !(root.getTypeName().equals("freeEnd") || root.getTypeName().equals("redEnd") ||root.getTypeName().equals("#attach")) )
+		/**
+		 * TODO: One user has asked for reducing end residues not to be shown regardless of type when the hide reducing end indicator check box is ticked
+		 *       Is this a behaviour everyone would agree one?
+		 */
+		//if( ret_redend || !(root.getTypeName().equals("freeEnd") || root.getTypeName().equals("redEnd") ||root.getTypeName().equals("#attach")) )
+		//	return root;
+		if(ret_redend){
 			return root;
+		}
 
 		return root.firstChild();
 	}

@@ -1156,7 +1156,8 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 	private boolean isDropped(ResidueType type) {
 		if( type.isDroppedWithMethylation() &&
 				(mass_options.DERIVATIZATION.equals(MassOptions.PERMETHYLATED) ||
-						mass_options.DERIVATIZATION.equals(MassOptions.PERDMETHYLATED)) )
+						mass_options.DERIVATIZATION.equals(MassOptions.PERDMETHYLATED) ||
+							mass_options.DERIVATIZATION.equals(MassOptions.HEAVYPERMETHYLATION)) )
 			return true;
 		if( type.isDroppedWithAcetylation() &&
 				(mass_options.DERIVATIZATION.equals(MassOptions.PERACETYLATED) ||
@@ -1167,7 +1168,8 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 
 	private int noSubstitutions(ResidueType type) {
 		if( mass_options.DERIVATIZATION.equals(MassOptions.PERMETHYLATED) ||
-				mass_options.DERIVATIZATION.equals(MassOptions.PERDMETHYLATED) )
+				mass_options.DERIVATIZATION.equals(MassOptions.PERDMETHYLATED) ||
+						mass_options.DERIVATIZATION.equals(MassOptions.HEAVYPERMETHYLATION) )
 			return type.getNoMethyls();
 		if( mass_options.DERIVATIZATION.equals(MassOptions.PERACETYLATED) ||
 				mass_options.DERIVATIZATION.equals(MassOptions.PERDACETYLATED) )
@@ -1184,6 +1186,8 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 			return (MassUtils.acetyl.getMass() - MassUtils.hydrogen.getMass());
 		if( mass_options.DERIVATIZATION.equals(MassOptions.PERDACETYLATED) ) 
 			return (MassUtils.dacetyl.getMass() - MassUtils.hydrogen.getMass());
+		if( mass_options.DERIVATIZATION.equals(MassOptions.HEAVYPERMETHYLATION) ) 
+			return (MassUtils.heavyMethyl.getMass() - MassUtils.hydrogen.getMass());
 		return 0.;
 	}
 
@@ -1196,6 +1200,8 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter {
 			return MassUtils.acetyl.and(MassUtils.hydrogen,-1);
 		if( mass_options.DERIVATIZATION.equals(MassOptions.PERDACETYLATED) ) 
 			return MassUtils.dacetyl.and(MassUtils.hydrogen,-1);
+		if( mass_options.DERIVATIZATION.equals(MassOptions.HEAVYPERMETHYLATION) ) 
+			return MassUtils.heavyMethyl.and(MassUtils.hydrogen,-1);
 		return new Molecule();
 	}
 

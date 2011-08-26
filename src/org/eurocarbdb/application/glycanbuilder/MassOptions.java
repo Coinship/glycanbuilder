@@ -42,6 +42,8 @@ public class MassOptions {
 	public static final String NO_DERIVATIZATION = "Und";
 	/** Structure is permethylated */
 	public static final String PERMETHYLATED = "perMe";
+	/** Structure is heavy permethylated */
+	public static final String HEAVYPERMETHYLATION = "perMe(C^13)";
 	/** Structure is perdeuteromethylated */
 	public static final String PERDMETHYLATED = "perDMe";
 	/** Structure is peracetylated */
@@ -50,7 +52,7 @@ public class MassOptions {
 	public static final String PERDACETYLATED = "perDAc";
 	/** List of possible persubstitutions */
 	public static final String[] DERIVATIZATIONS = new String[] {
-			NO_DERIVATIZATION, PERMETHYLATED, PERDMETHYLATED, PERACETYLATED,
+			NO_DERIVATIZATION, PERMETHYLATED, HEAVYPERMETHYLATION, PERDMETHYLATED, PERACETYLATED,
 			PERDACETYLATED };
 
 	/** Structure persubstitution */
@@ -87,6 +89,7 @@ public class MassOptions {
 	public static final String ION_CL = "Cl";
 	
 	public static final String ION_H2PO4 = "H2PO4";
+	
 
 	// pojo
 

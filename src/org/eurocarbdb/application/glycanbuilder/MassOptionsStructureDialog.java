@@ -130,7 +130,7 @@ public class MassOptionsStructureDialog extends EscapeDialog implements java.awt
     // set models
     field_isotope.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"---",MassOptions.ISOTOPE_MONO,MassOptions.ISOTOPE_AVG}));
 
-        field_derivatization.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"---",MassOptions.NO_DERIVATIZATION,MassOptions.PERMETHYLATED,MassOptions.PERDMETHYLATED,MassOptions.PERACETYLATED,MassOptions.PERDACETYLATED}));
+        field_derivatization.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"---",MassOptions.NO_DERIVATIZATION,MassOptions.PERMETHYLATED,MassOptions.PERDMETHYLATED,MassOptions.HEAVYPERMETHYLATION,MassOptions.PERACETYLATED,MassOptions.PERDACETYLATED}));
 
     field_reducingend.setModel(new javax.swing.DefaultComboBoxModel(new Union<String>().and("---").and(ResidueDictionary.getReducingEndsString()).and("Other...").toArray(new String[0])));
 

@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.eurocarbdb.application.glycanbuilder.Glycan;
 import org.eurocarbdb.application.glycanbuilder.MassOptions;
+import org.eurocarbdb.application.glycanbuilder.MassUtils;
 import org.eurocarbdb.application.glycanbuilder.ResidueDictionary;
 import org.eurocarbdb.application.glycanbuilder.ResidueType;
 import org.eurocarbdb.application.glycanbuilder.Union;
@@ -135,7 +136,7 @@ public  class MassOptionsConfigurator {
     
     private void initData(){
     	inputDevice.setIsotopValues(new String[] {"---",MassOptions.ISOTOPE_MONO,MassOptions.ISOTOPE_AVG});
-    	inputDevice.setDerivatizationValues(new String[] {"---",MassOptions.NO_DERIVATIZATION,MassOptions.PERMETHYLATED,MassOptions.PERDMETHYLATED,MassOptions.PERACETYLATED,MassOptions.PERDACETYLATED});
+    	inputDevice.setDerivatizationValues(new String[] {"---",MassOptions.NO_DERIVATIZATION,MassOptions.PERMETHYLATED,MassOptions.PERDMETHYLATED, MassOptions.HEAVYPERMETHYLATION,MassOptions.PERACETYLATED,MassOptions.PERDACETYLATED});
     	inputDevice.setReducingEndValues(new Union<String>().and("---").and(ResidueDictionary.getReducingEndsString()).and("Other...").toArray(new String[0]));
     	
     	inputDevice.setNAIonRange(generateValues(0,10,true));
@@ -161,7 +162,7 @@ public  class MassOptionsConfigurator {
         }else if(common_options.REDUCING_END_TYPE.isCustomType()) {
         	inputDevice.setSelectedReducingEnd("Other...");
         	inputDevice.setOtherName(common_options.REDUCING_END_TYPE.getResidueName());
-        	inputDevice.setOtherMass("" + common_options.REDUCING_END_TYPE.getResidueMassMain());
+        	inputDevice.setOtherMass("" + (common_options.REDUCING_END_TYPE.getResidueMassMain()-MassUtils.water.getMainMass()));
         }else{
         	inputDevice.setSelectedReducingEnd(common_options.REDUCING_END_TYPE.getName());
         	inputDevice.setOtherName("");

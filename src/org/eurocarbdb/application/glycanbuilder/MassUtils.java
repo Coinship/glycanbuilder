@@ -49,6 +49,9 @@ public class MassUtils {
 
 	/** A methyl group. */
 	public static Molecule methyl;
+	
+	/** A C^13 methyl, see http://cell.ccrc.uga.edu/~pierce/alvarez_isotop_paper.pdf */
+	public static Molecule heavyMethyl;
 
 	/** A deutero-methyl group. */
 	public static Molecule dmethyl;
@@ -95,6 +98,8 @@ public class MassUtils {
 			dmethyl = new Molecule("CD3");
 			acetyl = new Molecule("C2H3O");
 			dacetyl = new Molecule("C2D3O");
+			
+			heavyMethyl = new Molecule("C^13H3");
 
 			h_ion = new Molecule("H+");
 			li_ion = new Molecule("Li+");
@@ -169,6 +174,9 @@ public class MassUtils {
 						if (atom_all_isotopes.get(atom) == null)
 							atom_all_isotopes.put(atom, new Vector<Isotope>());
 						atom_all_isotopes.get(atom).add(isotope);
+						
+						Atom isotopeAtomObj=new Atom(atom.getSymbol()+"^"+isotope.getAtomicNumber()+"\t"+atom.getName()+"("+isotope.getAtomicNumber()+")"+"\t"+isotope.getMass()+"\t"+isotope.getMass());
+						atoms.put(isotopeAtomObj.getSymbol(), isotopeAtomObj);
 					}
 				}
 			}

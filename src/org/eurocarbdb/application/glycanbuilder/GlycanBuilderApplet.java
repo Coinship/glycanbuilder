@@ -171,6 +171,21 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 
 		theCanvas = new GlycanCanvas(null, theWorkspace, theThemeManager, false);
 
+		String allowUncertainTerminalsString=getParameter("allowUncertainTerminals");
+		if(allowUncertainTerminalsString!=null){
+			theCanvas.setAllowUncertainTerminals(Boolean.parseBoolean(allowUncertainTerminalsString));
+		}
+		
+		String allowRepeatingUnitsString=getParameter("allowRepeatingUnits");
+		if(allowRepeatingUnitsString!=null){
+			theCanvas.setAllowRepeatingUnits(Boolean.parseBoolean(allowRepeatingUnitsString));
+		}
+		
+		String allowMultipleStructuresString=getParameter("allowMultipleStructures");
+		if(allowMultipleStructuresString!=null){
+			theCanvas.setAllowMultipleStructures(Boolean.parseBoolean(allowMultipleStructuresString));
+		}
+		
 		// set the layout
 		getContentPane().setLayout(new BorderLayout());
 

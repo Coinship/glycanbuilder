@@ -151,6 +151,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		BaseDocument.DocumentChangeListener, ResidueHistory.Listener,
 		Printable, MouseListener, MouseMotionListener {
 	private static ICON_SIZE defaultMenuIconSize = ICON_SIZE.L3;
+	
+	private boolean allowRepeatingUnits=true;
+	private boolean allowMultipleStructures=true;
+	private boolean allowUncertainTerminals=true;
 
 	// Classes
 
@@ -853,8 +857,18 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		getTheActionManager().get("copy").setEnabled(hasSelectedResidues());
 		getTheActionManager().get("delete").setEnabled(hasSelectedResidues());
 
-		getTheActionManager().get("bracket").setEnabled(hasCurrentResidue());
-		getTheActionManager().get("repeat").setEnabled(hasCurrentResidue());
+		if(allowUncertainTerminals==false){
+			getTheActionManager().get("bracket").setEnabled(false);
+		}else{
+			getTheActionManager().get("bracket").setEnabled(hasCurrentResidue());
+		}
+		
+		if(allowRepeatingUnits==false){
+			getTheActionManager().get("repeat").setEnabled(false);
+		}else{
+			getTheActionManager().get("repeat").setEnabled(hasCurrentResidue());
+		}
+		
 		getTheActionManager().get("properties").setEnabled(hasCurrentResidue());
 
 		// theActionManager.get("orientation").putValue(Action.SMALL_ICON,
@@ -865,7 +879,41 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		getTheActionManager().get("moveccw").setEnabled(hasCurrentSelection());
 		// theActionManager.get("resetplace").setEnabled(hasCurrentSelection());
 		getTheActionManager().get("movecw").setEnabled(hasCurrentSelection());
+		
+		if(allowMultipleStructures==false){
+			if(theDoc.getNoStructures()==0){
+				setAddStructureStatus(true);
+			}else if(getSelectedResidues().length==0){
+				setAddStructureStatus(false);
+			}else{
+				setAddStructureStatus(true);
+			}
+		}else{
+			setAddStructureStatus(true);
+		}
+	}
+	
+	protected void setAddStructureStatus(boolean enable){
+		ResidueRenderer rr = getTheGlycanRenderer().getResidueRenderer();
+		for (ResidueType t : ResidueDictionary.allResidues()) {
 
+			getTheActionManager().get("change=" + t.getName()).setEnabled(enable);
+
+			if (t.canHaveParent()) {
+				getTheActionManager().get("add=" + t.getName()).setEnabled(enable);
+			}
+			if (t.canHaveParent() && t.canHaveChildren())
+				getTheActionManager().get("insert=" + t.getName()).setEnabled(enable);
+			if (t.canBeReducingEnd())
+				getTheActionManager().get("redend=" + t.getName()).setEnabled(enable);
+		}
+		
+		for (CoreType t : CoreDictionary.getCores()) {
+			getTheActionManager().get("addstructure=" + t.getName()).setEnabled(enable);
+		}
+		
+		getTheActionManager().get("addstructurestr").setEnabled(enable);
+		getTheActionManager().get("addcomposition").setEnabled(enable);
 	}
 	
 	private void updateOrientation(){
@@ -4741,5 +4789,35 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	public GlycanRendererAWT getTheGlycanRenderer() {
 		return theGlycanRenderer;
+	}
+	
+	public boolean isAllowRepeatingUnits(){
+		return allowRepeatingUnits;
+	}
+
+	public void setAllowRepeatingUnits(boolean allowRepeatingUnits){
+		this.allowRepeatingUnits=allowRepeatingUnits;
+		
+		updateActions();
+	}
+
+	public boolean isAllowMultipleStructures(){
+		return allowMultipleStructures;
+	}
+
+	public void setAllowMultipleStructures(boolean allowMultipleStructures){
+		this.allowMultipleStructures=allowMultipleStructures;
+		
+		updateActions();
+	}
+
+	public boolean isAllowUncertainTerminals(){
+		return allowUncertainTerminals;
+	}
+
+	public void setAllowUncertainTerminals(boolean allowUncertainTerminals){
+		this.allowUncertainTerminals=allowUncertainTerminals;
+		
+		updateActions();
 	}
 }

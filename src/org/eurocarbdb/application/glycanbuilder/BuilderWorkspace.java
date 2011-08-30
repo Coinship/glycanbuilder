@@ -20,6 +20,7 @@
 
 package org.eurocarbdb.application.glycanbuilder;
 
+import java.awt.Component;
 import java.awt.print.*;
 import java.util.*;
 import java.io.*;
@@ -90,13 +91,16 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	
 	public BuilderWorkspace(String config_file, boolean create,GlycanRenderer glycanRenderer,String residueTypesFile,
 					String terminalTypesFile,String coreTypesFile,String crossRingFragmentTypesFile){
-		super(false);
-		
 		this.residueTypesFile=residueTypesFile;
 		this.coreTypesFile=coreTypesFile;
 		this.crossRingFragmentTypesFile=crossRingFragmentTypesFile;
 		this.terminalTypesFile=terminalTypesFile;
 		
+		loaded=false; //TODO: This isn't acceptable in the long run, dictionary loading is an issue in webapp context
+		
+		super.init();
+	    this.components=new HashMap<String,Component>();
+
 		commonInit(config_file,create,glycanRenderer);
 	}
 
@@ -202,8 +206,17 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 			if (!loaded) {
 				if(residueTypesFile==null){
 					residueTypesFile=FileConstants.RESIDUE_TYPES_FILE;
+				}
+				
+				if(terminalTypesFile==null){
 					terminalTypesFile=FileConstants.TERMINAL_TYPES_FILE;
+				}
+				
+				if(coreTypesFile==null){
 					coreTypesFile=FileConstants.CORE_TYPES_FILE;
+				}
+				
+				if(crossRingFragmentTypesFile==null){
 					crossRingFragmentTypesFile=FileConstants.CROSS_RING_FRAGMENT_TYPES_FILE;
 				}
 				

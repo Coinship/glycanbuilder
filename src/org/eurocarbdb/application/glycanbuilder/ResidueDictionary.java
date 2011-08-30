@@ -28,6 +28,8 @@ import java.util.Vector;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
    The dictionary of all residue types available in the application.
@@ -285,12 +287,18 @@ public class ResidueDictionary {
     all_residues_map.clear();
     
     try {
-        // open file
-        java.net.URL file_url = ResidueDictionary.class.getResource(filename);
-        if( file_url==null )
-        throw new FileNotFoundException(filename);
-        BufferedReader is = new BufferedReader(new InputStreamReader(file_url.openStream()));
-        
+    	BufferedReader is;
+    	if(filename.startsWith("http")){
+    		URLConnection conn=new URL(filename).openConnection();
+    		is=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    	}else{
+    		// open file
+            java.net.URL file_url = ResidueDictionary.class.getResource(filename);
+            if( file_url==null )
+            throw new FileNotFoundException(filename);
+            is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+    	}
+    	
         // read dictionary
         String line;
         while( (line=is.readLine())!=null ) {

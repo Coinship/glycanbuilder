@@ -24,6 +24,8 @@
 package org.eurocarbdb.application.glycanbuilder;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -61,11 +63,17 @@ public class CrossRingFragmentDictionary {
     dictionary.clear();
     
     try {
-        // open file
-        java.net.URL file_url = CrossRingFragmentDictionary.class.getResource(filename);
-        if( file_url==null )
-        throw new FileNotFoundException(filename);
-        BufferedReader is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+    	BufferedReader is;
+    	if(filename.startsWith("http")){
+    		URLConnection conn=new URL(filename).openConnection();
+    		is=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    	}else{
+    		// open file
+            java.net.URL file_url = ResidueDictionary.class.getResource(filename);
+            if( file_url==null )
+            throw new FileNotFoundException(filename);
+            is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+    	}
         
         // read dictionary
         String line;

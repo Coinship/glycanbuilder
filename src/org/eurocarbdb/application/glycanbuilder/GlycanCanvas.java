@@ -859,14 +859,30 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		if(allowUncertainTerminals==false){
 			getTheActionManager().get("bracket").setEnabled(false);
+			if(bracketButton!=null)
+				bracketButton.setVisible(false);
+			if(bracketMenuItem!=null)
+				bracketMenuItem.setVisible(false);
 		}else{
 			getTheActionManager().get("bracket").setEnabled(hasCurrentResidue());
+			if(bracketButton!=null)
+				bracketButton.setVisible(true);
+			if(bracketMenuItem!=null)
+				bracketMenuItem.setVisible(true);
 		}
 		
 		if(allowRepeatingUnits==false){
 			getTheActionManager().get("repeat").setEnabled(false);
+			if(repeatButton!=null)
+				repeatButton.setVisible(false);
+			if(repeatMenuItem!=null)
+				repeatMenuItem.setVisible(false);
 		}else{
 			getTheActionManager().get("repeat").setEnabled(hasCurrentResidue());
+			if(repeatButton!=null)
+				repeatButton.setVisible(true);
+			if(repeatMenuItem!=null)
+				repeatMenuItem.setVisible(true);
 		}
 		
 		getTheActionManager().get("properties").setEnabled(hasCurrentResidue());
@@ -2397,9 +2413,9 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 		structure_menu.add(createAddTerminalMenu());
 		structure_menu.add(createInsertResidueMenu());
 		structure_menu.add(createChangeResidueTypeMenu());
-		// structure_menu.add(createChangeRedEndMenu());
-		structure_menu.add(getTheActionManager().get("bracket"));
-		structure_menu.add(getTheActionManager().get("repeat"));
+		
+		bracketMenuItem=structure_menu.add(getTheActionManager().get("bracket"));
+		repeatMenuItem=structure_menu.add(getTheActionManager().get("repeat"));
 
 		structure_menu.addSeparator();
 
@@ -2582,8 +2598,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 		toolbar.addSeparator();
 
-		toolbar.add(getTheActionManager().get("bracket"));
-		toolbar.add(getTheActionManager().get("repeat"));
+		bracketButton=toolbar.add(getTheActionManager().get("bracket"));
+		repeatButton=toolbar.add(getTheActionManager().get("repeat"));
 		toolbar.add(getTheActionManager().get("properties"));
 
 		toolbar.addSeparator();
@@ -4758,6 +4774,14 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 	
 	private List<UIActionListener> uiActionListenerList=new ArrayList<UIActionListener>();
+
+	private JMenuItem bracketMenuItem;
+
+	private JMenuItem repeatMenuItem;
+
+	private JButton bracketButton;
+
+	private JButton repeatButton;
 	
 	public void registerUIListener(UIActionListener uiActionListener){
 		uiActionListenerList.add(uiActionListener);

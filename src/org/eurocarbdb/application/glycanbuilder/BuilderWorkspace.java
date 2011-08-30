@@ -63,6 +63,12 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 	// renderers
 	protected GlycanRenderer theGlycanRenderer;
+	
+	//Dictionary files
+	public String residueTypesFile;
+	public String terminalTypesFile;
+	public String coreTypesFile;
+	public String crossRingFragmentTypesFile;
 
 	/**
 	 * Empty constructor. Initialize the dictionaries from the default files and
@@ -81,6 +87,18 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		theGlycanRenderer.setResidueStyleDictionary(theResidueStyleDictionary);
 		theGlycanRenderer.setLinkageStyleDictionary(theLinkageStyleDictionary);
 	}
+	
+	public BuilderWorkspace(String config_file, boolean create,GlycanRenderer glycanRenderer,String residueTypesFile,
+					String terminalTypesFile,String coreTypesFile,String crossRingFragmentTypesFile){
+		super(false);
+		
+		this.residueTypesFile=residueTypesFile;
+		this.coreTypesFile=coreTypesFile;
+		this.crossRingFragmentTypesFile=crossRingFragmentTypesFile;
+		this.terminalTypesFile=terminalTypesFile;
+		
+		commonInit(config_file,create,glycanRenderer);
+	}
 
 	/**
 	 * Load the configuration from a file. Initialize the dictionaries from the
@@ -96,6 +114,10 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	public BuilderWorkspace(String config_file, boolean create,GlycanRenderer glycanRenderer) {
 		super(false);
 
+		commonInit(config_file,create,glycanRenderer);
+	}
+	
+	private void commonInit(String config_file, boolean create,GlycanRenderer glycanRenderer){
 		theGlycanRenderer=glycanRenderer;
 		
 		init(config_file, create, false);
@@ -107,7 +129,8 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		theGlycanRenderer.setResidueStyleDictionary(theResidueStyleDictionary);
 		theGlycanRenderer.setLinkageStyleDictionary(theLinkageStyleDictionary);
 	}
-
+	
+	
 	// base document
 
 	public int size() {
@@ -177,13 +200,20 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 			// initialize dictionaries
 			if (!loaded) {
+				if(residueTypesFile==null){
+					residueTypesFile=FileConstants.RESIDUE_TYPES_FILE;
+					terminalTypesFile=FileConstants.TERMINAL_TYPES_FILE;
+					coreTypesFile=FileConstants.CORE_TYPES_FILE;
+					crossRingFragmentTypesFile=FileConstants.CROSS_RING_FRAGMENT_TYPES_FILE;
+				}
+				
 				ResidueDictionary
-						.loadDictionary(FileConstants.RESIDUE_TYPES_FILE);
+						.loadDictionary(residueTypesFile);
 				TerminalDictionary
-						.loadDictionary(FileConstants.TERMINAL_TYPES_FILE);
-				CoreDictionary.loadDictionary(FileConstants.CORE_TYPES_FILE);
+						.loadDictionary(terminalTypesFile);
+				CoreDictionary.loadDictionary(coreTypesFile);
 				CrossRingFragmentDictionary
-						.loadDictionary(FileConstants.CROSS_RING_FRAGMENT_TYPES_FILE);
+						.loadDictionary(crossRingFragmentTypesFile);
 
 				loaded = true;
 			}

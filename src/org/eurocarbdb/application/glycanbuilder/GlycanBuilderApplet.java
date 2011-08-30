@@ -120,9 +120,14 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		ThemeManager.lookupNoneCached = false;
 
 		LogUtils.setGraphicalReport(true);
-
+		
+		String residueTypesFile=getParameter("residueTypesFile");
+		String terminalTypesFile=getParameter("terminalTypesFile");
+		String coreTypesFile=getParameter("coreTypesFile");
+		String crossRingFragmentTypesFile=getParameter("crossRingFragmentTypesFile");
+		
 		// create the default workspace
-		theWorkspace = new BuilderWorkspace(null, false,new GlycanRendererAWT());
+		theWorkspace = new BuilderWorkspace(null, false,new GlycanRendererAWT(),residueTypesFile,terminalTypesFile,coreTypesFile,crossRingFragmentTypesFile);
 
 		// create singletons
 		theDoc = theWorkspace.getStructures();

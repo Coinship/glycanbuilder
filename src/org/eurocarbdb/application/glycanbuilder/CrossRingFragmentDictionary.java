@@ -70,9 +70,16 @@ public class CrossRingFragmentDictionary {
     	}else{
     		// open file
             java.net.URL file_url = ResidueDictionary.class.getResource(filename);
-            if( file_url==null )
-            throw new FileNotFoundException(filename);
-            is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            if( file_url==null ){
+            	File file=new File(filename);
+            	if(file.exists()==false){
+            		throw new FileNotFoundException(filename);
+            	}else{
+            		is=new BufferedReader(new FileReader(file));
+            	}
+            }else{
+            	is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            }
     	}
         
         // read dictionary

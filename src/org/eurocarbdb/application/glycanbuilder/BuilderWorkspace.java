@@ -24,6 +24,8 @@ import java.awt.Component;
 import java.awt.print.*;
 import java.util.*;
 import java.io.*;
+import java.net.URL;
+
 import org.w3c.dom.*;
 
 /**
@@ -65,11 +67,7 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	// renderers
 	protected GlycanRenderer theGlycanRenderer;
 	
-	//Dictionary files
-	public String residueTypesFile;
-	public String terminalTypesFile;
-	public String coreTypesFile;
-	public String crossRingFragmentTypesFile;
+	protected DictionaryConfiguration dictConfig;
 
 	/**
 	 * Empty constructor. Initialize the dictionaries from the default files and
@@ -91,15 +89,17 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	
 	public BuilderWorkspace(String config_file, boolean create,GlycanRenderer glycanRenderer,String residueTypesFile,
 					String terminalTypesFile,String coreTypesFile,String crossRingFragmentTypesFile){
-		this.residueTypesFile=residueTypesFile;
-		this.coreTypesFile=coreTypesFile;
-		this.crossRingFragmentTypesFile=crossRingFragmentTypesFile;
-		this.terminalTypesFile=terminalTypesFile;
-		
-		loaded=false; //TODO: This isn't acceptable in the long run, dictionary loading is an issue in webapp context
-		
 		super.init();
 	    this.components=new HashMap<String,Component>();
+	    
+	    dictConfig = new DictionaryConfiguration();
+	    
+	    dictConfig.setDictionaryFile(DictionaryConfiguration.RESIDUE_TYPES_FILE, residueTypesFile);
+	    dictConfig.setDictionaryFile(DictionaryConfiguration.CORE_TYPES_FILE, coreTypesFile);
+	    dictConfig.setDictionaryFile(DictionaryConfiguration.TERMINAL_TYPES_FILE, terminalTypesFile);
+	    dictConfig.setDictionaryFile(DictionaryConfiguration.CROSS_RING_FRAGMENT_TYPES_FILE, crossRingFragmentTypesFile);
+		
+		loaded=false; //TODO: This isn't acceptable in the long run, dictionary loading is an issue in webapp context
 
 		commonInit(config_file,create,glycanRenderer);
 	}
@@ -166,6 +166,9 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		theMassOptions = new MassOptions();
 		theGraphicOptions = new GraphicOptions();
 		theCompositionOptions = new CompositionOptions();
+		
+		if(dictConfig==null)
+			dictConfig = new DictionaryConfiguration();
 
 		thePrinterJob = null; // printer job is created only the first time is
 								// requested
@@ -194,9 +197,10 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 			createConfiguration();
 
 			// initialize configuration
-			if (config_file != null && theConfiguration.open(config_file))
+			if (config_file != null && theConfiguration.open(config_file)){
 				retrieveFromConfiguration();
-			else {
+				loaded=false;
+			}else {
 				storeToConfiguration(true);
 				if (config_file != null && create)
 					theConfiguration.save(config_file);
@@ -204,29 +208,14 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 			// initialize dictionaries
 			if (!loaded) {
-				if(residueTypesFile==null){
-					residueTypesFile=FileConstants.RESIDUE_TYPES_FILE;
-				}
-				
-				if(terminalTypesFile==null){
-					terminalTypesFile=FileConstants.TERMINAL_TYPES_FILE;
-				}
-				
-				if(coreTypesFile==null){
-					coreTypesFile=FileConstants.CORE_TYPES_FILE;
-				}
-				
-				if(crossRingFragmentTypesFile==null){
-					crossRingFragmentTypesFile=FileConstants.CROSS_RING_FRAGMENT_TYPES_FILE;
-				}
 				
 				ResidueDictionary
-						.loadDictionary(residueTypesFile);
+						.loadDictionary(dictConfig.getDictionaryFile(DictionaryConfiguration.RESIDUE_TYPES_FILE));
 				TerminalDictionary
-						.loadDictionary(terminalTypesFile);
-				CoreDictionary.loadDictionary(coreTypesFile);
+						.loadDictionary(dictConfig.getDictionaryFile(DictionaryConfiguration.TERMINAL_TYPES_FILE));
+				CoreDictionary.loadDictionary(dictConfig.getDictionaryFile(DictionaryConfiguration.CORE_TYPES_FILE));
 				CrossRingFragmentDictionary
-						.loadDictionary(crossRingFragmentTypesFile);
+						.loadDictionary(dictConfig.getDictionaryFile(DictionaryConfiguration.CROSS_RING_FRAGMENT_TYPES_FILE));
 
 				loaded = true;
 			}
@@ -245,6 +234,10 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 		
 	}
+	
+	public static URL getResource(String resource){
+		return BuilderWorkspace.class.getResource(resource);
+	}
 
 	protected void retrieveFromConfiguration() {
 		theFileHistory.retrieve(theConfiguration);
@@ -252,6 +245,7 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		theMassOptions.retrieve(theConfiguration);
 		theGraphicOptions.retrieve(theConfiguration);
 		theCompositionOptions.retrieve(theConfiguration);
+		dictConfig.retrieve(theConfiguration);
 	}
 
 	protected void storeToConfiguration(boolean save_options) {
@@ -261,7 +255,9 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 			theMassOptions.store(theConfiguration);
 			theGraphicOptions.store(theConfiguration);
 			theCompositionOptions.store(theConfiguration);
+			dictConfig.store(theConfiguration);
 		}
+		
 	}
 
 	/**
@@ -640,4 +636,11 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 		this.theLinkageStyleDictionary = theLinkageStyleDictionary;
 	}
 
+	public DictionaryConfiguration getDictionaryConfig(){
+		return dictConfig;
+	}
+
+	public void setDictionaryConfig(DictionaryConfiguration dictConfig){
+		this.dictConfig=dictConfig;
+	}
 }

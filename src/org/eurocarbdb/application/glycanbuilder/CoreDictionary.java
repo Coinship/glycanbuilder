@@ -27,6 +27,8 @@ import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.Vector;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -139,9 +141,16 @@ public class CoreDictionary {
     	}else{
     		// open file
             java.net.URL file_url = ResidueDictionary.class.getResource(filename);
-            if( file_url==null )
-            throw new FileNotFoundException(filename);
-            is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            if( file_url==null ){
+            	File file=new File(filename);
+            	if(file.exists()==false){
+            		throw new FileNotFoundException(filename);
+            	}else{
+            		is=new BufferedReader(new FileReader(file));
+            	}
+            }else{
+            	is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            }
     	}
         // read dictionary
         String line;

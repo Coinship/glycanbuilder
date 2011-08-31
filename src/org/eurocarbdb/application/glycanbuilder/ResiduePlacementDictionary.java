@@ -26,6 +26,8 @@ package org.eurocarbdb.application.glycanbuilder;
 import java.util.*;
 import java.text.*;
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
@@ -62,11 +64,26 @@ public class ResiduePlacementDictionary {
     placements.clear();
     
     try {
-        // open file
-        java.net.URL file_url = ResiduePlacementDictionary.class.getResource(filename);
-        if( file_url==null )
-        throw new FileNotFoundException(filename);
-               BufferedReader is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+    	BufferedReader is;
+    	if(filename.startsWith("http")){
+    		URLConnection conn=new URL(filename).openConnection();
+    		is=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    	}else{
+    		// open file
+            java.net.URL file_url = ResidueDictionary.class.getResource(filename);
+            if( file_url==null ){
+            	File file=new File(filename);
+            	if(file.exists()==false){
+            		throw new FileNotFoundException(filename);
+            	}else{
+            		is=new BufferedReader(new FileReader(file));
+            	}
+            }else{
+            	is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            }
+            
+            
+    	}
         
         // read dictionary
         String line;

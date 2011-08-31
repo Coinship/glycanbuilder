@@ -1,5 +1,15 @@
 package org.eurocarbdb.application.glycanbuilder;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -138,27 +148,27 @@ public class DictionaryConfiguration{
 		
 		keyToFile.put(UOXF_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXF_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_UOXF));
 		keyToFile.put(UOXF_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, UOXF_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF));
-		keyToFile.put(UOXF_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXF_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF));
+		keyToFile.put(UOXF_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXF_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_UOXF));
 		
 		keyToFile.put(UOXFCOL_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXFCOL_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_UOXFCOL));
 		keyToFile.put(UOXFCOL_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, UOXFCOL_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF));
-		keyToFile.put(UOXFCOL_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXFCOL_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF));
+		keyToFile.put(UOXFCOL_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, UOXFCOL_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_UOXF));
 		
 		keyToFile.put(TEXT_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, TEXT_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_TEXT));
 		keyToFile.put(TEXT_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, TEXT_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_TEXT));
-		keyToFile.put(TEXT_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, TEXT_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_TEXT));
+		keyToFile.put(TEXT_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, TEXT_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_TEXT));
 	
 		keyToFile.put(CFGLINK_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGLINK_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_CFGLINK));
 		keyToFile.put(CFGLINK_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, CFGLINK_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFGLINK));
-		keyToFile.put(CFGLINK_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGLINK_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFGLINK));
+		keyToFile.put(CFGLINK_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGLINK_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_CFGLINK));
 		
 		keyToFile.put(CFGBW_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGBW_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_CFGBW));
 		keyToFile.put(CFGBW_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, CFGBW_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFGBW));
-		keyToFile.put(CFGBW_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGBW_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFGBW));
+		keyToFile.put(CFGBW_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFGBW_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_CFGBW));
 
 		keyToFile.put(CFG_RESIDUE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFG_RESIDUE_STYLES_FILE, FileConstants.RESIDUE_STYLES_FILE_CFG));
 		keyToFile.put(CFG_RESIDUE_PLACEMENTS_FILE,theConfiguration.get(DICT_SECT, CFG_RESIDUE_PLACEMENTS_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFG));
-		keyToFile.put(CFG_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFG_LINKAGE_STYLES_FILE, FileConstants.RESIDUE_PLACEMENTS_FILE_CFG));
+		keyToFile.put(CFG_LINKAGE_STYLES_FILE,theConfiguration.get(DICT_SECT, CFG_LINKAGE_STYLES_FILE, FileConstants.LINKAGE_STYLES_FILE_CFG));
 	}
 	
 	public static String getDefaultDictionaryFile(String dictionaryName){
@@ -176,43 +186,82 @@ public class DictionaryConfiguration{
 		if(UOXF_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF;
 		if(UOXF_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF;
+			return FileConstants.LINKAGE_STYLES_FILE_UOXF;
 		
 		if(UOXFCOL_RESIDUE_STYLES_FILE.equals(dictionaryName))
 			return  FileConstants.RESIDUE_STYLES_FILE_UOXFCOL;
 		if(UOXFCOL_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF;
 		if(UOXFCOL_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF;
+			return FileConstants.LINKAGE_STYLES_FILE_UOXF;
 		
 		if(TEXT_RESIDUE_STYLES_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_STYLES_FILE_TEXT;
 		if(TEXT_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_TEXT;
 		if(TEXT_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_TEXT;
+			return FileConstants.LINKAGE_STYLES_FILE_TEXT;
 	
 		if(CFGLINK_RESIDUE_STYLES_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_STYLES_FILE_CFGLINK;
 		if(CFGLINK_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFGLINK;
 		if(CFGLINK_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFGLINK;
+			return FileConstants.LINKAGE_STYLES_FILE_CFGLINK;
 		
 		if(CFGBW_RESIDUE_STYLES_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_STYLES_FILE_CFGBW;
 		if(CFGBW_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFGBW;
 		if(CFGBW_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFGBW;
+			return FileConstants.LINKAGE_STYLES_FILE_CFGBW;
 
 		if(CFG_RESIDUE_STYLES_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_STYLES_FILE_CFG;
 		if(CFG_RESIDUE_PLACEMENTS_FILE.equals(dictionaryName))
 			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFG;
 		if(CFG_LINKAGE_STYLES_FILE.equals(dictionaryName))
-			return FileConstants.RESIDUE_PLACEMENTS_FILE_CFG;
+			return FileConstants.LINKAGE_STYLES_FILE_CFG;
 		
 		return null;
+	}
+	
+	public boolean isDefault(String dictionaryName){
+		return keyToFile.get(dictionaryName).equals(DictionaryConfiguration.getDefaultDictionaryFile(dictionaryName));
+	}
+	
+	public boolean isRemoteResource(String dictionaryName){
+		return keyToFile.get(dictionaryName).startsWith("http://");
+	}
+	
+	public String getDictionaryResourceAsString(String dictionaryName) throws MalformedURLException, IOException{
+		String filename=keyToFile.get(dictionaryName);
+		BufferedReader is;
+    	if(filename.startsWith("http")){
+    		URLConnection conn=new URL(filename).openConnection();
+    		is=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    	}else{
+    		// open file
+            java.net.URL file_url = ResidueDictionary.class.getResource(filename);
+            if( file_url==null ){
+            	File file=new File(filename);
+            	if(file.exists()==false){
+            		throw new FileNotFoundException(filename);
+            	}else{
+            		is=new BufferedReader(new FileReader(file));
+            	}
+            }else{
+            	is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            }
+    	}
+		
+		StringBuffer buf=new StringBuffer();
+		
+		String line;
+		while((line=is.readLine())!=null){
+			buf.append(line+"\n");
+		}
+		
+		return buf.toString();
 	}
 }

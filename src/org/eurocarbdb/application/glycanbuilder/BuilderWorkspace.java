@@ -433,48 +433,52 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 
 		if (notation.equals(GraphicOptions.NOTATION_UOXF)) {
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF);
+					.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXF_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_UOXF);
+					.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXF_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_UOXF);
+					.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXF_LINKAGE_STYLES_FILE));
 		} else if (notation.equals(GraphicOptions.NOTATION_UOXFCOL)) {
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_UOXF);
+			.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXF_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_UOXFCOL);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXFCOL_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_UOXF);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.UOXF_LINKAGE_STYLES_FILE));
 		}
 
 		else if (notation.equals(GraphicOptions.NOTATION_TEXT)) {
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_TEXT);
+			.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.TEXT_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_TEXT);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.TEXT_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_TEXT);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.TEXT_LINKAGE_STYLES_FILE));
 		} else if (notation.equals(GraphicOptions.NOTATION_CFGLINK)) {
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_CFGLINK);
+			.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGLINK_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_CFGLINK);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGLINK_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_CFGLINK);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGLINK_LINKAGE_STYLES_FILE));
 		} else if (notation.equals(GraphicOptions.NOTATION_CFGBW)) {
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_CFGBW);
+			.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGBW_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_CFGBW);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGBW_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_CFGBW);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFGBW_LINKAGE_STYLES_FILE));
 		} else {
+			//LogUtils.report(new Exception("Loading..."+getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_RESIDUE_PLACEMENTS_FILE)));
+			//LogUtils.report(new Exception("Loading..."+getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_RESIDUE_STYLES_FILE)));
+			//LogUtils.report(new Exception("Loading..."+getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_LINKAGE_STYLES_FILE)));
+			
 			theResiduePlacementDictionary
-					.loadPlacements(FileConstants.RESIDUE_PLACEMENTS_FILE_CFG);
+			.loadPlacements(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_RESIDUE_PLACEMENTS_FILE));
 			theResidueStyleDictionary
-					.loadStyles(FileConstants.RESIDUE_STYLES_FILE_CFG);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_RESIDUE_STYLES_FILE));
 			theLinkageStyleDictionary
-					.loadStyles(FileConstants.LINKAGE_STYLES_FILE_CFG);
+			.loadStyles(getDictionaryConfig().getDictionaryFile(DictionaryConfiguration.CFG_LINKAGE_STYLES_FILE));
 		}
 	}
 

@@ -24,8 +24,12 @@ package org.eurocarbdb.application.glycanbuilder;
 import java.util.Iterator;
 import java.util.Vector;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
    The dictionary of the linkage styles available in the application
@@ -53,11 +57,26 @@ public class LinkageStyleDictionary {
     styles.clear();
     
     try {
-        // open file
-        java.net.URL file_url = LinkageStyleDictionary.class.getResource(filename);
-        if( file_url==null )
-        throw new FileNotFoundException(filename);
-        BufferedReader is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+    	BufferedReader is;
+    	if(filename.startsWith("http")){
+    		URLConnection conn=new URL(filename).openConnection();
+    		is=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+    	}else{
+    		// open file
+            java.net.URL file_url = ResidueDictionary.class.getResource(filename);
+            if( file_url==null ){
+            	File file=new File(filename);
+            	if(file.exists()==false){
+            		throw new FileNotFoundException(filename);
+            	}else{
+            		is=new BufferedReader(new FileReader(file));
+            	}
+            }else{
+            	is = new BufferedReader(new InputStreamReader(file_url.openStream()));
+            }
+            
+            
+    	}
         
         // read dictionary
         String line;

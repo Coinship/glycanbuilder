@@ -236,6 +236,11 @@ public class DictionaryConfiguration{
 	
 	public String getDictionaryResourceAsString(String dictionaryName) throws MalformedURLException, IOException{
 		String filename=keyToFile.get(dictionaryName);
+		
+		return getResourceAsString(filename);
+	}
+	
+	public static String getResourceAsString(String filename) throws MalformedURLException, IOException{
 		BufferedReader is;
     	if(filename.startsWith("http")){
     		URLConnection conn=new URL(filename).openConnection();

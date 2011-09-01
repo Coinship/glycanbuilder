@@ -94,10 +94,14 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	    
 	    dictConfig = new DictionaryConfiguration();
 	    
-	    dictConfig.setDictionaryFile(DictionaryConfiguration.RESIDUE_TYPES_FILE, residueTypesFile);
-	    dictConfig.setDictionaryFile(DictionaryConfiguration.CORE_TYPES_FILE, coreTypesFile);
-	    dictConfig.setDictionaryFile(DictionaryConfiguration.TERMINAL_TYPES_FILE, terminalTypesFile);
-	    dictConfig.setDictionaryFile(DictionaryConfiguration.CROSS_RING_FRAGMENT_TYPES_FILE, crossRingFragmentTypesFile);
+	    if(residueTypesFile!=null)
+	    	dictConfig.setDictionaryFile(DictionaryConfiguration.RESIDUE_TYPES_FILE, residueTypesFile);
+	    if(coreTypesFile!=null)
+	    	dictConfig.setDictionaryFile(DictionaryConfiguration.CORE_TYPES_FILE, coreTypesFile);
+	    if(terminalTypesFile!=null)
+	    	dictConfig.setDictionaryFile(DictionaryConfiguration.TERMINAL_TYPES_FILE, terminalTypesFile);
+	    if(crossRingFragmentTypesFile!=null)
+	    	dictConfig.setDictionaryFile(DictionaryConfiguration.CROSS_RING_FRAGMENT_TYPES_FILE, crossRingFragmentTypesFile);
 		
 		loaded=false; //TODO: This isn't acceptable in the long run, dictionary loading is an issue in webapp context
 

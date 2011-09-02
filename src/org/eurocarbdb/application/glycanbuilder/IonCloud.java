@@ -21,12 +21,17 @@
 package org.eurocarbdb.application.glycanbuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import org.eurocarbdb.util.Combinator;
+import org.eurocarbdb.util.MutableInteger;
 
 /**
  * Manages a collection of charges that will be associated to a glycan
@@ -39,6 +44,7 @@ import java.util.regex.Matcher;
 public class IonCloud {
 
 	protected TreeMap<String, Integer> ions;
+	protected TreeMap<String, Double> ionNameToChargeMass;
 	protected int ionsNum;
 	protected int ionsRelCount;
 	protected double ionsTotalMass;
@@ -48,6 +54,7 @@ public class IonCloud {
 	 */
 	public IonCloud() {
 		ions = new TreeMap<String, Integer>();
+		ionNameToChargeMass = new TreeMap<String, Double>();
 		ionsNum = 0;
 		ionsRelCount = 0;
 		ionsTotalMass = 0.;
@@ -154,6 +161,9 @@ public class IonCloud {
 
 		for (Map.Entry<String, Integer> c : this.ions.entrySet())
 			ret.ions.put(c.getKey(), c.getValue());
+				
+		for (Map.Entry<String, Double> c : this.ionNameToChargeMass.entrySet())
+			ret.ionNameToChargeMass.put(c.getKey(), c.getValue());
 
 		ret.ionsNum = this.ionsNum;
 		ret.ionsRelCount = this.ionsRelCount;
@@ -285,9 +295,49 @@ public class IonCloud {
 		// update count
 		ionsRelCount += quantity;
 		ionsNum = Math.abs(ionsRelCount);
+		
+		ionNameToChargeMass.put(charge_name, charge_mass);
 
 		// update mass
 		ionsTotalMass += quantity * charge_mass;
+	}
+	
+	public List<IonCloud> generateCombinations(){
+		List<String> ionList=new ArrayList<String>();
+		for(String chargeName:ions.keySet()){
+			int num=ions.get(chargeName);
+			for(int i=0;i<num;i++){
+				ionList.add(chargeName);
+			}
+		}
+		
+		//LogUtils.report(new Exception("size: "+ionList.toString()));
+		
+		List<IonCloud> ionClouds=new ArrayList<IonCloud>();
+		HashSet<List<String>> ionCombinationsList=Combinator.generate(ionList);
+		//LogUtils.report(new Exception("size: "+ionCombinationsList.toString()));
+		for(List<String> ionCloudContents:ionCombinationsList){
+			IonCloud ionCloud=new IonCloud();
+			Map<String,MutableInteger> ionNameToQuantity=new HashMap<String,MutableInteger>();
+			for(String ionName:ionCloudContents){
+				if(ionNameToQuantity.containsKey(ionName)==false){
+					ionNameToQuantity.put(ionName, new MutableInteger());
+				}
+				ionNameToQuantity.get(ionName).mutI++;
+			}
+			
+			for(String ionName:ionNameToQuantity.keySet()){
+				int quantity=ionNameToQuantity.get(ionName).mutI;
+				
+				//LogUtils.report(new Exception(ionName+"|"+quantity));
+				
+				ionCloud.add(ionName, ionNameToChargeMass.get(ionName), quantity);
+			}
+			
+			ionClouds.add(ionCloud);
+		}
+		
+		return ionClouds;
 	}
 
 	/**

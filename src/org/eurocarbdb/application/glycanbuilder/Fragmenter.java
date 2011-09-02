@@ -41,6 +41,7 @@ public class Fragmenter {
 	protected int max_no_cleavages = 2;
 	protected int max_no_crossrings = 1;
 	protected boolean small_ring_fragments = true;
+	protected boolean iterate_ion_combinations = false;
 
 	/**
 	 * Initialize the fragmenter using the default options.
@@ -66,6 +67,8 @@ public class Fragmenter {
 
 			max_no_cleavages = opt.MAX_NO_CLEAVAGES;
 			max_no_crossrings = opt.MAX_NO_CROSSRINGS;
+			
+			iterate_ion_combinations = opt.ITERATE_ION_COMBINATIONS;
 		}
 	}
 
@@ -197,6 +200,14 @@ public class Fragmenter {
 	 */
 	public void setMaxNoCrossRings(int i) {
 		max_no_crossrings = i;
+	}
+
+	public boolean isIterate_ion_combinations() {
+		return iterate_ion_combinations;
+	}
+
+	public void setIterate_ion_combinations(boolean iterate_ion_combinations) {
+		this.iterate_ion_combinations = iterate_ion_combinations;
 	}
 
 	/**
@@ -338,21 +349,37 @@ public class Fragmenter {
 				&& !structure.hasRepetition()) {
 			// remove exchanges from parent mass options
 			MassOptions mass_opt = structure.getMassOptions().removeExchanges();
-			Glycan parent = structure.clone();
-			parent.setMassOptions(mass_opt);
+			List<IonCloud> ionClouds;
+			
+			if(iterate_ion_combinations){
+				ionClouds=mass_opt.ION_CLOUD.generateCombinations();
+			}else{
+				ionClouds=new ArrayList<IonCloud>();
+				ionClouds.add(mass_opt.ION_CLOUD);
+			}
+			
+			//LogUtils.report(new Exception("Ion cloud count: "+ionClouds.get(0).toString()+"|"+ionClouds.get(1).toString()+"|"+iterate_ion_combinations));
+			
+			for(IonCloud ionCloud:ionClouds){
+				MassOptions options=mass_opt.clone();
+				options.ION_CLOUD=ionCloud.clone();
+				
+				Glycan parent = structure.clone();
+				parent.setMassOptions(options);
 
-			// compute fragments
-			if (parent.hasLabileResidues()) {
-				computeAllFragmentsWithLabiles(fragments, parent,
-						max_no_cleavages, Math.min(max_no_cleavages,
-								max_no_crossrings), mass_opt);
-				for (Glycan conf : parent.getAllLabilesConfigurations())
-					fragments.addFragment(conf, getFragmentType(conf));
-			} else {
-				computeAllFragments(fragments, parent.getRoot(),
-						max_no_cleavages, Math.min(max_no_cleavages,
-								max_no_crossrings), mass_opt);
-				fragments.addFragment(parent, getFragmentType(parent));
+				// compute fragments
+				if (parent.hasLabileResidues()) {
+					computeAllFragmentsWithLabiles(fragments, parent,
+							max_no_cleavages, Math.min(max_no_cleavages,
+									max_no_crossrings), options);
+					for (Glycan conf : parent.getAllLabilesConfigurations())
+						fragments.addFragment(conf, getFragmentType(conf));
+				} else {
+					computeAllFragments(fragments, parent.getRoot(),
+							max_no_cleavages, Math.min(max_no_cleavages,
+									max_no_crossrings), options);
+					fragments.addFragment(parent, getFragmentType(parent));
+				}
 			}
 		}
 	}

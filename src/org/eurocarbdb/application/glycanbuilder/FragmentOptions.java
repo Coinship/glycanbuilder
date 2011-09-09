@@ -52,6 +52,8 @@ public class FragmentOptions {
     for a fragment (default = 1) */
     public int MAX_NO_CROSSRINGS = 1;   
 
+    public boolean ITERATE_ION_COMBINATIONS=false;
+    
     // pojo
     
     /** Return <code>true</code> if type A ring fragments should be
@@ -160,7 +162,15 @@ public class FragmentOptions {
 
     // serialization
 
-    public void store(Configuration config) {
+    public boolean isITERATE_ION_COMBINATIONS() {
+		return ITERATE_ION_COMBINATIONS;
+	}
+
+	public void setITERATE_ION_COMBINATIONS(boolean iTERATE_ION_COMBINATIONS) {
+		ITERATE_ION_COMBINATIONS = iTERATE_ION_COMBINATIONS;
+	}
+
+	public void store(Configuration config) {
     config.put("FragmentOptions","add_afragments",ADD_AFRAGMENTS);
     config.put("FragmentOptions","add_bfragments",ADD_BFRAGMENTS);
     config.put("FragmentOptions","add_cfragments",ADD_CFRAGMENTS);

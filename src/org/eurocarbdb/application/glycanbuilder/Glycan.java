@@ -49,7 +49,7 @@ import javax.xml.transform.sax.TransformerHandler;
    @author Alessio Ceroni (a.ceroni@imperial.ac.uk)
  */
 
-public class Glycan implements Comparable, SAXUtils.SAXWriter {
+public class Glycan implements Comparable, SAXUtils.SAXWriter, MassAware {
 
 
 	//----------------------

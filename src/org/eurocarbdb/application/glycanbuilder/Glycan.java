@@ -1094,6 +1094,20 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter, MassAware {
 
 		return no_charges;
 	}
+	
+	/**
+	 * David R. Damerell: We shouldn't really share Glycans across threads but we do when no manipulation of
+	 * the glycan is going to occur.  This is a fringe case were we do change the mass options of the structure
+	 * which might be an issue when sharing Glycan instances as a "in memory library".  For the time being we
+	 * will incur the penalty of a clone operation.
+	 */
+	public double computeMass(String type) {
+		Glycan cloneOf=clone();
+		cloneOf.setMassOptions(mass_options.clone());
+		cloneOf.getMassOptions().setIsotope(type);
+		
+		return cloneOf.computeMass();
+	}
 
 	/**
        Compute the mass of the molecule given the current mass
@@ -1965,5 +1979,14 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter, MassAware {
 		atts.addAttribute("","","structure","CDATA",this.toString());
 		th.startElement("","","Glycan",atts);
 		th.endElement("","","Glycan");
+	}
+
+	@Override
+	public boolean equals(MassAware aware){
+		if((aware instanceof Glycan)==false){
+			return false;
+		}else{
+			return toGlycoCTCondensed().equals(((Glycan)aware).toGlycoCT()) && computeMZ()==((Glycan)aware).computeMZ();
+		}
 	}
 }

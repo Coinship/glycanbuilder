@@ -23,7 +23,6 @@ import org.vaadin.navigator7.Navigator;
 import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Layout;
 
 public abstract class FluidAppLevelWindow extends NavigableAppLevelWindow{
@@ -33,10 +32,7 @@ public abstract class FluidAppLevelWindow extends NavigableAppLevelWindow{
 	public void attach() {
 		Layout main = createMainLayout();
 		this.setContent(main);  
-
-//		setSizeFull();
-//		getContent().setSizeFull();
-
+		
 		// Must be done after calling this.setConent(main), as for any component added to the window.
 		this.navigator = new Navigator();
 		this.addComponent(navigator);

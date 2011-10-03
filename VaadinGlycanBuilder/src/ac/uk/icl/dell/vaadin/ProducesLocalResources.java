@@ -20,6 +20,6 @@
 package ac.uk.icl.dell.vaadin;
 
 public interface ProducesLocalResources {
-	public void addLocalResourceWatcher(LocalResourceWatcher watcher);
+	public void setLocalResourceWatcher(LocalResourceWatcher watcher);
 	public void removeLocalResourceWatcher(LocalResourceWatcher watcher);
 }

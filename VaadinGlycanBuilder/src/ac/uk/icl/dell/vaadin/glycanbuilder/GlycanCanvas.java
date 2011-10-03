@@ -82,7 +82,7 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	
 	@SuppressWarnings("unused")
 	private Collection<Glycan> sel;
-	@SuppressWarnings("unused")
+	
 	private Linkage currentLinkage;
 	
 	private Residue currentResidue;

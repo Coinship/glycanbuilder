@@ -32,17 +32,14 @@ import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.GlycanCanvasUpdateListen
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
-import ac.uk.icl.dell.vaadin.menu.vaadin.MenuBar.MenuItem;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 
 /**
@@ -75,6 +72,8 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	protected ApplicationMenu theAppMenu;
 
 	private MenuBar.MenuItem structureItem;
+
+	private MenuBar.MenuItem fileMenu;
 	
 	public GlycanBuilder(ApplicationMenu appMenu){
 		super("glycan_builder_layout");
@@ -193,7 +192,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	}
 	
 	public void registerLocalResourceWatcher(LocalResourceWatcher watcher){
-		theCanvas.addLocalResourceWatcher(watcher);
+		theCanvas.setLocalResourceWatcher(watcher);
 	}
 	
 	private void initToolBars(){
@@ -202,6 +201,8 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		theToolBarPanel.addStyleName("igg-glycan-builder-toolbar-panel");
 		
 		NavigableApplication.getCurrentNavigableAppLevelWindow().addActionHandler(new Handler(){
+			private static final long serialVersionUID=1735392108529734256L;
+			
 			Action actionDelete = new ShortcutAction("Delete",ShortcutAction.KeyCode.DELETE, null);
 			Action actionCopy = new ShortcutAction("Copy",ShortcutAction.KeyCode.C, new int[]{ShortcutAction.ModifierKey.CTRL});
 			Action actionPaste = new ShortcutAction("Paste",ShortcutAction.KeyCode.V, new int[]{ShortcutAction.ModifierKey.CTRL});
@@ -312,7 +313,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	}
 	
 	private void initFileMenu(){
-		MenuBar.MenuItem fileMenu=theAppMenu.getFileMenu();
+		fileMenu=theAppMenu.getFileMenu();
 		
 		theAppMenu.saveState(fileMenu, this);
 		
@@ -320,6 +321,14 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		theCanvas.appendImportMenu(fileMenu);
 		
 		fileMenu.setVisible(true);
+	}
+	
+	public MenuBar.MenuItem getFileMenu(){
+		return fileMenu;
+	}
+	
+	public MenuBar getMenuBar(){
+		return theAppMenu.getMenuBar();
 	}
 	
 	private void initStructureMenu(){

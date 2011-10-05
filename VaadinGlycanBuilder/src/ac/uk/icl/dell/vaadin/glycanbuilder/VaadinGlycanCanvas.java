@@ -21,9 +21,7 @@ package ac.uk.icl.dell.vaadin.glycanbuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,19 +54,15 @@ import org.vaadin.damerell.canvas.BasicCanvas;
 import org.vaadin.damerell.canvas.font.Font;
 import org.vaadin.damerell.canvas.font.Font.FONT;
 import org.vaadin.hene.popupbutton.PopupButton;
-import org.vaadin.hezamu.canvas.Canvas.DimensionEventListener;
-import org.vaadin.navigator7.NavigableApplication;
-import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 import org.vaadin.weelayout.WeeLayout;
 import org.vaadin.weelayout.WeeLayout.Direction;
 
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
-import ac.uk.icl.dell.vaadin.MessageDialogBox;
 import ac.uk.icl.dell.vaadin.ProducesLocalResources;
 import ac.uk.icl.dell.vaadin.glycanbuilder.MassOptionsDialog.MassOptionListener;
+import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
+import ac.uk.icl.dell.vaadin.navigator7.pages.buildingblocks.NavigatorFileUpload;
 
-import com.github.wolfie.refresher.Refresher;
-import com.github.wolfie.refresher.Refresher.RefreshListener;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.DownloadStream;
@@ -92,7 +86,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.VerticalLayout;
@@ -106,37 +99,23 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	
 	private List<LocalResourceWatcher> localResourceWatchers=new ArrayList<LocalResourceWatcher>();
 	
-	//private Panel theParentPanel;
-	
 	protected GlycanCanvas theCanvas;
 	
 	protected boolean automaticallyAdjustHeight=true;
 
 	private OptionGroup field_anomeric_state;
-
 	private OptionGroup field_anomeric_carbon;
-
 	private OptionGroup field_linkage_position;
-
 	private OptionGroup field_chirality;
-
 	private OptionGroup field_ring_size;
-
 	private CheckBox field_second_bond;
-
 	private OptionGroup field_second_child_position;
-
 	private OptionGroup field_second_parent_position;
-
 	private PopupButton linkage_one_panel;
-
 	private PopupButton linkage_two_panel;
 	
 	float realWidth;
 	float realHeight;
-	
-	//private Long lastScreenResizeRequest;
-	private boolean waiting=false; 
 	
 	public VaadinGlycanCanvas() {
 		theCanvas=new GlycanCanvas(new GlycanRendererCanvas(),new CanvasPaintable(this));
@@ -151,44 +130,13 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		componentsWithResidueSelectionDependency=new ArrayList<Component>();
 		menuItemsWithResidueSelectionDependency=new ArrayList<MenuBar.MenuItem>();
 		
-	//	theParentPanel=parent;
-		
 		addSelectionListener(this);
 		
 		theCanvas.addSelectionChangeListener(this);
 		theCanvas.theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS=false;
 		theCanvas.theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS=false;
 		
-		//addListener((DimensionEventListener)this);
-		
 		setImmediate(true);
-		
-//		refresher = new Refresher();
-//		refresher.addListener(new RefreshListener(){
-//			@Override
-//			public void refresh(Refresher source) {
-//				if(lastScreenResizeRequest!=null && System.currentTimeMillis()-lastScreenResizeRequest>650){
-//					System.out.println("Poll resize");
-//					
-//					repaintOnDimensionUpdate=true;
-//					
-//					fireDimensionEvent();
-//					lastScreenResizeRequest=null;
-//					waiting=false;
-//					
-//					refresher.setRefreshInterval(250);
-//				}else{
-//					refresher.setRefreshInterval((long)(refresher.getRefreshInterval()*1.5));
-//					System.err.println("R: "+refresher.getRefreshInterval());
-//					repaintOnDimensionUpdate=true;
-//					fireDimensionEvent();
-//				}
-//			}
-//		});
-//		
-//		refresher.setRefreshInterval(250);
-		
-	//	NavigableApplication.getCurrentNavigableAppLevelWindow().addComponent(refresher);
 	}
 
 	public void appendStructureMenu(MenuBar.MenuItem parent){
@@ -198,9 +146,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for(final CoreType t:CoreDictionary.getCores(superclass)){
 				superClassMenu.addItem(t.getName(), new Command(){
-					/**
-					 * 
-					 */
 					private static final long serialVersionUID=-148395291969656325L;
 
 					@Override
@@ -226,10 +171,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				
 				final String type=t.getName();
 				Command addTerminal=new Command(){
-
-					/**
-					 * 
-					 */
 					private static final long serialVersionUID=6872577027235164629L;
 
 					@Override
@@ -254,9 +195,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	
 	public void appendImportMenu(MenuBar.MenuItem parent){
 		final Window importWindow=new Window(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-397373017493034496L;
 
 			public void close(){
@@ -264,7 +202,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		importWindow.setCaption("Import from sequence");
-		//importWindow.setWidth("400px");
+		importWindow.setResizable(false);
+
 		
 		final CanvasImport canvasImport=new CanvasImport();
 		importWindow.getContent().addComponent(canvasImport);
@@ -273,9 +212,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		@SuppressWarnings("unused")
 		MenuBar.MenuItem importMenu=parent.addItem("Import", new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-6735134306275926140L;
 
 			@Override
@@ -294,17 +230,15 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		importWindow.getContent().setSizeUndefined();
 		
 		final Window importFromStringWindow=new Window(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=7035248961169308096L;
 
 			public void close(){
 				setVisible(false);
 			}
 		};
+		
 		importFromStringWindow.setCaption("Import sequence from string");
-		//importFromStringWindow.setWidth("400px");
+		importFromStringWindow.setWidth("400px");
 		
 		final ImportStructureFromStringDialog importStructureStringDialog=new ImportStructureFromStringDialog(theCanvas);
 		
@@ -312,31 +246,25 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			@Override
 			public void done(boolean cancelled) {
 				if(!cancelled){
-					System.err.println(">");
-					System.err.println(importStructureStringDialog.getSequenceString());
-					System.err.println("|");
 					if(!theCanvas.theDoc.importFromString(importStructureStringDialog.getSequenceString(),theCanvas.getImportFormatShortFormat(importStructureStringDialog.getSequenceFormat()))){
-						MessageDialogBox box=new MessageDialogBox("String import error", LogUtils.getLastError(), NavigableApplication.getCurrentNavigableAppLevelWindow());
-						box.center();
-						box.setVisible(true);
+						IGGApplication.reportMessage(LogUtils.getLastError());
+						
+						LogUtils.clearLastError();
 					}
 				}
 			}
 		});
 		
-		importFromStringWindow.getContent().addComponent(importStructureStringDialog);
-		((VerticalLayout)importFromStringWindow.getContent()).setComponentAlignment(importStructureStringDialog, Alignment.MIDDLE_CENTER);
+		WeeLayout layout=new WeeLayout(Direction.VERTICAL);
+		layout.setSizeFull();
+		importFromStringWindow.setContent(layout);
+		layout.addComponent(importStructureStringDialog,Alignment.MIDDLE_CENTER);
+
 		importFromStringWindow.center();
 		importFromStringWindow.setVisible(false);
 		
-		importFromStringWindow.setSizeUndefined();
-		importFromStringWindow.getContent().setSizeUndefined();
-		
 		@SuppressWarnings("unused")
 		MenuBar.MenuItem importFromStringMenu=parent.addItem("Import from string", new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=1586089744665899803L;
 
 			@Override
@@ -350,25 +278,52 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				}
 			}
 		});
-		
-		
 	}
 	
-	public class CanvasImport extends Panel implements Upload.SucceededListener,Upload.FailedListener,Upload.Receiver{
-		/**
-		 * 
-		 */
+	public class CanvasImport extends Panel {
 		private static final long serialVersionUID=8487960720141044728L;
-		Upload uploader;
+		
+		NavigatorFileUpload uploader;
 		ListSelect importTypes;
 		
 		public CanvasImport(){
-			uploader=new Upload("Upload",this);
+			uploader=new NavigatorFileUpload("Upload"){
+				@Override
+				public void uploadFailed(FailedEvent failedEvent){
+					IGGApplication.reportMessage("Upload failed");
+				}
+
+				@Override
+				public void uploadSucceeded(SucceededEvent succeededEvent){
+					File file=getUploadedFile();
+					
+					String format=theCanvas.getImportFormatShortFormat((String)importTypes.getValue());
+					try{
+						theCanvas.theDoc.importFrom(file.getPath(), format);
+					}catch(Exception ex){
+						IGGApplication.reportMessage("Wrong format or invalid content");
+					}
+					
+					if(LogUtils.hasLastError()){
+						IGGApplication.reportMessage("Wrong format or invalid content");
+					}
+					
+					LogUtils.clearLastError();
+					
+					if(file.delete()==false){
+						IGGApplication.reportException(new Exception("Unable to delete file: "+file.getPath()));
+					}
+					
+					removeLocalResource(file);
+				}
+
+				@Override
+				public void uploadFailed(Message msg){
+					IGGApplication.reportMessage(msg.getMessage());
+				}
+			};
 			
-			uploader.addListener((Upload.SucceededListener)this);
-			uploader.addListener((Upload.FailedListener)this);
-			
-			
+			uploader.setLocalResourceWatchers(localResourceWatchers);
 			
 			List<String> importTypeList=theCanvas.getImportFormats();
 			
@@ -377,57 +332,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			importTypes.setValue(importTypeList.get(0));
 			
 			getContent().addComponent(importTypes);
-			getContent().addComponent(uploader);
-		}
-		
-		File file;
-		
-		@Override
-		public OutputStream receiveUpload(String filename, String MIMEType) {
-			FileOutputStream fos = null;
-	        try {
-	        	file = File.createTempFile("import",".seq");
-	        	
-	        	addLocalResource(file); 
-	        	
-	            fos = new FileOutputStream(file);
-	        } catch (final java.io.FileNotFoundException e) {
-	        	// TODO Auto-generated catch block
-				e.printStackTrace();
-	        } catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        return fos;
-		}
-
-		@Override
-		public void uploadFailed(FailedEvent event) {
-			showMessage("Upload failed","100px","100px");
-		}
-
-		@Override
-		public void uploadSucceeded(SucceededEvent event) {
-			String format=theCanvas.getImportFormatShortFormat((String)importTypes.getValue());
-			try{
-				theCanvas.theDoc.importFrom(file.getPath(), format);
-			}catch(Exception ex){
-				showMessage("Wrong format or corrupt file!","350px","150px");
-			}
-			
-			if(LogUtils.hasLastError()){
-				showMessage("Wrong format or corrupt file!","350px","150px");
-			}
-			
-			LogUtils.clearLastError();
-			
-			try{
-				file.delete();
-			}catch(Exception ex){
-				//do something
-			}
-			
-			removeLocalResource(file);
+			getContent().addComponent(uploader.getUploadComponent());
 		}
 	}
 	
@@ -496,9 +401,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					final String finalMimeType=mimeType;
 					
 					getWindow().open(new FileResource(file, getApplication()){
-						/**
-						 * 
-						 */
 						private static final long serialVersionUID=6816460214678812683L;
 
 						@Override
@@ -509,7 +411,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 								ds.setCacheTime(getCacheTime());
 								return ds;
 							}catch(Exception ex){
-								
+								IGGApplication.reportMessage("An error has occured attempting to export the glycan canvas", ex);
 							}
 							
 							return null;
@@ -517,7 +419,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					});
 					
 				} catch (IOException e) {
-					e.printStackTrace();
+					IGGApplication.reportMessage("An error has occured attempting to export the glycan canvas", e);
 				}				
 			}
 		};
@@ -527,9 +429,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		}
 		
 		Command onImageExport=new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-3304865968113708422L;
 
 			@Override
@@ -563,9 +462,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					final String finalMimeType=mimeType;
 					
 					getWindow().open(new FileResource(file, getApplication()){
-						/**
-						 * 
-						 */
 						private static final long serialVersionUID=7843576185418877104L;
 
 						@Override
@@ -576,7 +472,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 								ds.setCacheTime(getCacheTime());
 								return ds;
 							}catch(Exception ex){
-								
+								IGGApplication.reportMessage("An error has occured attempting to export the glycan canvas", ex);
 							}
 							
 							return null;
@@ -584,7 +480,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					});
 					
 				} catch (IOException e) {
-					e.printStackTrace();
+					IGGApplication.reportMessage("An error has occured attempting to export the glycan canvas", e);
 				}
 			}
 		};
@@ -605,9 +501,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
 				if (t.canHaveParent()){
 					superClassMenu.addItem(t.getName(), new Command(){
-						/**
-						 * 
-						 */
 						private static final long serialVersionUID=4750928193466060500L;
 
 						@Override
@@ -621,7 +514,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			if(superClassMenu.getChildren()==null){
 				structureMenu.removeChild(superClassMenu);
 			}
-			
 		}
 	}
 	
@@ -636,10 +528,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				if (t.canHaveParent() && t.canHaveChildren()
 						&& t.getMaxLinkages() >= 2){
 					superClassMenu.addItem(t.getName(), new Command(){
-
-						/**
-						 * 
-						 */
 						private static final long serialVersionUID=2685831199169131556L;
 
 						@Override
@@ -667,10 +555,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)){
 				superClassMenu.addItem(t.getName(), new Command(){
-
-					/**
-					 * 
-					 */
 					private static final long serialVersionUID=-7886271503255704127L;
 
 					@Override
@@ -692,9 +576,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final HashMap<String,String> notationIndex=new HashMap<String,String>();
 		
 		Command notationChangeCommand=new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=5081687058270283137L;
 
 			@Override
@@ -723,9 +604,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		notationIndex.put("Text only notation", GraphicOptions.NOTATION_TEXT);
 		
 		parent.addItem("Show Masses", new ThemeResource("icons/uncheckedbox.png"),new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=6140157670134115820L;
 
 			@Override
@@ -747,15 +625,10 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		});
 		
 		parent.addItem("Show reducing end symbol",new ThemeResource("icons/uncheckedbox.png"), new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-5209359926737326181L;
 
 			@Override
 			public void menuSelected(MenuItem selectedItem) {
-				//selectedItem.setIcon(arg0);
-				
 				boolean showRedEnd=theCanvas.theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS;
 				
 				if(showRedEnd){
@@ -772,9 +645,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		
 		final Window massOptionsDialog=new Window(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-5094399884130705221L;
 
 			public void close(){
@@ -793,17 +663,10 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		((VerticalLayout) massOptionsDialog.getContent()).setComponentAlignment(dialog, Alignment.MIDDLE_CENTER);
 		
 		massOptionsDialog.setVisible(false);
-		//massOptionsDialog.setWidth("600px");
-		//massOptionsDialog.setHeight("400px");
 		
 		massOptionsDialog.center();
 		
-		final Boolean attached=false;
-		
 		parent.addItem("Mass options",new Command(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-589321392382766804L;
 
 			@Override
@@ -917,18 +780,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			return;
 		if (current.getParent() != null
 				&& (!current.isSpecial() || current.isCleavage())) {
-			//new ResiduePropertiesDialog(theCanvas.theParent, current,
-				//	theCanvas.getLinkedResidues(), theCanvas.theDoc).setVisible(true);
 			theCanvas.setSelection(current);
 			theCanvas.documentUpdated();
 		} else if (current.isStartRepetition()) {
-			//new ResiduePropertiesDialog(theCanvas.theParent, current, theCanvas.theDoc)
-				//	.setVisible(true);
 			theCanvas.setSelection(current);
 			theCanvas.documentUpdated();
 		} else if (current.isEndRepetition()) {
-			//new RepetitionPropertiesDialog(theCanvas.theParent, current, theCanvas.theDoc)
-				//	.setVisible(true);
 			theCanvas.setSelection(current);
 			theCanvas.documentUpdated();
 		}
@@ -979,6 +836,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			linkage_two_panel = new PopupButton("2nd Linkage");
 			popupLayout2 = new HorizontalLayout();
 			popupLayout2.addStyleName("2nd_linkage_panel");
+			
 			linkage_two_panel.setComponent(popupLayout2);
 			
 			field_anomeric_state = new OptionGroup("Anomeric state",Arrays.asList(new String[] { "?","a", "b" }));
@@ -1052,7 +910,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				if (parent_link != null){
 					field_linkage_position.setValue(Arrays.asList(theCanvas.toStrings(parent_link.glycosidicBond().getParentPositions())));
 				}else{
-					//field_linkage_position.setNullSelectionItemId(new Integer(-1));
 					field_linkage_position.setValue(null);
 				}
 
@@ -1095,17 +952,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				
 				forceLinkagePopRepaint();
 			}
-			
-			
 		}
 	}
 	
 	public void registerLinkageListeners(){
-		
 		defaultListener = new Property.ValueChangeListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=375264676842546361L;
 
 			@Override
@@ -1124,9 +975,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		field_second_parent_position.addListener(defaultListener);
 		
 		field_second_bond.addListener(new Property.ValueChangeListener() {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=1577488601988220206L;
 
 			@Override
@@ -1137,8 +985,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				
 				Residue current=theCanvas.getCurrentResidue();
 				
-				System.err.println("Field box changed!");
-				
 				if(checked){
 					Linkage parent_link=current.getParentLinkage();
 					boolean can_have_parent_linkage = (parent_link != null && parent_link.getParentResidue() != null && 
@@ -1147,8 +993,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					
 					field_second_parent_position.setEnabled(can_have_parent_linkage && parent_link.hasMultipleBonds());
 					field_second_child_position.setEnabled(can_have_parent_linkage && parent_link.hasMultipleBonds());
-					
-					System.err.println("Enabling second panel: ");
 					
 					linkage_two_panel.setEnabled(true);
 				}else{
@@ -1174,6 +1018,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		
 		HorizontalLayout popupLayout = new HorizontalLayout();
+		
 		popupLayout.addStyleName("1st_linkage_panel");
 		
 		popupLayout.addComponent(field_anomeric_state);
@@ -1183,6 +1028,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		popupLayout.addComponent(field_ring_size);
 		
 		linkage_one_panel.setComponent(popupLayout);
+		linkage_one_panel.addStyleName("link");
+		linkage_two_panel.addStyleName("link");
+		
+		linkage_two_panel.addStyleName("igg-glycan-builder-linkage-toolbar-panel-item");
+		linkage_one_panel.addStyleName("igg-glycan-builder-linkage-toolbar-panel-item");
+		field_second_bond.addStyleName("igg-glycan-builder-linkage-toolbar-panel-item");
 		
 		toolBar.addComponent(linkage_one_panel);
 		
@@ -1204,10 +1055,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private HorizontalLayout popupLayout2;
 
 	private Property.ValueChangeListener defaultListener;
-
-	private float parentRealWidth;
-
-	private float parentRealHeight;
 	
 	public void appendLinkageToolBar(Panel theLinkageToolBarPanel){
 		linkagePanel=theLinkageToolBarPanel;
@@ -1223,9 +1070,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		NativeButton deleteButton=new NativeButton("Delete");
 		deleteButton.setIcon(new ThemeResource("icons/deleteNew.png"));
 		deleteButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=1289257412952359727L;
 
 			@Override
@@ -1239,9 +1083,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final NativeButton pasteButton=new NativeButton("Paste");
 		copyButton.setIcon(new ThemeResource("icons/editcopy.png"));
 		copyButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-1740735587078805580L;
 
 			@Override
@@ -1254,9 +1095,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		pasteButton.setIcon(new ThemeResource("icons/editpaste.png"));
 		pasteButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-8732259244009686729L;
 
 			@Override
@@ -1270,9 +1108,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final NativeButton bracketButton=new NativeButton("Bracket");
 		bracketButton.setIcon(new ThemeResource("icons/bracket.png"));
 		bracketButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=5201094306113759901L;
 
 			@Override
@@ -1285,9 +1120,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final NativeButton repeatButton=new NativeButton("Repeat");
 		repeatButton.setIcon(new ThemeResource("icons/repeat.png"));
 		repeatButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-23302591439643695L;
 
 			@Override
@@ -1310,9 +1142,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		orientationButton.setIcon(new ThemeResource("icons/"+theCanvas.getOrientationIcon()));
 		orientationButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=6621021858668446143L;
 
 			@Override
@@ -1326,9 +1155,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		selectAllButton.setIcon(new ThemeResource("icons/selectall.png"));
 		selectAllButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=-5848923636575805154L;
 
 			@Override
@@ -1342,9 +1168,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		deSelectAllButton.setIcon(new ThemeResource("icons/deselect.png"));
 		deSelectAllButton.addListener(new ClickListener(){
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID=8339468775345706027L;
 
 			@Override
@@ -1422,13 +1245,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		this.automaticallyAdjustHeight=automaticallyAdjustHeight;
 	}
 	
-	private boolean needsRepaint=false;
-	
 	private void updateCanvasHeight(){
 		if(automaticallyAdjustHeight){
-			//String width=String.valueOf(getWindow().getHeight());
-			//System.err.println("Width: "+width);
-			
 			int proposedHeight=theCanvas.getHeight();
 			if(theCanvas.theGlycanRenderer.getRenderMode()==GlycanRendererMode.TOOLBAR){
 				proposedHeight+=2;
@@ -1436,42 +1254,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				proposedHeight+=100;
 			}
 			
-			
-			
-			
-			
-//			System.err.println(proposedHeight+"|"+realHeight+"|"+parentRealHeight);
-//			if(proposedHeight>parentRealHeight){
-//				System.err.println("Setting new height to: "+proposedHeight);
-//				
-//				
-//				
-//				
-//				
-//				
-//				
-//				setHeight(proposedHeight+"px");
-//				needsRepaint=true;
-//			}else if(proposedHeight<parentRealHeight){
-//				System.err.println("Setting new height to: "+parentRealHeight);
-//				setHeight(parentRealHeight+"px");
-//				needsRepaint=true;
-//			}
-			
 			int proposedWidth=theCanvas.getWidth();
-			
-//			System.err.println(theCanvas.theGlycanRenderer.getRenderMode()+"|"+proposedWidth+"|"+realWidth+"|"+parentRealWidth);
-//			if(proposedWidth>parentRealWidth){
-//				setWidth(proposedWidth+"px");
-//				needsRepaint=true;
-//			}else if(proposedWidth<parentRealWidth){
-//				System.err.println("Setting new width to: "+parentRealWidth);
-//				setWidth(parentRealWidth+"px");
-//				needsRepaint=true;
-//			}
-			
-			//getParent().getContent().setHeight(theCanvas.getHeight()+"px");
-			////theParentPanel.requestRepaint();
 			
 			setMinimumSize(proposedWidth, proposedHeight);
 		}
@@ -1485,7 +1268,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		if(theCanvas.getCurrentResidue()!=null && selectedResidue==theCanvas.getCurrentResidue() && selectedResidue.isRepetition()){
 			final Window window=new Window("Repeatition options");
-			Panel panel=new Panel();
 			
 			WeeLayout layout=new WeeLayout(org.vaadin.weelayout.WeeLayout.Direction.VERTICAL);
 			
@@ -1546,9 +1328,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			
 			layout.addComponent(buttonLayout, Alignment.BOTTOM_CENTER);
 			
-			//panel.setContent(layout);
-			//panel.getContent().setSizeUndefined();
-			
 			window.center();
 			window.getContent().addComponent(layout);
 			
@@ -1573,7 +1352,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	}
 
 	@Override
-	public void addLocalResourceWatcher(LocalResourceWatcher watcher) {
+	public void setLocalResourceWatcher(LocalResourceWatcher watcher) {
 		localResourceWatchers.add(watcher);
 	}
 
@@ -1596,44 +1375,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		theCanvas.documentUpdated();
 	}
 
-//	public volatile boolean repaintOnDimensionUpdate=false;
-
-	//private Refresher refresher;
-	
-//	@Override
-//	public synchronized void dimensionUpdate(float width, float height, Component component, float parentWidth, float parentHeight) {
-//		realWidth=width;
-//		realHeight=height;
-//		parentRealWidth=parentWidth;
-//		parentRealHeight=parentHeight;
-//		
-//		if(repaintOnDimensionUpdate){
-//			repaintOnDimensionUpdate=false;
-//			
-//			updateCanvasHeight();
-//			
-//			if(needsRepaint){
-//				needsRepaint=false;
-//				requestRepaint();
-//			}
-//		}
-//	}
-
 	public synchronized void resizeCanvas() {
-//		if(lastScreenResizeRequest==null){
-//			repaintOnDimensionUpdate=true;
-//			
-//			fireDimensionEvent();
-//			
-//			refresher.setRefreshInterval(100);
-//		}else{
-//			if(waiting==false){
-//				waiting=true;
-//				refresher.setRefreshInterval(100);
-//			}
-//		}
-//		
-//		lastScreenResizeRequest=System.currentTimeMillis();
+
 	}
 	
 	@Override

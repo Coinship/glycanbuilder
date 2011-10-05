@@ -19,7 +19,6 @@
 */
 package ac.uk.icl.dell.vaadin.glycanbuilder;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Collection;

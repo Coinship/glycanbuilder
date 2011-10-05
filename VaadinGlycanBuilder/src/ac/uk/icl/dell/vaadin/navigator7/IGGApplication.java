@@ -28,8 +28,10 @@ import org.vaadin.navigator7.Navigator;
 import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
+import ac.uk.icl.dell.vaadin.MessageDialogBox;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.Terminal;
 
 public class IGGApplication extends NavigableApplication implements  LocalResourceWatcher{
 	private static final long serialVersionUID=4370691195660076222L;
@@ -57,6 +59,7 @@ public class IGGApplication extends NavigableApplication implements  LocalResour
 	@Override
 	public void close(){
 		for(File file:localFilesAttachedToSession){
+			System.out.println("Deleting file: "+file.getPath());
 			file.delete();
 		}
 		
@@ -108,5 +111,31 @@ public class IGGApplication extends NavigableApplication implements  LocalResour
         IGGWebApplication.removeLogger();
         
         super.transactionEnd(application, transactionData);
+    }
+    
+    @Override
+    public void terminalError(Terminal.ErrorEvent event){
+    	super.terminalError(event);
+    
+    	MessageDialogBox box=new MessageDialogBox("Unexpected exception", "An unexpected exception has just been detected", NavigableApplication.getCurrentNavigableAppLevelWindow());
+    	box.setVisible(true);
+    	box.center();
+    }
+    
+    
+    public static void reportMessage(String message,Exception ex){
+    	IGGApplication.reportMessage(message);
+    	
+    	IGGApplication.reportException(ex);
+    }
+    
+    public static void reportException(Exception ex){
+    	ex.printStackTrace();    
+    }
+    
+    public static void reportMessage(String message){
+    	MessageDialogBox box=new MessageDialogBox("Notification", message, IGGApplication.getCurrentNavigableAppLevelWindow());
+    	box.setVisible(true);
+    	box.center();
     }
 }

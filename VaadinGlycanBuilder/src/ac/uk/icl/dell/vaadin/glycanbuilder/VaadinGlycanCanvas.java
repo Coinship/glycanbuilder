@@ -60,6 +60,7 @@ import org.vaadin.weelayout.WeeLayout.Direction;
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
 import ac.uk.icl.dell.vaadin.ProducesLocalResources;
 import ac.uk.icl.dell.vaadin.glycanbuilder.MassOptionsDialog.MassOptionListener;
+import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
 import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
 import ac.uk.icl.dell.vaadin.navigator7.pages.buildingblocks.NavigatorFileUpload;
 
@@ -79,9 +80,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.Command;
-import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
@@ -95,7 +93,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private static final long serialVersionUID=-4055030966241059255L;
 	
 	private List<Component> componentsWithResidueSelectionDependency;
-	public List<MenuBar.MenuItem> menuItemsWithResidueSelectionDependency;
+	public List<CustomMenuBar.MenuItem> menuItemsWithResidueSelectionDependency;
 	
 	private List<LocalResourceWatcher> localResourceWatchers=new ArrayList<LocalResourceWatcher>();
 	
@@ -128,7 +126,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		font=Font.getFont(FONT.STANDARD);
 		
 		componentsWithResidueSelectionDependency=new ArrayList<Component>();
-		menuItemsWithResidueSelectionDependency=new ArrayList<MenuBar.MenuItem>();
+		menuItemsWithResidueSelectionDependency=new ArrayList<CustomMenuBar.MenuItem>();
 		
 		addSelectionListener(this);
 		
@@ -139,17 +137,17 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		setImmediate(true);
 	}
 
-	public void appendStructureMenu(MenuBar.MenuItem parent){
-		MenuBar.MenuItem structureMenu=parent.addItem("Add structure", null);
+	public void appendStructureMenu(CustomMenuBar.MenuItem parent){
+		CustomMenuBar.MenuItem structureMenu=parent.addItem("Add structure", null);
 
 		for(String superclass:CoreDictionary.getSuperclasses()){
-			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
+			CustomMenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for(final CoreType t:CoreDictionary.getCores(superclass)){
-				superClassMenu.addItem(t.getName(), new Command(){
+				superClassMenu.addItem(t.getName(), new CustomMenuBar.Command(){
 					private static final long serialVersionUID=-148395291969656325L;
 
 					@Override
-					public void menuSelected(MenuItem selectedItem) {
+					public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 						theCanvas.addSequenceByName(t.getName());
 					}
 				});
@@ -162,19 +160,19 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		createTerminalMenu(parent);
 	}
 	
-	private void createTerminalMenu(MenuBar.MenuItem parent){
-		MenuBar.MenuItem structureMenu=parent.addItem("Add terminal", null);
+	private void createTerminalMenu(CustomMenuBar.MenuItem parent){
+		CustomMenuBar.MenuItem structureMenu=parent.addItem("Add terminal", null);
 		for(String superclass : TerminalDictionary.getSuperclasses()){
-			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
+			CustomMenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (TerminalType t : TerminalDictionary.getTerminals(superclass)) {
-				MenuBar.MenuItem terminalType=superClassMenu.addItem(t.getDescription(),null);
+				CustomMenuBar.MenuItem terminalType=superClassMenu.addItem(t.getDescription(),null);
 				
 				final String type=t.getName();
-				Command addTerminal=new Command(){
+				CustomMenuBar.Command addTerminal=new CustomMenuBar.Command(){
 					private static final long serialVersionUID=6872577027235164629L;
 
 					@Override
-					public void menuSelected(MenuItem selectedItem) {
+					public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 						String longForm=selectedItem.getText();
 						
 						if(longForm.equals("Unknown linkage")){
@@ -193,7 +191,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		}
 	}
 	
-	public void appendImportMenu(MenuBar.MenuItem parent){
+	public void appendImportMenu(CustomMenuBar.MenuItem parent, CustomMenuBar.MenuItem beforeItem){
 		final Window importWindow=new Window(){
 			private static final long serialVersionUID=-397373017493034496L;
 
@@ -211,11 +209,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		importWindow.setVisible(false);
 		
 		@SuppressWarnings("unused")
-		MenuBar.MenuItem importMenu=parent.addItem("Import", new Command(){
+		CustomMenuBar.MenuItem importMenu=parent.addItemBefore("Import",null, new CustomMenuBar.Command(){
 			private static final long serialVersionUID=-6735134306275926140L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				if(!importWindow.isVisible()){
 					if(getWindow().getChildWindows().contains(importWindow)==false){
 						getWindow().addWindow(importWindow);
@@ -224,7 +222,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					importWindow.setVisible(true);
 				}
 			}
-		});
+		},beforeItem);
 		
 		importWindow.setSizeUndefined();
 		importWindow.getContent().setSizeUndefined();
@@ -264,11 +262,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		importFromStringWindow.setVisible(false);
 		
 		@SuppressWarnings("unused")
-		MenuBar.MenuItem importFromStringMenu=parent.addItem("Import from string", new Command(){
+		CustomMenuBar.MenuItem importFromStringMenu=parent.addItemBefore("Import from string",null, new CustomMenuBar.Command(){
 			private static final long serialVersionUID=1586089744665899803L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				if(!importFromStringWindow.isVisible()){
 					if(getWindow().getChildWindows().contains(importFromStringWindow)==false){
 						getWindow().addWindow(importFromStringWindow);
@@ -277,7 +275,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 					importFromStringWindow.setVisible(true);
 				}
 			}
-		});
+		},beforeItem);
 	}
 	
 	public class CanvasImport extends Panel {
@@ -369,17 +367,15 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		}
 	}
 	
-	public void appendExportMenu(MenuBar.MenuItem parent){
-		MenuBar.MenuItem exportMenu=parent.addItem("Export", null);
-		
-		Command command=new Command(){
+	public void appendExportMenu(CustomMenuBar.MenuItem parent, CustomMenuBar.MenuItem beforeItem){
+		CustomMenuBar.Command command=new CustomMenuBar.Command(){
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID=-3300979660830126504L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				if(theCanvas.theDoc.getStructures().size()==0){
 					return;
 				}
@@ -424,15 +420,17 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		
+		CustomMenuBar.MenuItem exportMenu=parent.addItemBefore("Export", null, null, beforeItem);
+		
 		for(String format:theCanvas.getSequenceExportFormats()){
 			exportMenu.addItem(format, command);
 		}
 		
-		Command onImageExport=new Command(){
+		CustomMenuBar.Command onImageExport=new CustomMenuBar.Command(){
 			private static final long serialVersionUID=-3304865968113708422L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				if(theCanvas.theDoc.getStructures().size()==0){
 					return;
 				}
@@ -485,26 +483,26 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		
-		MenuBar.MenuItem exportToImageMenu=parent.addItem("Image export", null);
+		CustomMenuBar.MenuItem exportToImageMenu=parent.addItemBefore("Image export", null,null,beforeItem);
 		for(String format:theCanvas.getImageExportFormats()){
 			exportToImageMenu.addItem(format, onImageExport);
 		}
 	}
 	
-	public void createAddResidueMenu(MenuBar.MenuItem parent) {
+	public void createAddResidueMenu(CustomMenuBar.MenuItem parent) {
 		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
 		
-		MenuBar.MenuItem structureMenu=parent.addItem("Add residue", null);
+		CustomMenuBar.MenuItem structureMenu=parent.addItem("Add residue", null);
 
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
-			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
+			CustomMenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
 				if (t.canHaveParent()){
-					superClassMenu.addItem(t.getName(), new Command(){
+					superClassMenu.addItem(t.getName(), new CustomMenuBar.Command(){
 						private static final long serialVersionUID=4750928193466060500L;
 
 						@Override
-						public void menuSelected(MenuItem selectedItem) {
+						public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 							theCanvas.addResidueByNameToSelected(selectedItem.getText());
 						}		
 					}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
@@ -517,21 +515,21 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		}
 	}
 	
-	public void createInsertResidueMenu(MenuBar.MenuItem parent){
-		MenuBar.MenuItem structureMenu=parent.addItem("Insert residue", null);
+	public void createInsertResidueMenu(CustomMenuBar.MenuItem parent){
+		CustomMenuBar.MenuItem structureMenu=parent.addItem("Insert residue", null);
 		
 		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
 		
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
-			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
+			CustomMenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)) {
 				if (t.canHaveParent() && t.canHaveChildren()
 						&& t.getMaxLinkages() >= 2){
-					superClassMenu.addItem(t.getName(), new Command(){
+					superClassMenu.addItem(t.getName(), new CustomMenuBar.Command(){
 						private static final long serialVersionUID=2685831199169131556L;
 
 						@Override
-						public void menuSelected(MenuItem selectedItem) {
+						public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 							theCanvas.insertResidueByNameBeforeSelected(selectedItem.getText());
 						}
 					}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
@@ -546,19 +544,19 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		menuItemsWithResidueSelectionDependency.add(structureMenu);
 	}
 	
-	private void createChangeResidueMenu(MenuBar.MenuItem parent) {
-		MenuBar.MenuItem structureMenu=parent.addItem("Change residue", null);
+	private void createChangeResidueMenu(CustomMenuBar.MenuItem parent) {
+		CustomMenuBar.MenuItem structureMenu=parent.addItem("Change residue", null);
 
 		String notation=theCanvas.theGlycanRenderer.getGraphicOptions().NOTATION;
 		
 		for (String superclass : ResidueDictionary.getSuperclasses()) {
-			MenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
+			CustomMenuBar.MenuItem superClassMenu=structureMenu.addItem(superclass,null);
 			for (ResidueType t : ResidueDictionary.getResidues(superclass)){
-				superClassMenu.addItem(t.getName(), new Command(){
+				superClassMenu.addItem(t.getName(), new CustomMenuBar.Command(){
 					private static final long serialVersionUID=-7886271503255704127L;
 
 					@Override
-					public void menuSelected(MenuItem selectedItem) {
+					public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 						theCanvas.changeSelectedToResidueByName(selectedItem.getText());
 					}
 				}).setIcon(new ThemeResource("icons"+File.separator+"residues"+File.separator+notation+File.separator+t.getName()+".png"));
@@ -572,14 +570,14 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		menuItemsWithResidueSelectionDependency.add(structureMenu);
 	}
 	
-	public void appendNotationMenu(MenuBar.MenuItem parent) {
+	public void appendNotationMenu(CustomMenuBar.MenuItem parent) {
 		final HashMap<String,String> notationIndex=new HashMap<String,String>();
 		
-		Command notationChangeCommand=new Command(){
+		CustomMenuBar.Command notationChangeCommand=new CustomMenuBar.Command(){
 			private static final long serialVersionUID=5081687058270283137L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				String notation=notationIndex.get(selectedItem.getText());
 				theCanvas.setNotation(notation);
 			}
@@ -603,11 +601,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		parent.addItem("Text only notation", notationChangeCommand);
 		notationIndex.put("Text only notation", GraphicOptions.NOTATION_TEXT);
 		
-		parent.addItem("Show Masses", new ThemeResource("icons/uncheckedbox.png"),new Command(){
+		parent.addItem("Show Masses", new ThemeResource("icons/uncheckedbox.png"),new CustomMenuBar.Command(){
 			private static final long serialVersionUID=6140157670134115820L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				//selectedItem.setIcon(arg0);
 				
 				boolean showMasses=theCanvas.theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS;
@@ -624,11 +622,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		});
 		
-		parent.addItem("Show reducing end symbol",new ThemeResource("icons/uncheckedbox.png"), new Command(){
+		parent.addItem("Show reducing end symbol",new ThemeResource("icons/uncheckedbox.png"), new CustomMenuBar.Command(){
 			private static final long serialVersionUID=-5209359926737326181L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				boolean showRedEnd=theCanvas.theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS;
 				
 				if(showRedEnd){
@@ -666,11 +664,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		
 		massOptionsDialog.center();
 		
-		parent.addItem("Mass options",new Command(){
+		parent.addItem("Mass options",new CustomMenuBar.Command(){
 			private static final long serialVersionUID=-589321392382766804L;
 
 			@Override
-			public void menuSelected(MenuItem selectedItem) {
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem) {
 				if(massOptionsDialog.getParent()==null){
 					getWindow().addWindow(massOptionsDialog);
 				}
@@ -1226,12 +1224,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 				component.setEnabled(true);
 			}
 
-			for(MenuBar.MenuItem menuItem:menuItemsWithResidueSelectionDependency){
+			for(CustomMenuBar.MenuItem menuItem:menuItemsWithResidueSelectionDependency){
 				menuItem.setEnabled(true);
 			}
 			
 		}else{
-			for(MenuBar.MenuItem menuItem:menuItemsWithResidueSelectionDependency){
+			for(CustomMenuBar.MenuItem menuItem:menuItemsWithResidueSelectionDependency){
 				menuItem.setEnabled(false);
 			}
 			

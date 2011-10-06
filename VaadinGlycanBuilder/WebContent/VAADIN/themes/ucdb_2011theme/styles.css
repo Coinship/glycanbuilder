@@ -304,6 +304,39 @@
     -webkit-box-sizing: border-box;	
 }
 
+.igg-manage-users-table {
+	width:inherit;
+	height:100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-body {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-body-noselection {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-header-wrap {
+	width:inherit !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+
+
 .igg-glycan-sequence-table .v-table-body {
 	width:inherit !important;
 	height:95% !important;

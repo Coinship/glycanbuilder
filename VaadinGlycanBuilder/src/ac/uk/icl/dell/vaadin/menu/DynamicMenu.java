@@ -19,26 +19,29 @@
 */
 package ac.uk.icl.dell.vaadin.menu;
 
-import com.vaadin.ui.MenuBar;
 
 public interface DynamicMenu{
 	/**
 	 * Store a snapshot of the current menu
 	 */
-	public void saveState(MenuBar.MenuItem item, Object obj);
+	public void saveState(CustomMenuBar.MenuItem item, Object obj);
 	
 	/**
 	 * Remove all items not present in the snapshot
 	 */
-	public void restoreState(MenuBar.MenuItem item, Object obj);
+	public void restoreState(CustomMenuBar.MenuItem item, Object obj);
 	
-	public void removeMenuItem(MenuBar.MenuItem item);
+	public void removeMenuItem(CustomMenuBar.MenuItem item);
 	
 	public void setup();
+	
+	public void appendFinalItems();
 
 	boolean isModified();
 
 	void refresh();
 
 	void setModified();
+	
+	public CustomMenuBar getMenuBar();
 }

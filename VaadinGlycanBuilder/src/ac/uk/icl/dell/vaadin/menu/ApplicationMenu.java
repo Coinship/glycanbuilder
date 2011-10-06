@@ -19,11 +19,11 @@
 */
 package ac.uk.icl.dell.vaadin.menu;
 
-import com.vaadin.ui.MenuBar;
 
 public interface ApplicationMenu extends DynamicMenu{
-	public MenuBar.MenuItem getFileMenu();
-	public MenuBar.MenuItem getEditMenu();
-	public MenuBar.MenuItem getViewMenu();
-	public MenuBar getMenuBar();
+	public CustomMenuBar.MenuItem getFileMenu();
+	public CustomMenuBar.MenuItem getRestartFileMenuItem();
+	public CustomMenuBar.MenuItem getEditMenu();
+	public CustomMenuBar.MenuItem getViewMenu();
+	public CustomMenuBar getMenuBar();
 }

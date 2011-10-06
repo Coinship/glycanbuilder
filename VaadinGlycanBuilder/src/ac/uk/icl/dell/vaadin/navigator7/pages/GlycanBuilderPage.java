@@ -26,15 +26,13 @@ import org.vaadin.navigator7.Page;
 import org.vaadin.navigator7.window.PageWrapper;
 
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanBuilder;
+import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
 import ac.uk.icl.dell.vaadin.navigator7.IGGAppLevelWindow;
 import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
 
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.Command;
-import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Window;
 
 @Page
@@ -46,17 +44,27 @@ public class GlycanBuilderPage implements PageWrapper{
 		IGGAppLevelWindow window=(IGGAppLevelWindow)IGGApplication.getCurrentNavigableAppLevelWindow();
 		theGlycanBuilder=new GlycanBuilder(window.getApplicationMenu());
 		
-		theGlycanBuilder.getFileMenu().addItem("Restart", new Command(){
-			@Override
-			public void menuSelected(MenuItem selectedItem){
-				IGGApplication.getCurrent().close();
-			}
-		});
+//		theGlycanBuilder.getFileMenu().addItem("Restart", new CustomMenuBar.Command(){
+//			/**
+//			 * 
+//			 */
+//			private static final long serialVersionUID = -8709571317865762061L;
+//
+//			@Override
+//			public void menuSelected(CustomMenuBar.MenuItem selectedItem){
+//				IGGApplication.getCurrent().close();
+//			}
+//		});
 		
-		MenuBar.MenuItem helpItem=theGlycanBuilder.getMenuBar().addItem("Help",null);
-		helpItem.addItem("Manual", new Command(){
+		CustomMenuBar.MenuItem helpItem=theGlycanBuilder.getMenuBar().addItem("Help",null);
+		helpItem.addItem("Manual", new CustomMenuBar.Command(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7641505913124834642L;
+
 			@Override
-			public void menuSelected(MenuItem selectedItem){
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem){
 				Window window=new Window();
 				window.setHeight("60%");
 				window.setWidth("60%");
@@ -78,9 +86,14 @@ public class GlycanBuilderPage implements PageWrapper{
 			}
 		});
 		
-		helpItem.addItem("About", new Command(){
+		helpItem.addItem("About", new CustomMenuBar.Command(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1552280257083917640L;
+
 			@Override
-			public void menuSelected(MenuItem selectedItem){
+			public void menuSelected(CustomMenuBar.MenuItem selectedItem){
 				Window window=new Window();
 				window.setHeight("30%");
 				window.setWidth("30%");

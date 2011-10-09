@@ -29,6 +29,7 @@ import org.eurocarbdb.application.glycanbuilder.MassOptions;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
@@ -42,7 +43,7 @@ import com.vaadin.ui.TextField;
 public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.MassInput{
 	private static final long serialVersionUID=8707959087794407560L;
 	
-	GridLayout layout=new GridLayout(13,13);
+	GridLayout layout=new GridLayout(3,15);
 	Collection<Glycan> glycans;
 	
 	public MassOptionsDialog(Collection<Glycan> glycans, MassOptions massOptions){
@@ -355,36 +356,63 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 		layout.addComponent(new Label("Reducing end"),0,2,0,2);
 		layout.addComponent(reducingEndSelect,1,2,1,2);
 		
-		layout.addComponent(new Label("name"),1,3,1,3);
-		layout.addComponent(otherNameField,2,3,2,3);
+		{
+			Label nameLabel=new Label("name");
+			nameLabel.setWidth("40px");
+			layout.addComponent(nameLabel,1,3,1,3);
+			layout.addComponent(otherNameField,2,3,2,3);
 		
-		layout.addComponent(new Label("mass"),1,4,1,4);
-		layout.addComponent(otherMassField,2,4,2,4);
+			layout.setComponentAlignment(nameLabel, Alignment.MIDDLE_RIGHT);
+		}
 		
-		layout.addComponent(new Label("Negative mode"),0,5,0,5);
-		layout.addComponent(negativeModeField,1,5,1,5);
+		{
+			Label massLabel=new Label("mass");
+			massLabel.setWidth("40px");
+			layout.addComponent(massLabel,1,4,1,4);
+			layout.addComponent(otherMassField,2,4,2,4);	
+			layout.setComponentAlignment(massLabel, Alignment.MIDDLE_RIGHT);
+		}
 		
-		layout.addComponent(hIonCountSelect,0,6,0,6);
 		
-		layout.addComponent(naIonCountSelect,0,7,0,7);
 		
-		layout.addComponent(exNAIonCountSelect,1,7,1,7);
+		int row=5;
 		
-		layout.addComponent(liIonCountSelect,0,8,0,8);
+		{
+			Label divider=new Label("<hr/>",Label.CONTENT_XHTML);
 		
-		layout.addComponent(exLIIonCountSelect,1,8,1,8);
+			layout.addComponent(divider,0,row,2,row++);
+		}
 		
-		layout.addComponent(kIonCountSelect,0,9,0,9);
+		layout.addComponent(new Label("Negative mode"),0,row,0,row);
+		layout.addComponent(negativeModeField,1,row,1,row++);
 		
-		layout.addComponent(exKIonCountSelect,1,9,1,9);
+		layout.addComponent(hIonCountSelect,0,row,0,row++);
 		
-		layout.addComponent(clIonCountSelect,0,10,0,10);
+		layout.addComponent(naIonCountSelect,0,row,0,row);
 		
-		layout.addComponent(exClIonCountSelect,1,10,1,10);
+		layout.addComponent(exNAIonCountSelect,1,row,1,row++);
 		
-		layout.addComponent(h2po4IonCountSelect,0,11,0,11);
+		layout.addComponent(liIonCountSelect,0,row,0,row);
 		
-		layout.addComponent(exH2po4IonCountSelect,1,11,1,11);
+		layout.addComponent(exLIIonCountSelect,1,row,1,row++);
+		
+		layout.addComponent(kIonCountSelect,0,row,0,row);
+		
+		layout.addComponent(exKIonCountSelect,1,row,1,row++);
+		
+		{
+			Label divider=new Label("<hr/>",Label.CONTENT_XHTML);
+		
+			layout.addComponent(divider,0,row,2,row++);
+		}
+		
+		layout.addComponent(clIonCountSelect,0,row,0,row);
+		
+		layout.addComponent(exClIonCountSelect,1,row,1,row++);
+		
+		layout.addComponent(h2po4IonCountSelect,0,row,0,row);
+		
+		layout.addComponent(exH2po4IonCountSelect,1,row,1,row++);
 		
 		NativeButton update=new NativeButton("Save");
 		update.addListener(new ClickListener(){
@@ -402,7 +430,7 @@ public class MassOptionsDialog extends Panel implements MassOptionsConfigurator.
 			}
 		});
 		
-		layout.addComponent(update,0,12,0,12);
+		layout.addComponent(update,0,row,0,row);
 	}
 	
 	public void addAllItems(AbstractSelect select,Object [] objects){

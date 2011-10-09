@@ -650,6 +650,9 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 		};
 		
+		massOptionsDialog.setResizable(false);
+		//massOptionsDialog.setIcon(new ThemeResource("icons/massoptions.png"));
+		
 		massOptionsDialog.setCaption("Mass options");
 		
 		MassOptionsDialog dialog=new MassOptionsDialog(theCanvas.theDoc.getStructures(), theCanvas.theWorkspace.getDefaultMassOptions());

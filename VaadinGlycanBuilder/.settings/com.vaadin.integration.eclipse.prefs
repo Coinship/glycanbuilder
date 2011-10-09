@@ -1,6 +1,6 @@
-#Thu Oct 06 13:35:56 WEST 2011
+#Thu Oct 06 16:23:23 WEST 2011
 com.vaadin.integration.eclipse.useLatestNightly=false
 com.vaadin.integration.eclipse.widgetsetCompilationEta=141214
-com.vaadin.integration.eclipse.widgetsetDirty=false
+com.vaadin.integration.eclipse.widgetsetDirty=true
 com.vaadin.integration.eclipse.widgetsetStyle=OBF
 eclipse.preferences.version=1

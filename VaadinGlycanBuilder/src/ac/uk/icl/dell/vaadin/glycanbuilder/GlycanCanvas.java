@@ -39,6 +39,7 @@ import java.util.Vector;
 import org.eurocarbdb.application.glycanbuilder.BBoxManager;
 import org.eurocarbdb.application.glycanbuilder.BaseDocument.DocumentChangeEvent;
 import org.eurocarbdb.application.glycanbuilder.BaseDocument.DocumentChangeListener;
+import org.eurocarbdb.application.glycanbuilder.BuilderWorkspace;
 import org.eurocarbdb.application.glycanbuilder.CoreDictionary;
 import org.eurocarbdb.application.glycanbuilder.Glycan;
 import org.eurocarbdb.application.glycanbuilder.GlycanDocument;
@@ -1029,5 +1030,9 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 			theDoc.fireDocumentChanged();
 			setSelection(old_current);
 		}
+	}
+	
+	public BuilderWorkspace getWorkspace(){
+		return theWorkspace;
 	}
 }

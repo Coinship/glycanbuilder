@@ -22,6 +22,9 @@ package ac.uk.icl.dell.vaadin.glycanbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.vaadin.weelayout.WeeLayout;
+import org.vaadin.weelayout.WeeLayout.Direction;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -31,7 +34,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.VerticalLayout;
 
 public class ImportStructureFromStringDialog extends Panel {
 	private static final long serialVersionUID=-5458440361659452562L;
@@ -40,21 +42,23 @@ public class ImportStructureFromStringDialog extends Panel {
 	GlycanCanvas theCanvas;
 	RichTextArea sequenceInputField;
 	NativeButton ok;
-	VerticalLayout layout;
+	WeeLayout layout;
 	
 	List<UserInputEndedListener> userInputEndedListeners=new ArrayList<UserInputEndedListener>();
 	
 	ImportStructureFromStringDialog(GlycanCanvas canvas){
 		theCanvas=canvas;
 		
-		layout=(VerticalLayout) getContent();
+		layout=new WeeLayout(Direction.VERTICAL);
+		
+		setContent(layout);
 		
 		initComponents();
 		installClickListeners();
 		layoutComponents();
 		
-		setSizeUndefined();
-		getContent().setSizeUndefined();
+		setSizeFull();
+		layout.setSizeFull();
 	}
 	private String sequence;
 	private void initComponents(){
@@ -74,9 +78,10 @@ public class ImportStructureFromStringDialog extends Panel {
 			}
 		});
 		
+		sequenceInputField.setHeight("90%");
+		sequenceInputField.setWidth("100%");
+		
 		ok=new NativeButton("Import");
-		
-		
 	}
 	
 	private void installClickListeners(){
@@ -94,7 +99,6 @@ public class ImportStructureFromStringDialog extends Panel {
 		layout.addComponent(sequenceInputField);
 		layout.addComponent(importTypeSelectField);
 		layout.addComponent(ok);
-		
 		
 		layout.setComponentAlignment(sequenceInputField, Alignment.TOP_CENTER);
 		layout.setComponentAlignment(importTypeSelectField, Alignment.MIDDLE_CENTER);

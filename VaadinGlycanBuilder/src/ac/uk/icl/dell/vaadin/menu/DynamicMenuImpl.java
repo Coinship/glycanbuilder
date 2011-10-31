@@ -23,9 +23,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.vaadin.ui.MenuBar;
 
-public abstract class DynamicMenuImpl extends MenuBar implements DynamicMenu{
+public abstract class DynamicMenuImpl extends CustomMenuBar implements DynamicMenu{
 	private static final long serialVersionUID=-1297565156689183635L;
 	protected boolean modified=false;
 	
@@ -47,6 +46,7 @@ public abstract class DynamicMenuImpl extends MenuBar implements DynamicMenu{
 			removeItems();
 
 			setup();
+			appendFinalItems();
 
 			modified=false;
 		}
@@ -74,7 +74,7 @@ public abstract class DynamicMenuImpl extends MenuBar implements DynamicMenu{
 
 	@Override
 	public synchronized void removeMenuItem(MenuItem item) {
-		MenuBar.MenuItem parent=item.getParent();
+		MenuItem parent=item.getParent();
 		if(parent==null){
 			removeItem(item);
 		}else{

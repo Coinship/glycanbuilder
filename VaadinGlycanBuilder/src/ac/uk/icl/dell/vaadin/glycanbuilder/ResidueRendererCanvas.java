@@ -30,16 +30,12 @@ import java.awt.Rectangle;
 import javax.swing.Icon;
 
 import org.eurocarbdb.application.glycanbuilder.AbstractResidueRenderer;
-import org.eurocarbdb.application.glycanbuilder.GraphicOptions;
 import org.eurocarbdb.application.glycanbuilder.Paintable;
 import org.eurocarbdb.application.glycanbuilder.ResAngle;
 import org.eurocarbdb.application.glycanbuilder.Residue;
 import org.eurocarbdb.application.glycanbuilder.ResidueStyle;
 import org.eurocarbdb.application.glycanbuilder.ResidueType;
 import org.vaadin.damerell.canvas.BasicCanvas;
-import org.vaadin.damerell.canvas.BasicCanvas.TextInfo;
-
-import com.google.gwt.dom.client.Style.Position;
 
 import ac.uk.icl.dell.vaadin.canvas.shapes.Bracket;
 import ac.uk.icl.dell.vaadin.canvas.shapes.Circle;
@@ -70,13 +66,13 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 	
 	@Override
 	public Icon getIcon(ResidueType type, int max_y_size) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public Image getImage(ResidueType type, int max_y_size) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -87,8 +83,7 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 		
 		Point pp = ( par_bbox!=null ) ?center(par_bbox) :center(cur_bbox);
 		
-    	@SuppressWarnings("unused")
-		Point pc = center(cur_bbox);
+    	Point pc = center(cur_bbox);
     	
     	Point ps = ( sup_bbox!=null ) ?center(sup_bbox) :center(cur_bbox);
 		
@@ -167,7 +162,7 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 
 				painted=true;
 			}else{
-				//System.err.println("Style: "+style.getShape());
+
 			}
 		}	
 		
@@ -176,22 +171,17 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 			
 			if(!painted){
 				canvas.saveContext();
-				//Color colour=Color.CYAN;
-				//canvas.setFillStyle(colour.getRed(),colour.getGreen(), colour.getBlue());
-				
-				
-				
 				canvas.setFillStyle("#CCF");
 				canvas.fillRect(x, y, cur_bbox.width,cur_bbox.height);
 				canvas.restoreContext();
 			}
 			
 			if(text!=null){
-				float scale=.3f;
-				
-				if(!painted && theGraphicOptions.NOTATION==GraphicOptions.NOTATION_TEXT){
-					scale=0.5f;
-				}
+//				float scale=.3f;
+//				
+//				if(!painted && theGraphicOptions.NOTATION==GraphicOptions.NOTATION_TEXT){
+//					scale=0.5f;
+//				}
 				
 				canvas.saveContext();
 				
@@ -253,66 +243,40 @@ public class ResidueRendererCanvas extends AbstractResidueRenderer{
 		canvas.setLineWidth(2.0);
 		canvas.beginPath();
 		
-		TextInfo info=canvas.getRequiredScale(scale, 0.05, cur_bbox.width,cur_bbox.width, text);
 		ResAngle angle=theGraphicOptions.getOrientationAngle();
 		
-		double rotate=0;
-//		if( !(angle.equals(0) || orientation.equals(180))){
-//			rotate=-Math.PI/2.0; 
-//			info=canvas.getRequiredScale(scale, 0.05, cur_bbox.height,cur_bbox.height, text);
-//			canvas.renderText(text, x,y, rotate, info.scale);
-//		}else{
-			System.err.println("Angle: "+angle);
-			
-			canvas.font("8pt Calibri");
-			canvas.setFillStyle("black");
-			
-			if(position==Position.TOP){
-				if(angle.getIntAngle()==180){
-					canvas.textAlign("left");
-					canvas.fillText(text, (float)x+(cur_bbox.width/2), (float)y+10);
-				}else if(angle.getIntAngle()==0){
-					canvas.textAlign("right");
-					canvas.fillText(text, (float)x+(cur_bbox.width/2)+1, (float)y+cur_bbox.height-2); //minus 1 and 2 are odd correction factors we need
-				}else if(angle.getIntAngle()==-90){
-					canvas.textAlign("left");
-					canvas.fillText(text, (float)x+cur_bbox.width-10, (float)y+(cur_bbox.height/2)+6);
-				}else if(angle.getIntAngle()==90){
-					canvas.textAlign("right");
-					canvas.fillText(text, (float)x+10, (float)y+(cur_bbox.height/2)+1);
-				}
-				
-				
-//				if(angle.getIntAngle()==-90){
-//					canvas.renderText(text, x+cur_bbox.width-(info.width/2), y+(cur_bbox.height/2), rotate, info.scale);
-//				}else{
-//					canvas.renderText(text, x+(40*info.scale), y, rotate, info.scale);
-//				}
-			}else if(position==Position.BOTTOM){
-				if(angle.getIntAngle()==180){
-					canvas.textAlign("left");
-					canvas.fillText(text, (float)x+(cur_bbox.width/2), (float)y+cur_bbox.height-2);
-				}else if(angle.getIntAngle()==0){
-					canvas.textAlign("right");
-					canvas.fillText(text, (float)x+(cur_bbox.width/2)+1, (float)y+10); //minus 1 and 2 are odd correction factors we need
-				}else if(angle.getIntAngle()==-90){
-					canvas.textAlign("right");
-					canvas.fillText(text, (float)x+10, (float)y+(cur_bbox.height/2)+6);
-				}else if(angle.getIntAngle()==90){
-					canvas.textAlign("left");
-					canvas.fillText(text, (float)x+cur_bbox.width-10, (float)y+(cur_bbox.height/2)+1);
-				}
-				
-				
-//				if(angle.getIntAngle()==-90){
-//					canvas.renderText(text, x+(40*info.scale)-info.width, y+(cur_bbox.height/2), rotate, info.scale);
-//				}else if(angle.getIntAngle()==90){
-//					canvas.renderText(text, x+cur_bbox.width-(30*info.scale)-info.width, y, rotate, info.scale);
-//				}else{
-//					canvas.renderText(text, x+(40*info.scale), y+cur_bbox.height-(12*info.scale)-(10*info.scale), rotate, info.scale);
-//				}
+		canvas.font("8pt Calibri");
+		canvas.setFillStyle("black");
+
+		if(position==Position.TOP){
+			if(angle.getIntAngle()==180){
+				canvas.textAlign("left");
+				canvas.fillText(text, (float)x+(cur_bbox.width/2), (float)y+10);
+			}else if(angle.getIntAngle()==0){
+				canvas.textAlign("right");
+				canvas.fillText(text, (float)x+(cur_bbox.width/2)+1, (float)y+cur_bbox.height-2); //minus 1 and 2 are odd correction factors we need
+			}else if(angle.getIntAngle()==-90){
+				canvas.textAlign("left");
+				canvas.fillText(text, (float)x+cur_bbox.width-10, (float)y+(cur_bbox.height/2)+6);
+			}else if(angle.getIntAngle()==90){
+				canvas.textAlign("right");
+				canvas.fillText(text, (float)x+10, (float)y+(cur_bbox.height/2)+1);
 			}
-//		}
+		}else if(position==Position.BOTTOM){
+			if(angle.getIntAngle()==180){
+				canvas.textAlign("left");
+				canvas.fillText(text, (float)x+(cur_bbox.width/2), (float)y+cur_bbox.height-2);
+			}else if(angle.getIntAngle()==0){
+				canvas.textAlign("right");
+				canvas.fillText(text, (float)x+(cur_bbox.width/2)+1, (float)y+10); //minus 1 and 2 are odd correction factors we need
+			}else if(angle.getIntAngle()==-90){
+				canvas.textAlign("right");
+				canvas.fillText(text, (float)x+10, (float)y+(cur_bbox.height/2)+6);
+			}else if(angle.getIntAngle()==90){
+				canvas.textAlign("left");
+				canvas.fillText(text, (float)x+cur_bbox.width-10, (float)y+(cur_bbox.height/2)+1);
+			}
+		}
 	
 		Color colour=style.getTextColor();
 		canvas.setStrokeStyle(colour.getRed(),colour.getGreen(), colour.getBlue());

@@ -23,7 +23,6 @@ package ac.uk.icl.dell.vaadin.glycanbuilder;
 import ac.uk.icl.dell.vaadin.SimpleFileMenu;
 
 import com.vaadin.Application;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Window;
 
@@ -40,19 +39,5 @@ public class GlycanBuilderWindow extends Application{
 		
 		CustomLayout layout=new CustomLayout("header_content_footer_layout");
 		layout.addComponent(menu, "header");
-		
-		
-		
-//		GlycanBuilder builder=new GlycanBuilder(menu);
-//		
-//		CssLayout layout=new CssLayout();
-//		layout.setSizeFull();
-//		layout.setStyleName("igg-top-level-container");
-//		
-//		mainWindow.setSizeFull();
-//		mainWindow.setContent(layout);
-//		
-//		mainWindow.getContent().addComponent(menu);
-//		mainWindow.getContent().addComponent(builder);
 	}
 }

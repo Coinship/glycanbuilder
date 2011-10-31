@@ -1,4 +1,6 @@
+/* @import url(../chameleon-blue/styles.css); */
 @import url(../reindeer/styles.css);
+@import url(../chameleon/components/button/button.css);
 
 .v-table-cell-content-odd-even-neutral {
 	background-color: white;
@@ -48,6 +50,7 @@
 
 .v-horizontallayout-2nd_linkage_panel {
 	width: 200px !important;
+	background-color: #CCF;
 }
 
 .v-horizontallayout-2nd_linkage_panel>div {
@@ -55,21 +58,26 @@
 }
 
 .v-horizontallayout-2nd_linkage_panel>div  div {
-	margin-left: 2px;
-	margin-right: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
 }
 
 .v-horizontallayout-1st_linkage_panel {
-	width: 370px !important;
+	width: 400px !important;
+	background-color: #CCF
 }
 
 .v-horizontallayout-1st_linkage_panel>div {
-	width: 370px !important;
+	width: 400px !important;
 }
 
 .v-horizontallayout-1st_linkage_panel>div  div {
-	margin-left: 2px;
-	margin-right: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.v-horizontallayout-1st_linkage_panel_last_child {
+	padding-right: 0px !important;
 }
 
 .gwt-RichTextToolbar {
@@ -295,6 +303,39 @@
 	-moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;	
 }
+
+.igg-manage-users-table {
+	width:inherit;
+	height:100%;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-body {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-body-noselection {
+	width:inherit !important;
+	height:95% !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;	
+}
+
+.igg-manage-users-table .v-table-header-wrap {
+	width:inherit !important;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+
 
 .igg-glycan-sequence-table .v-table-body {
 	width:inherit !important;
@@ -687,3 +728,15 @@
 .glycan_builder_panel>div:nth-child(3) {
 	background: #CCF;
 }
+
+.igg-glycan-builder-linkage-toolbar-panel {
+	background: white;
+}
+
+.igg-glycan-builder-linkage-toolbar-panel-item {
+	padding-left:2px;
+	padding-right:2px;
+}
+
+
+

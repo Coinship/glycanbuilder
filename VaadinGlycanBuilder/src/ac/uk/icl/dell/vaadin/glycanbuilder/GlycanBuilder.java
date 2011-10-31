@@ -32,17 +32,14 @@ import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.GlycanCanvasUpdateListen
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
-import ac.uk.icl.dell.vaadin.menu.vaadin.MenuBar.MenuItem;
+import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 
 /**
@@ -63,7 +60,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	public org.eurocarbdb.application.glycanbuilder.BuilderWorkspace theWorkspace;
 	
 	private Panel theToolBarPanel;
-	private List<MenuBar.MenuItem> menuItems=new ArrayList<MenuBar.MenuItem>();
+	private List<CustomMenuBar.MenuItem> menuItems=new ArrayList<CustomMenuBar.MenuItem>();
 	
 	
 	public enum GlycanBuilderMode{
@@ -74,7 +71,9 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	
 	protected ApplicationMenu theAppMenu;
 
-	private MenuBar.MenuItem structureItem;
+	private CustomMenuBar.MenuItem structureItem;
+
+	private CustomMenuBar.MenuItem fileMenu;
 	
 	public GlycanBuilder(ApplicationMenu appMenu){
 		super("glycan_builder_layout");
@@ -193,7 +192,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	}
 	
 	public void registerLocalResourceWatcher(LocalResourceWatcher watcher){
-		theCanvas.addLocalResourceWatcher(watcher);
+		theCanvas.setLocalResourceWatcher(watcher);
 	}
 	
 	private void initToolBars(){
@@ -202,6 +201,8 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		theToolBarPanel.addStyleName("igg-glycan-builder-toolbar-panel");
 		
 		NavigableApplication.getCurrentNavigableAppLevelWindow().addActionHandler(new Handler(){
+			private static final long serialVersionUID=1735392108529734256L;
+			
 			Action actionDelete = new ShortcutAction("Delete",ShortcutAction.KeyCode.DELETE, null);
 			Action actionCopy = new ShortcutAction("Copy",ShortcutAction.KeyCode.C, new int[]{ShortcutAction.ModifierKey.CTRL});
 			Action actionPaste = new ShortcutAction("Paste",ShortcutAction.KeyCode.V, new int[]{ShortcutAction.ModifierKey.CTRL});
@@ -312,39 +313,37 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	}
 	
 	private void initFileMenu(){
-		MenuBar.MenuItem fileMenu=theAppMenu.getFileMenu();
+		fileMenu=theAppMenu.getFileMenu();
 		
 		theAppMenu.saveState(fileMenu, this);
 		
-		theCanvas.appendExportMenu(fileMenu);
-		theCanvas.appendImportMenu(fileMenu);
+		theCanvas.appendExportMenu(fileMenu,theAppMenu.getRestartFileMenuItem());
+		theCanvas.appendImportMenu(fileMenu,theAppMenu.getRestartFileMenuItem());
 		
 		fileMenu.setVisible(true);
 	}
 	
+	public CustomMenuBar.MenuItem getFileMenu(){
+		return fileMenu;
+	}
+	
+	public CustomMenuBar getMenuBar(){
+		return theAppMenu.getMenuBar();
+	}
+	
 	private void initStructureMenu(){
-		MenuBar dockMenuBar=theAppMenu.getMenuBar();
+		CustomMenuBar dockMenuBar=theAppMenu.getMenuBar();
 		
-		if(dockMenuBar.getItems().size()>3){
-			structureItem=dockMenuBar.addItemBefore("Structure", null, null, dockMenuBar.getItems().get(2));
-		}else{
-			structureItem=dockMenuBar.addItem("Structure", null, null);
-		}
+		structureItem=dockMenuBar.addItemAfter("Structure", null, null, theAppMenu.getViewMenu());
 		
 		theCanvas.appendStructureMenu(structureItem);
 		menuItems.add(structureItem);
 	}
 	
 	private void initViewMenu(){
-		MenuBar dockMenuBar=theAppMenu.getMenuBar();
+		CustomMenuBar.MenuItem structureItem=theAppMenu.getViewMenu();
 		
-		//tmp
-		MenuBar.MenuItem structureItem;
-		if(dockMenuBar.getItems().size()>2){
-			structureItem=dockMenuBar.addItemBefore("View", null, null, dockMenuBar.getItems().get(1));
-		}else{
-			structureItem=dockMenuBar.addItem("View", null, null);
-		}
+		theAppMenu.getViewMenu().setVisible(true);
 		
 		theCanvas.appendNotationMenu(structureItem);
 		menuItems.add(structureItem);
@@ -373,7 +372,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		theAppMenu.restoreState(theAppMenu.getFileMenu(), this);
 		theAppMenu.getFileMenu().setVisible(false);
 		
-		for(MenuBar.MenuItem item:menuItems){
+		for(CustomMenuBar.MenuItem item:menuItems){
 			theAppMenu.removeMenuItem(item);
 		}
 	}

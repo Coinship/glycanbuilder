@@ -53,7 +53,6 @@ import org.eurocarbdb.application.glycanbuilder.TerminalType;
 import org.vaadin.damerell.canvas.BasicCanvas;
 import org.vaadin.damerell.canvas.font.Font;
 import org.vaadin.damerell.canvas.font.Font.FONT;
-import org.vaadin.hene.popupbutton.PopupButton;
 import org.vaadin.weelayout.WeeLayout;
 import org.vaadin.weelayout.WeeLayout.Direction;
 
@@ -83,6 +82,7 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.PopupView;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.SucceededEvent;
@@ -109,8 +109,8 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	private CheckBox field_second_bond;
 	private OptionGroup field_second_child_position;
 	private OptionGroup field_second_parent_position;
-	private PopupButton linkage_one_panel;
-	private PopupButton linkage_two_panel;
+	private PopupView linkage_one_panel;
+	private PopupView linkage_two_panel;
 	
 	float realWidth;
 	float realHeight;
@@ -195,6 +195,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final Window importWindow=new Window(){
 			private static final long serialVersionUID=-397373017493034496L;
 
+			@Override
 			public void close(){
 				setVisible(false);
 			}
@@ -230,6 +231,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final Window importFromStringWindow=new Window(){
 			private static final long serialVersionUID=7035248961169308096L;
 
+			@Override
 			public void close(){
 				setVisible(false);
 			}
@@ -645,6 +647,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		final Window massOptionsDialog=new Window(){
 			private static final long serialVersionUID=-5094399884130705221L;
 
+			@Override
 			public void close(){
 				setVisible(false);
 			}
@@ -834,11 +837,11 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			}
 			
 			linkagePanel.removeAllComponents();
-			linkage_two_panel = new PopupButton("2nd Linkage");
 			popupLayout2 = new HorizontalLayout();
-			popupLayout2.addStyleName("2nd_linkage_panel");
+			linkage_two_panel = new PopupView("2nd Linkage", popupLayout2);
 			
-			linkage_two_panel.setComponent(popupLayout2);
+			popupLayout2.addStyleName("2nd_linkage_panel");
+			linkage_two_panel.setEnabled(false);
 			
 			field_anomeric_state = new OptionGroup("Anomeric state",Arrays.asList(new String[] { "?","a", "b" }));
 			field_anomeric_state.setStyleName("linkage_component_select");
@@ -875,7 +878,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			field_second_parent_position.setEnabled(false);
 		
 			if(current != null && (!current.isSpecial() || current.isCleavage() || current.isStartRepetition())){
-				linkagePanel.setVisible(true);
+				//linkagePanel.setVisible(true);
 				
 				Linkage parent_link = current.getParentLinkage();
 				
@@ -932,7 +935,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 						
 				forceLinkagePopRepaint();
 			}else{
-				linkagePanel.setVisible(false);
+				//linkagePanel.setVisible(false);
 				
 				field_linkage_position.setEnabled(false);
 				field_anomeric_state.setEnabled(false);
@@ -1007,9 +1010,10 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	public void forceLinkagePopRepaint(){
 		registerLinkageListeners();
 		
-		HorizontalLayout toolBar=new HorizontalLayout();
+		WeeLayout toolBar=new WeeLayout(Direction.HORIZONTAL);
 		
-		linkage_one_panel = new PopupButton("1st Linkage");
+		HorizontalLayout popupLayout = new HorizontalLayout();
+		linkage_one_panel = new PopupView("1st Linkage",popupLayout);
 		if(field_linkage_position.isEnabled() || field_anomeric_carbon.isEnabled() || 
 					field_anomeric_state.isEnabled() || field_chirality.isEnabled() || field_ring_size.isEnabled()){
 			linkage_one_panel.setEnabled(true);
@@ -1018,7 +1022,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		}
 		
 		
-		HorizontalLayout popupLayout = new HorizontalLayout();
 		
 		popupLayout.addStyleName("1st_linkage_panel");
 		
@@ -1028,9 +1031,14 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		popupLayout.addComponent(field_chirality);
 		popupLayout.addComponent(field_ring_size);
 		
-		linkage_one_panel.setComponent(popupLayout);
-		linkage_one_panel.addStyleName("link");
-		linkage_two_panel.addStyleName("link");
+		
+//		boolean enabled=linkage_two_panel.isEnabled();
+//		linkage_two_panel = new PopupButton("2nd Linkage");
+//		linkage_two_panel.setEnabled(enabled);
+//		linkage_two_panel.setComponent(popupLayout2);
+		
+//		linkage_one_panel.addStyleName(BaseTheme.BUTTON_LINK);
+//		linkage_two_panel.addStyleName("link");
 		
 		linkage_two_panel.addStyleName("igg-glycan-builder-linkage-toolbar-panel-item");
 		linkage_one_panel.addStyleName("igg-glycan-builder-linkage-toolbar-panel-item");

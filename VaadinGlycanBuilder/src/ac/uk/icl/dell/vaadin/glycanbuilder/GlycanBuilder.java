@@ -254,6 +254,8 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		theCanvas.appendLinkageToolBar(theLinkageToolBarPanel);
 		
 		theLinkageToolBarPanel.setScrollable(false);
+		theLinkageToolBarPanel.setSizeUndefined();
+		theLinkageToolBarPanel.getContent().setSizeUndefined();
 		
 		addComponent(theLinkageToolBarPanel,"linkage");
 		

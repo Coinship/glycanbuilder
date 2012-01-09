@@ -294,6 +294,10 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	}
 	
 	public void documentUpdated(){
+		documentUpdated(false);
+	}
+	
+	public void documentUpdated(boolean selectionRedraw){
 		thePaintable.clear();
 		
 		posManager = new PositionManager();
@@ -301,7 +305,32 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 		
 		if(!theDoc.isEmpty()){
 			theGlycanRenderer.computeBoundingBoxes(theDoc.getStructures(), theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS,theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS, posManager, theBBoxManager);
-		
+
+			if(thePaintable instanceof CanvasPaintable){
+				if(selectionRedraw){
+					((CanvasPaintable)thePaintable).canvas.setScroll(-1);
+				}else{
+					if(currentResidue!=null){
+						//Rectangle rec=theBBoxManager.getBBox(glycan, theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS);
+						Rectangle rec=theBBoxManager.getBorder(currentResidue);
+						if(rec!=null){
+							System.out.println("Rec: "+rec);
+							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y);
+						}
+					}else{
+						Rectangle rec=theBBoxManager.getBBox(theDoc.getLastStructure(),theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS);
+						if(rec!=null){
+							System.out.println("Rec: "+rec);
+							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y);
+						}
+					}
+					
+					
+				}
+				
+				
+			}
+			
 			for(Glycan glycan:theDoc.getStructures()){
 				theGlycanRenderer.paint(thePaintable,glycan, selectedResidues, selectedLinkages, theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS,theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS, posManager, theBBoxManager);
 			}
@@ -550,7 +579,7 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	
 	public void fireUpdatedSelection(){
 		if(!pauseSelectionUpdates){
-			documentUpdated();
+			documentUpdated(true);
 			
 			for(SelectionChangeListener listener:selectionChangeListeners){
 				listener.selectionChanged();
@@ -666,6 +695,8 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	}
 	
 	HashSet<NotationChangedListener> notationChangeListeners=new HashSet<NotationChangedListener>();
+
+	protected boolean selectionRender=false;
 	
 	public interface NotationChangedListener {
 		public void notationChanged(String notation);

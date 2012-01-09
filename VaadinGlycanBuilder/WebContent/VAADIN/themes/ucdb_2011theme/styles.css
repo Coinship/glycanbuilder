@@ -706,14 +706,14 @@
 }
 
 .glycan_builder_panel>div:nth-child(4) {
-	background: #CFC;
+	background: #CCF;
 	
 	-webkit-box-flex: 1;
 	-moz-box-flex: 1;
 	-ms-box-flex: 1;
 	box-flex: 1;
 	
-	/* flexbox setup */
+	/* flexbox setup 
 	display: -webkit-box;
 	display: -moz-box;
 	display: -ms-box;
@@ -722,7 +722,7 @@
 	-webkit-box-orient: vertical;
 	-moz-box-orient: vertical;
 	-ms-box-orient: vertical;
-	box-orient: vertical;
+	box-orient: vertical;*/
 }
 
 .glycan_builder_panel>div:nth-child(3) {
@@ -731,6 +731,7 @@
 
 .igg-glycan-builder-linkage-toolbar-panel {
 	background: white;
+	width:100%;
 }
 
 .igg-glycan-builder-linkage-toolbar-panel-item {

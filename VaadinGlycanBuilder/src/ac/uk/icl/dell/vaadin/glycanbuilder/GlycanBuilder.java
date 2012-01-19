@@ -37,9 +37,12 @@ import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.ResizeEvent;
 
 /**
@@ -51,9 +54,11 @@ import com.vaadin.ui.Window.ResizeEvent;
  * @author david
  *
  */
-public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.ResizeListener, ResidueHistoryListener{
+public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, ResidueHistoryListener{
 	private static final long serialVersionUID=-1310424874910700087L;
 	
+	protected VerticalLayout mainLayout;
+
 	protected VaadinGlycanCanvas theCanvas;
 	protected VaadinGlycanCanvas theResidueCanvas;
 	
@@ -76,49 +81,22 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	private CustomMenuBar.MenuItem fileMenu;
 	
 	public GlycanBuilder(ApplicationMenu appMenu){
-		super("glycan_builder_layout");
+		mainLayout=new VerticalLayout();
+		mainLayout.setSizeFull();
 		
 		theAppMenu=appMenu;
 		theAppMenu.setModified();
 		
-		setSizeUndefined();
-		
-		addStyleName("igg-glycan-builder");
-		
-		//final Panel panel=new Panel();
-		//panel.setScrollable(true);
-		
-		//CssLayout layout=new CssLayout();
-		//layout.addStyleName("igg-glycan-builder-canvas-container");
-		//layout.setSizeUndefined();
-		
 		theCanvas=new VaadinGlycanCanvas();
-		theCanvas.setBackgroundColor("#CCF");
-		theCanvas.addStyleName("igg-glycan-builder-glycan-canvas");
-//		theCanvas.setWidth("100%");
-//		theCanvas.setHeight("100%");
-		
-		theCanvas.setSizeUndefined();
-		
+		theCanvas.setSizeFull();
 		
 		theCanvas.enableMouseSelectionRectangle(true);
 		theCanvas.theCanvas.addResidueHistoryListener(this);	
 		
-//		
-//		panel.setSizeFull();
-//		panel.getContent().setWidth("100%");
-//		panel.getContent().setHeight("100%");
-//		panel.getContent().addComponent(theCanvas);
-//		panel.setStyleName("glycan_canvas");
-		
 		initToolBars();
 		
-		//layout.addComponent(theCanvas);
-		
-		
-		addComponent(theCanvas,"canvas");
-		
-		////((VerticalLayout)getContent()).setExpandRatio(panel, 1f);
+		mainLayout.addComponent(theCanvas);
+		mainLayout.setExpandRatio(theCanvas, 1);
 		
 		theCanvas.theCanvas.addNotationListener(new NotationChangedListener() {
 			@Override
@@ -153,28 +131,8 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		initViewMenu();
 		initStructureMenu();
 		
-		theResidueCanvas.setSizeUndefined();
-		
 		theCanvas.setMinimumSize(1, 1);
-		theResidueCanvas.setMinimumSize(1, 1);
-		
-		
-//		theCanvas.repaintOnDimensionUpdate=true;
-//		theCanvas.fireDimensionEvent();
-//		
-//		theResidueCanvas.repaintOnDimensionUpdate=true;
-//		theResidueCanvas.fireDimensionEvent();
-		
-//		NavigableApplication.getCurrentNavigableAppLevelWindow().setImmediate(true);
-//		NavigableApplication.getCurrentNavigableAppLevelWindow().addListener(new Window.ResizeListener(){
-//			@Override
-//			public void windowResized(ResizeEvent e) {
-//				System.out.println("Window resize event picked up!");
-//				
-//				theCanvas.resizeCanvas();
-//				theResidueCanvas.resizeCanvas();
-//			}
-//		});
+		theResidueCanvas.setMinimumSize(1, 50);
 	}
 	
 	public static void removeMenuItems(com.vaadin.ui.MenuBar.MenuItem structureItem2){
@@ -197,8 +155,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 	
 	private void initToolBars(){
 		theToolBarPanel=new Panel();
-		theToolBarPanel.setContent(new CssLayout());
-		theToolBarPanel.addStyleName("igg-glycan-builder-toolbar-panel");
+		theToolBarPanel.setContent(new HorizontalLayout());
 		
 		NavigableApplication.getCurrentNavigableAppLevelWindow().addActionHandler(new Handler(){
 			private static final long serialVersionUID=1735392108529734256L;
@@ -246,49 +203,30 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		
 		theToolBarPanel.setScrollable(false);
 		
-		addComponent(theToolBarPanel,"toolbar");
+		mainLayout.addComponent(theToolBarPanel);
 		
 		Panel theLinkageToolBarPanel=new Panel();
-		theLinkageToolBarPanel.setContent(new CssLayout());
-		theLinkageToolBarPanel.addStyleName("igg-glycan-builder-linkage-toolbar-panel");
+		theLinkageToolBarPanel.setContent(new HorizontalLayout());
+		
 		theCanvas.appendLinkageToolBar(theLinkageToolBarPanel);
 		
 		theLinkageToolBarPanel.setScrollable(false);
-		theLinkageToolBarPanel.setSizeUndefined();
-		theLinkageToolBarPanel.getContent().setSizeUndefined();
 		
-		addComponent(theLinkageToolBarPanel,"linkage");
-		
-		//final Panel panel=new Panel();
-		
-//		HorizontalLayout canvasLayout=new HorizontalLayout();
-//		canvasLayout.setWidth("100%");
-//		canvasLayout.setHeight("100%");
-//		
-//		CssLayout layout=new CssLayout();
-//		layout.addStyleName("igg-glycan-builder-canvas-addbar-container");
+		mainLayout.addComponent(theLinkageToolBarPanel);
 		
 		theResidueCanvas=new VaadinGlycanCanvas();
 		theResidueCanvas.setBackgroundColor("#CCF");
 		theResidueCanvas.setName("residueCanvas");
-//		theResidueCanvas.setWidth("100%");
-//		theResidueCanvas.setHeight("100%");
 		
-		theResidueCanvas.setSizeUndefined();
+		theResidueCanvas.setHeight("50px");
+		theResidueCanvas.setWidth("100%");
 		
 		theResidueCanvas.enableMouseSelectionRectangle(false);
-		//theResidueCanvas.automaticHeightAdjust(false);
 		theResidueCanvas.theCanvas.theGlycanRenderer.getGraphicOptions().MARGIN_TOP=2;
+	
+		mainLayout.addComponent(theResidueCanvas);
+		//mainLayout.setExpandRatio(theResidueCanvas, 1);
 		
-		//layout.addComponent(theResidueCanvas);
-		
-		//canvasLayout.addComponent(layout);
-		
-		//panel.setContent(canvasLayout);
-		//panel.setScrollable(false);
-		
-		//addComponent(theResidueCanvas);
-		addComponent(theResidueCanvas,"recent");
 		
 		final VaadinGlycanCanvas finalCanvas=theResidueCanvas;
 		finalCanvas.enableResidueToolBarMode();
@@ -353,7 +291,7 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 
 	@Override
 	public void windowResized(ResizeEvent e) {
-		requestRepaintAll();
+		mainLayout.requestRepaintAll();
 		
 		
 		//getWindow().executeJavaScript("$('.gwt-PopupPanel canvas')[0].style.height=$('.v-panel-content-glycan_canvas_1')[0].style.height;");
@@ -377,5 +315,9 @@ public class GlycanBuilder extends CustomLayout implements com.vaadin.ui.Window.
 		for(CustomMenuBar.MenuItem item:menuItems){
 			theAppMenu.removeMenuItem(item);
 		}
+	}
+	
+	public Component getComponent(){
+		return mainLayout;
 	}
 }

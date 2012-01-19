@@ -24,6 +24,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.VerticalLayout;
 
 public abstract class HeaderFooterFluidAppLevelWindow extends FluidAppLevelWindow{
 	private static final long serialVersionUID=-5505006913843998562L;
@@ -36,38 +37,24 @@ public abstract class HeaderFooterFluidAppLevelWindow extends FluidAppLevelWindo
 
     @Override
     protected ComponentContainer createComponents() {
-        CssLayout mainContainer=(CssLayout) getContent();
-        mainContainer.setStyleName("igg-top-level-container");
-        //mainContainer.setSizeUndefined();
+        VerticalLayout mainContainer=(VerticalLayout) getContent(); //set in FluidAppLevelWindow::attach via createMainLayout
+        mainContainer.setSizeFull();
         
-        
-        CustomLayout layout=new CustomLayout("header_content_footer");
-        layout.setSizeUndefined();
-        
-        // Header
         header = createHeader();
-        //header.setWidth("100%");
+        header.setWidth("100%");
         
-        //header.addStyleName("igg-header");
-        
-        //mainContainer.addComponent(header);
-        layout.addComponent(header,"header");
-
-        // Center page area
-        Layout pageBand = new CssLayout();
-       // pageBand.setSizeUndefined();
-       // pageBand.setStyleName("igg-content-level-container");
-        //mainContainer.addComponent(pageBand);
-        layout.addComponent(pageBand,"content");
-        
-        //mainContainer.setExpandRatio(pageBand, 1f);
+        mainContainer.addComponent(header);
         
         footer=createFooter();
-        //footer.addStyleName("igg-footer");
-        //mainContainer.addComponent(footer);
-        layout.addComponent(footer,"footer");
+        footer.setWidth("100%");
         
-        mainContainer.addComponent(layout);
+        VerticalLayout pageBand=new VerticalLayout();
+        pageBand.setSizeFull();
+        
+        mainContainer.addComponent(pageBand);
+        mainContainer.setExpandRatio(pageBand, 1);
+        
+        mainContainer.addComponent(footer);
 
         return pageBand;
     }

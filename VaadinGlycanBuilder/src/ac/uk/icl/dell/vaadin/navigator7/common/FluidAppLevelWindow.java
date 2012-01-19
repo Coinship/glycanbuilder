@@ -24,6 +24,7 @@ import org.vaadin.navigator7.window.NavigableAppLevelWindow;
 
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.VerticalLayout;
 
 public abstract class FluidAppLevelWindow extends NavigableAppLevelWindow{
 	private static final long serialVersionUID=-7045300488515169537L;
@@ -39,12 +40,9 @@ public abstract class FluidAppLevelWindow extends NavigableAppLevelWindow{
 
 		pageContainer = createComponents();
 	}
-
-
+	
 	@Override
 	protected Layout createMainLayout() {
-		return new CssLayout();
+		return new VerticalLayout();
 	}
-	
-	
 }

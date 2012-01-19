@@ -18,18 +18,18 @@
     -->
     <!-- <set-property name="user.agent" value="gecko1_8"/> -->
 
-
+    <!--  <set-property name="user.agent" value="safari"/>-->
     
 
     <inherits name="org.vaadin.hene.popupbutton.widgetset.PopupbuttonWidgetset" />
 
     
 
-    <inherits name="ac.uk.icl.dell.gwt.EnhancedcanvasWidgetset" />
+    
 
     <inherits name="org.vaadin.weelayout.WeelayoutWidgetset" />
 
     <inherits name="com.github.wolfie.refresher.RefresherApplicationWidgetset" />
 
-    <inherits name="org.vaadin.hezamu.canvas.widgetset.CanvastestWidgetset" />
+    
 </module>

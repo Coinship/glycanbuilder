@@ -308,20 +308,20 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 
 			if(thePaintable instanceof CanvasPaintable){
 				if(selectionRedraw){
-					((CanvasPaintable)thePaintable).canvas.setScroll(-1);
+					((CanvasPaintable)thePaintable).canvas.setScroll(-1,-1);
 				}else{
 					if(currentResidue!=null){
 						//Rectangle rec=theBBoxManager.getBBox(glycan, theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS);
 						Rectangle rec=theBBoxManager.getBorder(currentResidue);
 						if(rec!=null){
 							System.out.println("Rec: "+rec);
-							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y);
+							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y,rec.x);
 						}
 					}else{
 						Rectangle rec=theBBoxManager.getBBox(theDoc.getLastStructure(),theWorkspace.getGraphicOptions().SHOW_REDEND_CANVAS);
 						if(rec!=null){
 							System.out.println("Rec: "+rec);
-							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y);
+							((CanvasPaintable)thePaintable).canvas.setScroll(rec.y,rec.x);
 						}
 					}
 					

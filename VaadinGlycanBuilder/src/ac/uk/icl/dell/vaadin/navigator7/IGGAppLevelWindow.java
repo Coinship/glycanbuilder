@@ -26,6 +26,7 @@ import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
 import ac.uk.icl.dell.vaadin.navigator7.common.HeaderFooterFluidAppLevelWindow;
 
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
 public class IGGAppLevelWindow  extends HeaderFooterFluidAppLevelWindow{
@@ -46,7 +47,14 @@ public class IGGAppLevelWindow  extends HeaderFooterFluidAppLevelWindow{
 
 	@Override
 	protected Component createFooter() {
-		return new Label("ICL GlycanBuilder");
+		HorizontalLayout layout=new HorizontalLayout();
+		layout.setWidth("100%");
+		
+		layout.addStyleName("white-background");
+		
+		layout.addComponent(new Label("GlycanBuilder"));
+		
+		return layout;
 	}
 	
 	synchronized public void changePage(PageWrapper pageParam) {

@@ -114,6 +114,7 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 			}
 		});
 		
+		theCanvas.setBackgroundColor("#CCF");
 		theCanvas.setName("glycanCanvas");
 		
 		theCanvas.addExportListener(new ExportListener(){
@@ -201,16 +202,18 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		
 		theCanvas.appendGeneralToolBar(theToolBarPanel);
 		
-		theToolBarPanel.setScrollable(false);
+		//theToolBarPanel.setScrollable(true);
 		
 		mainLayout.addComponent(theToolBarPanel);
 		
 		Panel theLinkageToolBarPanel=new Panel();
 		theLinkageToolBarPanel.setContent(new HorizontalLayout());
+		theLinkageToolBarPanel.setWidth("100%");
+		//theLinkageToolBarPanel.setScrollable(true);
 		
 		theCanvas.appendLinkageToolBar(theLinkageToolBarPanel);
 		
-		theLinkageToolBarPanel.setScrollable(false);
+		//theLinkageToolBarPanel.setScrollable(false);
 		
 		mainLayout.addComponent(theLinkageToolBarPanel);
 		
@@ -218,7 +221,7 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		theResidueCanvas.setBackgroundColor("#CCF");
 		theResidueCanvas.setName("residueCanvas");
 		
-		theResidueCanvas.setHeight("50px");
+		theResidueCanvas.setHeight("25px");
 		theResidueCanvas.setWidth("100%");
 		
 		theResidueCanvas.enableMouseSelectionRectangle(false);

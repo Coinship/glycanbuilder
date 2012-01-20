@@ -1,6 +1,114 @@
-@import url(../chameleon-blue/styles.css);
 @import url(../reindeer/styles.css);
-@import url(../chameleon/components/button/button.css); 
+@import url(../chameleon/components/button/button.css);
+
+/* CSS for none-generic components */
+
+.toolbar .v-nativebutton {
+        display: block;
+        width: 65px;
+        height: 55px;
+        background: transparent;
+        border: thin;
+        text-align: center;
+}
+
+.toolbar .v-nativebutton img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+        width: 30px;
+}
+
+.toolbar .v-nativebutton span {
+        font-size: x-small;
+        text-shadow: #fafafa 1px 1px 0;
+}
+
+.white-background {
+	background-color: white;
+}
+
+/* LINKAGE PANEL */
+
+.igg-glycan-builder-linkage-toolbar-panel-item {
+	padding-left:2px;
+	padding-right:2px;
+}
+
+/* 1st bond popup view */
+.v-horizontallayout-1st_linkage_panel {
+	width: 400px !important;
+	background-color: #CCF
+}
+
+.v-horizontallayout-1st_linkage_panel>div {
+	width: 400px !important;
+}
+
+.v-horizontallayout-1st_linkage_panel>div  div {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.v-horizontallayout-1st_linkage_panel_last_child {
+	padding-right: 0px !important;
+}
+
+.glycanbuilder-2nd-cov-checkbox >input {
+	margin-top:1px;
+}
+
+/* 2nd bond popup view */
+.v-horizontallayout-2nd_linkage_panel {
+	width: 200px !important;
+	background-color: #CCF;
+}
+
+.v-horizontallayout-2nd_linkage_panel>div {
+	width: 200px !important;
+}
+
+.v-horizontallayout-2nd_linkage_panel>div  div {
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+
+
+/* #################################################### */
+/* RDEFINE VAADIN DEFAULTS	*/
+
+/* redefine grid layout */
+
+/* redefine default spacing */
+.v-gridlayout-spacing-on {
+	padding-top: 5px;
+	padding-left: 5px;
+}
+
+/* redefine default margins */
+.v-gridlayout-margin-left {
+	padding-left:5px;
+}
+
+.v-gridlayout-margin-right {
+	padding-right:5px;
+}
+
+.v-gridlayout-margin-bottom {
+	padding-bottom:5px;
+}
+
+.v-gridlayout-margin-top {
+	padding-top:5px;
+}
+
+/* #################################################### */
+/* RDEFINE GWT DEFAULTS	*/
+.gwt-RichTextToolbar { 
+ 	display: none; 
+} 
 
 /* .v-table-cell-content-odd-even-neutral { */
 /* 	background-color: white; */

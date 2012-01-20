@@ -862,9 +862,9 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			field_ring_size.setMultiSelect(false);
 			field_ring_size.setEnabled(false);
 			
-			field_second_bond=new CheckBox("2nd bond");
+			field_second_bond=new CheckBox("");
 			field_second_bond.setEnabled(false);
-			
+			field_second_bond.addStyleName("glycanbuilder-2nd-cov-checkbox");
 			
 			field_second_bond.setValue(false);
 			field_second_bond.setImmediate(true); //forces a value change event to be fired immediately
@@ -1011,6 +1011,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		registerLinkageListeners();
 		
 		WeeLayout toolBar=new WeeLayout(Direction.HORIZONTAL);
+		toolBar.setWidth("100%");
 		
 		HorizontalLayout popupLayout = new HorizontalLayout();
 		linkage_one_panel = new PopupView("1st Linkage",popupLayout);
@@ -1073,6 +1074,7 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 	
 	public void appendGeneralToolBar(Panel theToolBarPanel){
 		HorizontalLayout toolBar=new HorizontalLayout();
+		toolBar.setWidth("100%");
 		
 		toolBar.setStyleName("toolbar");
 		
@@ -1225,6 +1227,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		toolBar.addComponent(repeatButton);
 		toolBar.addComponent(moveCWButton);
 		toolBar.addComponent(moveCCWButton);
+		
+		HorizontalLayout layout=new HorizontalLayout();
+		layout.setSizeFull();
+		
+		toolBar.addComponent(layout);
+		toolBar.setExpandRatio(layout, 1);
 		
 		theToolBarPanel.setContent(toolBar);
 	}

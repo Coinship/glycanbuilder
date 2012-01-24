@@ -74,6 +74,13 @@
 	padding-right: 2px;
 }
 
+/* Canvas adjustments */
+
+/* disable outline when canvas is focused on (produces an unwanted border-type effect */
+.v-canvas{
+	outline:none;
+}
+
 
 
 /* #################################################### */
@@ -105,8 +112,8 @@
 }
 
 /* #################################################### */
-/* RDEFINE GWT DEFAULTS	*/
-.gwt-RichTextToolbar { 
+/* Hide toolbar	*/
+.hide-richtext-toolbar > .gwt-RichTextToolbar { 
  	display: none; 
 } 
 

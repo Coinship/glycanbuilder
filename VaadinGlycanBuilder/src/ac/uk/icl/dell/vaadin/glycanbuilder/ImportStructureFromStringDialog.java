@@ -60,6 +60,7 @@ public class ImportStructureFromStringDialog extends Panel {
 		setSizeFull();
 		layout.setSizeFull();
 	}
+	
 	private String sequence;
 	private void initComponents(){
 		importTypeSelectField=new Select("Sequence format",theCanvas.getImportFormats());
@@ -80,6 +81,8 @@ public class ImportStructureFromStringDialog extends Panel {
 		
 		sequenceInputField.setHeight("90%");
 		sequenceInputField.setWidth("100%");
+		
+		sequenceInputField.addStyleName("hide-richtext-toolbar");
 		
 		ok=new NativeButton("Import");
 	}

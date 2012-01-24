@@ -133,7 +133,7 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		initStructureMenu();
 		
 		theCanvas.setMinimumSize(1, 1);
-		theResidueCanvas.setMinimumSize(1, 50);
+		theResidueCanvas.setMinimumSize(1, 25);
 	}
 	
 	public static void removeMenuItems(com.vaadin.ui.MenuBar.MenuItem structureItem2){

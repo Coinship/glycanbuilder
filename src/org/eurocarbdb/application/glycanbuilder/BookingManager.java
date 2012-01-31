@@ -167,15 +167,17 @@ public class BookingManager {
     }
 
     private boolean hasEmptyPositions(ResAngle[] pos) {
-    for( int i=0; i<pos.length; i++ ) 
-        if( available_positions.get(pos[i].getIntAngle()).size()==0 )
-        return true;
-    return false;
+    	for( int i=0; i<pos.length; i++ ){
+    		if( available_positions.get(pos[i].getIntAngle())==null || available_positions.get(pos[i].getIntAngle()).size()==0 ){
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     private ResAngle findOnBorderPosition(Residue r) {
     ResAngle[] positions = getPossiblePositions(r);  
-    if( other_residues.size()>0 || !hasEmptyPositions(positions) ) {
+    if(other_residues.size()>0 || !hasEmptyPositions(positions) ) {
         for( int i=0; i<positions.length; i++ ) {
         if( countOnBorderResidues(positions[i])==1 )
             return positions[i];

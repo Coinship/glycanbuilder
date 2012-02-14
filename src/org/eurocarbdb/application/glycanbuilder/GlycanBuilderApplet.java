@@ -27,12 +27,16 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
 
+import org.eurocarbdb.application.glycanbuilder.BaseDocument.DocumentChangeEvent;
+import org.eurocarbdb.application.glycanbuilder.BaseDocument.DocumentChangeListener;
+
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.awt.print.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.text.*;
 import java.net.*;
 
@@ -149,7 +153,7 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		// set document
 		if (getParameter("DOCUMENT") != null)
 			setDocument(getParameter("DOCUMENT"));
@@ -466,6 +470,29 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		}
 		
 		return theDoc.toString(format);
+	}
+	
+	public String getCurrentCoordinates(){
+		StringBuilder buf=new StringBuilder();
+		
+		buf.append("#Orientation angle="+theCanvas.getGlycanRenderer().getGraphicOptions().getOrientationAngle()+"\n");
+		
+		Vector<Glycan> structures=theDoc.getStructures();
+		
+		for(int i=0;i<structures.size();i++){
+			Glycan structure=structures.get(i);
+			
+			buf.append(">"+structure.toGlycoCT().replace("\r\n", "~").replace("\n", "~")+"\n");
+			
+			Collection<Residue> residues=structure.getAllResidues();
+			for(Residue residue:residues){
+				Rectangle rec=theCanvas.theBBoxManager.border_bboxes.get(residue);
+				
+				buf.append(residue.getType().getResidueName()+"~"+rec.x+"~"+rec.y+"~"+rec.width+"~"+rec.height+"\n");
+			}
+		}
+		
+		return buf.toString();
 	}
 	
 	public void setDocument(String src, String format) {

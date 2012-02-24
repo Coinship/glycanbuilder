@@ -178,6 +178,10 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 			try{
 				Residue toAdd = ResidueDictionary.newResidue(name);
 				theDoc.addResidue(null, getLinkedResidues(),toAdd);
+				
+				if(theGlycanRenderer.getRenderMode()!=GlycanRendererMode.TOOLBAR){
+					setSelection(toAdd);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -19,10 +19,15 @@
 */
 package ac.uk.icl.dell.vaadin.glycanbuilder;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.eurocarbdb.application.glycanbuilder.Glycan;
+import org.eurocarbdb.application.glycanbuilder.GlycanParserFactory;
+import org.eurocarbdb.application.glycanbuilder.LogUtils;
 import org.eurocarbdb.application.glycanbuilder.Residue;
 import org.vaadin.damerell.canvas.BasicCanvas.ExportListener;
 import org.vaadin.navigator7.NavigableApplication;
@@ -33,6 +38,7 @@ import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
 import ac.uk.icl.dell.vaadin.menu.ApplicationMenu;
 import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
+import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -119,11 +125,56 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		
 		theCanvas.addExportListener(new ExportListener(){
 			@Override
-			public void exportRequest(String type) {
-				if(type.equals("glycoct_condensed")){
-					theCanvas.respondToExportRequest(theCanvas.theCanvas.theDoc.toGlycoCTCondensed());
-				}else if(type.equals("glycoct")){
-					theCanvas.respondToExportRequest(theCanvas.theCanvas.theDoc.toGlycoCT());
+			public void exportRequest(String fullCommand) {
+				try{
+					if(fullCommand.contains("~")){
+						String cols[]=fullCommand.split("~");
+
+						String command=cols[0];
+						if(command.equals("export")){
+							if(cols.length!=2){
+								theCanvas.respondToExportRequest("Export command without type");
+							}else{
+								String type=cols[1];
+
+								String sequence=null;
+
+								if(type.equals("glycoct_condensed")){
+									sequence=theCanvas.theCanvas.theDoc.toGlycoCTCondensed();
+								}else if(type.equals("glycoct")){
+									sequence=theCanvas.theCanvas.theDoc.toGlycoCT();
+								}else{
+									sequence=theCanvas.theCanvas.theDoc.toString(GlycanParserFactory.getParser(type));
+								}
+
+								if(sequence!=null){
+									theCanvas.respondToExportRequest(sequence);
+								}else{
+									theCanvas.respondToExportRequest("sequence is null");
+								}
+							}
+						}else if(command.equals("import")){
+							if(cols.length!=3){
+								theCanvas.respondToExportRequest("Import command without format and or value");
+							}else{
+								String type=cols[1];
+								
+								String value=cols[2].replaceAll("<br/>","\n"); //for debugger
+								
+								if(!theCanvas.theCanvas.theDoc.importFromString(value,type)){
+									theCanvas.respondToExportRequest("ERROR:"+LogUtils.getLastError());
+									
+									LogUtils.clearLastError();
+								}
+							}
+						}else{
+							theCanvas.respondToExportRequest("ERROR:Unable to extract command");
+						}
+					}else{
+						theCanvas.respondToExportRequest("ERROR:Unable to extract command");
+					}
+				}catch(Exception ex){
+					theCanvas.respondToExportRequest("ERROR:An exception as occurred");
 				}
 			}
 		});

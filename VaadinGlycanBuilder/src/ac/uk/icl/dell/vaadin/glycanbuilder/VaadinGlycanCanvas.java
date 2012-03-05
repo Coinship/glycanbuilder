@@ -33,9 +33,11 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.eurocarbdb.application.glycanbuilder.AbstractGlycanRenderer;
+import org.eurocarbdb.application.glycanbuilder.BuilderWorkspace;
 import org.eurocarbdb.application.glycanbuilder.CoreDictionary;
 import org.eurocarbdb.application.glycanbuilder.CoreType;
 import org.eurocarbdb.application.glycanbuilder.Glycan;
+import org.eurocarbdb.application.glycanbuilder.GlycanDocument;
 import org.eurocarbdb.application.glycanbuilder.GlycanRendererAWT;
 import org.eurocarbdb.application.glycanbuilder.GlycanRendererMode;
 import org.eurocarbdb.application.glycanbuilder.GraphicOptions;
@@ -63,6 +65,7 @@ import ac.uk.icl.dell.vaadin.menu.CustomMenuBar;
 import ac.uk.icl.dell.vaadin.navigator7.IGGApplication;
 import ac.uk.icl.dell.vaadin.navigator7.pages.buildingblocks.NavigatorFileUpload;
 
+import com.google.gwt.canvas.client.Canvas;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.DownloadStream;
@@ -135,6 +138,12 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		theCanvas.theWorkspace.getGraphicOptions().SHOW_MASSES_CANVAS=false;
 		
 		setImmediate(true);
+	}
+	
+	public void setDocument(GlycanDocument doc){
+		theCanvas.setDocument(doc);
+		
+		updateActions();
 	}
 
 	public void appendStructureMenu(CustomMenuBar.MenuItem parent){
@@ -1022,8 +1031,6 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 			linkage_one_panel.setEnabled(false);
 		}
 		
-		
-		
 		popupLayout.addStyleName("1st_linkage_panel");
 		
 		popupLayout.addComponent(field_anomeric_state);
@@ -1405,5 +1412,9 @@ public class VaadinGlycanCanvas extends BasicCanvas implements BasicCanvas.Selec
 		 * - So this is just a hack to get around this limitation
 		 */
 		updateCanvasHeight();
+	}
+
+	public void setWorkspace(BuilderWorkspace workspace) {
+		theCanvas.setWorkspace(workspace);
 	}
 }

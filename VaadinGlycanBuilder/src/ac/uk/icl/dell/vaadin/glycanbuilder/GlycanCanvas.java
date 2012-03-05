@@ -94,6 +94,18 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	public org.eurocarbdb.application.glycanbuilder.GlycanDocument getTheDoc() {
 		return theDoc;
 	}
+	
+	public void setDocument(GlycanDocument doc){
+		resetSelection();
+		
+		theDoc.removeDocumentChangeListener(this);
+		
+		theDoc=doc;
+		
+		theDoc.addDocumentChangeListener(this);
+		
+		documentUpdated();
+	}
 
 	protected Paintable thePaintable;
 	
@@ -1069,5 +1081,10 @@ public class GlycanCanvas implements DocumentChangeListener, Serializable{
 	
 	public BuilderWorkspace getWorkspace(){
 		return theWorkspace;
+	}
+
+	public void setWorkspace(BuilderWorkspace workspace) {
+		theWorkspace=workspace;
+		theGlycanRenderer=theWorkspace.getGlycanRenderer();
 	}
 }

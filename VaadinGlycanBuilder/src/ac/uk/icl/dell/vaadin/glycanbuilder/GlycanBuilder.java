@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.eurocarbdb.application.glycanbuilder.BuilderWorkspace;
 import org.eurocarbdb.application.glycanbuilder.Glycan;
 import org.eurocarbdb.application.glycanbuilder.GlycanParserFactory;
 import org.eurocarbdb.application.glycanbuilder.LogUtils;
@@ -373,5 +374,10 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 	
 	public Component getComponent(){
 		return mainLayout;
+	}
+	
+	public void setWorkspace(BuilderWorkspace workspace){
+		theWorkspace=workspace;
+		theCanvas.setWorkspace(theWorkspace);
 	}
 }

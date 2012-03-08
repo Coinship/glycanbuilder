@@ -59,6 +59,7 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter, MassAware {
 	private Residue bracket = null;   
 
 	private MassOptions mass_options = new MassOptions();
+	private String name;
 
 	// ------------------------
 	// construction
@@ -1988,5 +1989,14 @@ public class Glycan implements Comparable, SAXUtils.SAXWriter, MassAware {
 		}else{
 			return toGlycoCTCondensed().equals(((Glycan)aware).toGlycoCT()) && computeMZ()==((Glycan)aware).computeMZ();
 		}
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name){
+		this.name=name;
 	}
 }

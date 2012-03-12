@@ -472,27 +472,8 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		return theDoc.toString(format);
 	}
 	
-	public String getCurrentCoordinates(){
-		StringBuilder buf=new StringBuilder();
-		
-		buf.append("#Orientation angle="+theCanvas.getGlycanRenderer().getGraphicOptions().getOrientationAngle()+"\n");
-		
-		Vector<Glycan> structures=theDoc.getStructures();
-		
-		for(int i=0;i<structures.size();i++){
-			Glycan structure=structures.get(i);
-			
-			buf.append(">"+structure.toGlycoCT().replace("\r\n", "~").replace("\n", "~")+"\n");
-			
-			Collection<Residue> residues=structure.getAllResidues();
-			for(Residue residue:residues){
-				Rectangle rec=theCanvas.theBBoxManager.border_bboxes.get(residue);
-				
-				buf.append(residue.getType().getResidueName()+"~"+rec.x+"~"+rec.y+"~"+rec.width+"~"+rec.height+"\n");
-			}
-		}
-		
-		return buf.toString();
+	public String getCurrentCoordinates(String format){
+		return theDoc.toStringWithCoordinates(format, theCanvas.theBBoxManager);
 	}
 	
 	public void setDocument(String src, String format) {

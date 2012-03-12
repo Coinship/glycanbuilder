@@ -1305,6 +1305,15 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 			return "";
 		}
 	}
+	
+	public String toStringWithCoordinates(String format, BBoxManager bboxManager){
+		try {
+			return toString(structures, GlycanParserFactory.getParser(format), bboxManager);
+		} catch (Exception e) {
+			LogUtils.report(e);
+			return "";
+		}
+	}
 
 	/**
 	 * Create a string representation of the specified structures.
@@ -1315,23 +1324,30 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 		return toString(structures, new GWSParser());
 	}
 
+	
+	
+	static public String toString(Collection<Glycan> structures,
+			GlycanParser parser) {
+		return toString(structures, parser, null);
+	}
+	
 	/**
 	 * Create a string representation of the specified structures using the
 	 * given parser.
 	 */
 	static public String toString(Collection<Glycan> structures,
-			GlycanParser parser) {
+			GlycanParser parser, BBoxManager bboxManager) {
 
 		String str = "";
 		if (parser instanceof GWSParser) {
 			for (Iterator<Glycan> i = structures.iterator(); i.hasNext();) {
-				str += parser.writeGlycan(i.next());
+				str += parser.writeGlycan(i.next(), bboxManager);
 				if (i.hasNext())
 					str += ";";
 			}
 		} else
 			str = parser.writeGlycan(structures.isEmpty() ? null : structures
-					.iterator().next());
+					.iterator().next(), bboxManager);
 
 		return str;
 	}
@@ -1541,6 +1557,8 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 			s.write(th);
 		th.endElement("", "", "Structures");
 	}
+
+	
 
 }
 

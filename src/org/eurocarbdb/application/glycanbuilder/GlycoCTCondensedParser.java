@@ -101,7 +101,11 @@ public class GlycoCTCondensedParser extends GlycoCTParser {
     }
     }
   
-    /**
+    public Sugar toSugar(Glycan structure) throws Exception {
+		return toSugar(structure,null);
+	}
+
+	/**
        Create a glycan structure from its GlycoCT condensed
        representation. Equivalent to a call to {@link #readGlycan}.
        @param default_mass_opt the mass options to use for the new

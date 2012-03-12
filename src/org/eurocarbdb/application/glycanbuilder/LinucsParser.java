@@ -204,4 +204,9 @@ public class LinucsParser implements GlycanParser {
     return domain.charAt(ind);
     }
 
+	@Override
+	public String writeGlycan(Glycan structure, BBoxManager bboxManager) {
+		throw new UnsupportedOperationException();
+	}
+
 }

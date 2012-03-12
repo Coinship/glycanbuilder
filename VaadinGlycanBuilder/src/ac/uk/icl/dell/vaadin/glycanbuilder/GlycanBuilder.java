@@ -380,4 +380,8 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		theWorkspace=workspace;
 		theCanvas.setWorkspace(theWorkspace);
 	}
+	
+	public Panel getGeneralToolBar(){
+		return theToolBarPanel;
+	}
 }

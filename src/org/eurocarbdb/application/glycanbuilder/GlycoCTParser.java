@@ -28,6 +28,7 @@ import org.eurocarbdb.MolecularFramework.io.GlycoCT.*;
 import org.eurocarbdb.MolecularFramework.io.namespace.*;
 import org.eurocarbdb.MolecularFramework.sugar.NonMonosaccharides.HistoricalEntity;
 
+import java.awt.Rectangle;
 import java.util.*;
 import java.util.regex.*;
 
@@ -133,13 +134,17 @@ public class GlycoCTParser implements GlycanParser {
 		return visitor_export;
 	}
 
+	public String toGlycoCT(Glycan structure) {
+		return toGlycoCT(structure,null);
+	}
+	
 	/**
 	 * Return a GlycoCT representation of a glycan structure. Equivalent to a
 	 * call to {@link #writeGlycan}
 	 */
-	public String toGlycoCT(Glycan structure) {
+	public String toGlycoCT(Glycan structure, BBoxManager manager) {
 		try {
-			exporter.start(toSugar(structure));
+			exporter.start(toSugar(structure, manager));
 			return exporter.getXMLCode();
 		} catch (Exception e) {
 			LogUtils.report(e);
@@ -154,7 +159,7 @@ public class GlycoCTParser implements GlycanParser {
 	 * @throws Exception
 	 *             if the conversion cannot be made
 	 */
-	public Sugar toSugar(Glycan structure) throws Exception {
+	public Sugar toSugar(Glycan structure, BBoxManager manager) throws Exception {
 		// init
 		Sugar sugar = new Sugar();
 		if (structure == null)
@@ -167,13 +172,13 @@ public class GlycoCTParser implements GlycanParser {
 			Residue root = structure.getRoot();
 			if (!root.isSaccharide()) {
 				if (root.getTypeName().equals("freeEnd"))
-					toSugar(root.firstChild(), sugar, false, null, null);
+					toSugar(root.firstChild(), sugar, false, null, null, manager);
 				else if (root.getTypeName().equals("redEnd"))
-					toSugar(root.firstChild(), sugar, true, null, null);
+					toSugar(root.firstChild(), sugar, true, null, null, manager);
 				else
-					toSugar(root.firstChild(), sugar, false, null, null);
+					toSugar(root.firstChild(), sugar, false, null, null, manager);
 			} else
-				toSugar(root, sugar, false, null, null);
+				toSugar(root, sugar, false, null, null, manager);
 		}
 
 		// add antennae
@@ -185,7 +190,7 @@ public class GlycoCTParser implements GlycanParser {
 
 				// create subtree
 				UnderdeterminedSubTree nm_antenna = new UnderdeterminedSubTree();
-				toSugar(antenna, nm_antenna, false, null, null);
+				toSugar(antenna, nm_antenna, false, null, null, manager);
 
 				// set connection
 				nm_antenna.setConnection(toSugar(link));
@@ -204,7 +209,7 @@ public class GlycoCTParser implements GlycanParser {
 	}
 
 	private GlycoNode toSugar(Residue current, GlycoGraph nm_graph,
-			boolean alditol, Residue stop_at, HashMap<Residue, GlycoNode> map)
+			boolean alditol, Residue stop_at, HashMap<Residue, GlycoNode> map, BBoxManager bboxManager)
 			throws Exception {
 		if (nm_graph == null)
 			return null;
@@ -216,12 +221,18 @@ public class GlycoCTParser implements GlycanParser {
 		GlycoNode nm_current = null;
 		if (current.isStartRepetition()) {
 			// create repeat unit
-			nm_current = toSugarUnitRepeat(current);
+			nm_current = toSugarUnitRepeat(current, bboxManager);
 			parent = current.findEndRepetition();
 		} else {
 			// translate current residue
 			UnvalidatedGlycoNode toadd = new UnvalidatedGlycoNode();
 			toadd.setName(getIupacName(current, alditol));
+			
+			//if
+			if(bboxManager.border_bboxes.containsKey(current)){
+				toadd.setCenterPosition(bboxManager.border_bboxes.get(current));
+			}
+			
 			nm_current = toadd;
 			parent = current;
 		}
@@ -233,7 +244,7 @@ public class GlycoCTParser implements GlycanParser {
 
 		// translate children
 		for (Linkage link : parent.getChildrenLinkages()) {
-			GlycoNode nm_child = toSugar(link.getChildResidue(), nm_graph, false, stop_at, map);
+			GlycoNode nm_child = toSugar(link.getChildResidue(), nm_graph, false, stop_at, map, bboxManager);
 			
 			if (nm_child != null)
 				nm_graph.addEdge(nm_current, nm_child, toSugar(link));
@@ -242,7 +253,7 @@ public class GlycoCTParser implements GlycanParser {
 		return nm_current;
 	}
 
-	private SugarUnitRepeat toSugarUnitRepeat(Residue start) throws Exception {
+	private SugarUnitRepeat toSugarUnitRepeat(Residue start, BBoxManager manager) throws Exception {
 		// init
 		SugarUnitRepeat unit = new SugarUnitRepeat();
 
@@ -251,7 +262,7 @@ public class GlycoCTParser implements GlycanParser {
 		Residue end = start.findEndRepetition();
 		HashMap<Residue, GlycoNode> map = new HashMap<Residue, GlycoNode>();
 
-		toSugar(root, unit, false, end, map);
+		toSugar(root, unit, false, end, map, manager);
 
 		// set min and max
 		unit.setMinRepeatCount(end.getMinRepetitions());
@@ -682,4 +693,12 @@ public class GlycoCTParser implements GlycanParser {
 		return (int) (pos - '0');
 	}
 
+	@Override
+	public String writeGlycan(Glycan structure, BBoxManager bboxManager) {
+		return toGlycoCT(structure, bboxManager);
+	}
+
+	public Sugar toSugar(Glycan glycan) throws Exception {
+		return toSugar(glycan, null);
+	}
 }

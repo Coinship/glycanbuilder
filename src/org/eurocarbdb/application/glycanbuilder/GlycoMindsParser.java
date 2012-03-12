@@ -412,4 +412,9 @@ public class GlycoMindsParser implements GlycanParser {
     return sb.toString();
     }
 
+	@Override
+	public String writeGlycan(Glycan structure, BBoxManager bboxManager) {
+		throw new UnsupportedOperationException();
+	}
+
 }

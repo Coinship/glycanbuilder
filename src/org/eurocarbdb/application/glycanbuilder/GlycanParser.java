@@ -50,4 +50,6 @@ public interface GlycanParser {
      */
     public Glycan readGlycan(String buffer, MassOptions default_mass_options) throws Exception;
 
+	public String writeGlycan(Glycan structure, BBoxManager bboxManager);
+
 }

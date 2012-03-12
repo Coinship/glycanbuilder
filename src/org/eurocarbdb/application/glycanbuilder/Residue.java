@@ -70,6 +70,8 @@ public class Residue {
 	private Residue endRepetitionResidue;
 
 	private Residue startRepititionResidue;
+
+	private Rectangle centerPos;
     
     // ----
 
@@ -1517,6 +1519,14 @@ public class Residue {
 	
 	public Residue getStartRepetitionResidue(){
 		return startRepititionResidue;
+	}
+
+	public void setCenterPosition(Rectangle rectangle) {
+		centerPos=rectangle;
+	}
+
+	public Rectangle getCenterPosition() {
+		return centerPos;
 	}
 
     //-----------------

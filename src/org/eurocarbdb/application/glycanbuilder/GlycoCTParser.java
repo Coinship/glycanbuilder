@@ -229,7 +229,7 @@ public class GlycoCTParser implements GlycanParser {
 			toadd.setName(getIupacName(current, alditol));
 			
 			//if
-			if(bboxManager.border_bboxes.containsKey(current)){
+			if(bboxManager!=null && bboxManager.border_bboxes.containsKey(current)){
 				toadd.setCenterPosition(bboxManager.border_bboxes.get(current));
 			}
 			

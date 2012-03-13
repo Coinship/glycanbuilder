@@ -401,4 +401,7 @@ public class Molecule {
 		return sb.toString();
 	}
 
+	public TreeMap<Atom, Integer> getRawAtomTree(){
+		return atoms;
+	}
 }

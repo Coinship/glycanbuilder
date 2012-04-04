@@ -34,6 +34,7 @@ import org.vaadin.damerell.canvas.BasicCanvas.ExportListener;
 import org.vaadin.navigator7.NavigableApplication;
 
 import ac.uk.icl.dell.vaadin.LocalResourceWatcher;
+import ac.uk.icl.dell.vaadin.SimpleFileMenu;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.GlycanCanvasUpdateListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.NotationChangedListener;
 import ac.uk.icl.dell.vaadin.glycanbuilder.GlycanCanvas.ResidueHistoryListener;
@@ -63,6 +64,8 @@ import com.vaadin.ui.Window.ResizeEvent;
  */
 public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, ResidueHistoryListener{
 	private static final long serialVersionUID=-1310424874910700087L;
+
+	protected static SimpleFileMenu menu;
 	
 	protected VerticalLayout mainLayout;
 
@@ -71,8 +74,8 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 	
 	public org.eurocarbdb.application.glycanbuilder.BuilderWorkspace theWorkspace;
 	
-	private Panel theToolBarPanel;
-	private List<CustomMenuBar.MenuItem> menuItems=new ArrayList<CustomMenuBar.MenuItem>();
+	protected Panel theToolBarPanel;
+	protected List<CustomMenuBar.MenuItem> menuItems=new ArrayList<CustomMenuBar.MenuItem>();
 	
 	
 	public enum GlycanBuilderMode{
@@ -87,6 +90,12 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 
 	private CustomMenuBar.MenuItem fileMenu;
 	
+	public GlycanBuilder(){
+		this(menu=new SimpleFileMenu());
+		
+		menu.addStyleName("icl-grey-menu");
+	}
+	
 	public GlycanBuilder(ApplicationMenu appMenu){
 		mainLayout=new VerticalLayout();
 		mainLayout.setSizeFull();
@@ -99,6 +108,10 @@ public class GlycanBuilder implements com.vaadin.ui.Window.ResizeListener, Resid
 		
 		theCanvas.enableMouseSelectionRectangle(true);
 		theCanvas.theCanvas.addResidueHistoryListener(this);	
+		
+		if(appMenu==menu){
+			mainLayout.addComponent(menu);
+		}
 		
 		initToolBars();
 		

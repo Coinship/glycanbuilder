@@ -33,7 +33,9 @@ import static org.eurocarbdb.application.glycanbuilder.Geometry.union;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -1260,6 +1262,8 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 			b.setText(null);
 			tb.add(b, recent_residues_index + no_recent_residues_buttons++);
 		}
+		
+		//tb.repaint();
 	}
 
 	private JMenu createZoomMenu() {
@@ -2578,7 +2582,36 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 
 	private JToolBar createToolBarStructure() {
 
-		JToolBar toolbar = new JToolBar();
+		JToolBar toolbar = new JToolBar(){
+			@Override
+			public Dimension getPreferredSize() {
+				int width=getParent().getWidth();
+			
+				int maxHeight=Integer.MIN_VALUE;
+				int runningWidth=0;
+				for(Component component:getComponents()){
+					if(component.getHeight()>maxHeight){
+						maxHeight=component.getHeight();
+					}
+					
+					runningWidth+=component.getWidth()+5;
+				}
+				
+				if(width>0){
+					int rows=(int)runningWidth/width;
+					
+					if(runningWidth % width>0){
+						rows++;
+					}
+					
+					return new Dimension(width, (rows*maxHeight)+(rows*6));
+				}else{
+					return super.getPreferredSize();
+				}
+			}
+		};
+		toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
 		toolbar.setVisible(true);
 		toolbar.setFloatable(false);
 		for (Iterator<ResidueType> i = ResidueDictionary.directResidues()
@@ -2622,9 +2655,60 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 	}
 
 	private JToolBar createToolBarProperties() {
-		JToolBar toolbar = new JToolBar();
+		JToolBar toolbar = new JToolBar(){
+			
+			@Override
+			public Dimension getPreferredSize() {
+				int width=getParent().getWidth();
+			
+				int maxHeight=Integer.MIN_VALUE;
+				int runningWidth=0;
+				for(Component component:getComponents()){
+					if(component.getHeight()>maxHeight){
+						maxHeight=component.getHeight();
+					}
+					
+					runningWidth+=component.getWidth()+6; //was 8, 14
+				}
+				
+				if(width>0){
+					int rows=(int)runningWidth/width;
+					
+					if(runningWidth % width>0){
+						rows++;
+					}
+					
+					return new Dimension(width, (rows*maxHeight)+(rows*6));
+				}else{
+					return super.getPreferredSize();
+				}
+				
+				
+				
+//				int maxY=Integer.MIN_VALUE;
+//				int height=0;
+//				for(Component component:getComponents()){
+//					if(component.getY()>maxY){
+//						maxY=component.getY();
+//						height=component.getHeight();
+//					}
+//				}
+//				
+//				SwingUtilities.invokeLater(new Runnable(){
+//					public void run(){
+//						getParent().repaint();
+//					}
+//				});
+//				
+//				System.out.println("h="+(maxY+height+30));
+//				
+//				return new Dimension(getParent().getWidth(), maxY+height+30);
+			}
+		};
 		toolbar.setFloatable(false);
-		toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+		toolbar.setLayout(new FlowLayout(FlowLayout.LEFT){
+			
+		});
 
 		toolbar.add(createLabel("Linkage", 5));
 		toolbar.add(field_anomeric_state = new JComboBox(new String[] { "?",
@@ -2756,10 +2840,10 @@ public class GlycanCanvas extends JComponent implements ActionListener,
 						10));
 		this.updateChangeResidueRibbonGallery("Change residue", band4);
 
-		//RibbonTask task1 = new RibbonTask("Linkage specification", band1);
+		RibbonTask task1 = new RibbonTask("Linkage specification", band1);
 
 		return new RibbonContextualTaskGroup("Residue options", Color.GREEN,
-				new RibbonTask("Residue input", band2, band3, band4));// ,new //task1
+				new RibbonTask("Residue input", band2, band3, band4), task1);// ,new //task1
 		// RibbonTask("Add residue",band3),new
 		// RibbonTask("Change residue",band4));
 	}

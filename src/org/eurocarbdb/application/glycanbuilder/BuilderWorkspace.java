@@ -273,9 +273,13 @@ public class BuilderWorkspace extends BaseDocument implements BaseWorkspace,
 	 */
 	public void exit(String config_file) {
 		if (config_file != null) {
-			storeToConfiguration(autosave);
-			theConfiguration.save(config_file);
+			storeConfiguration(config_file);
 		}
+	}
+	
+	public void storeConfiguration(String config_file){
+		storeToConfiguration(autosave);
+		theConfiguration.save(config_file);
 	}
 
 	/**

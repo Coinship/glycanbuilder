@@ -3,6 +3,17 @@
 
 /* CSS for none-generic components */
 
+.icl-grey-menu {
+	color:black;
+	background:white;
+	text-shadow: none;
+}
+
+.icl-grey-menu :hover{
+	color:black !important;
+	text-shadow: none;
+}
+
 .toolbar .v-nativebutton {
         display: block;
         width: 65px;

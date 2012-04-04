@@ -188,7 +188,7 @@ public class FileHistory {
      */
     public File getRecentFolder() {
     if( recent_folder==null )
-        return new File(FileUtils.getRootDir());
+        return new File(System.getProperty("user.home"));
     return new File(recent_folder);
     }
 

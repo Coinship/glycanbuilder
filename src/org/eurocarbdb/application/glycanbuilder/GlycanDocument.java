@@ -1345,9 +1345,16 @@ public class GlycanDocument extends BaseDocument implements SAXUtils.SAXWriter {
 				if (i.hasNext())
 					str += ";";
 			}
-		} else
-			str = parser.writeGlycan(structures.isEmpty() ? null : structures
+		} else {
+			if(bboxManager!=null){ //At the moment this will force conversion to GlycoCT_XML
+				str = parser.writeGlycan(structures.isEmpty() ? null : structures
 					.iterator().next(), bboxManager);
+			}else{
+				str = parser.writeGlycan(structures.isEmpty() ? null : structures
+						.iterator().next());
+			}
+
+		}
 
 		return str;
 	}

@@ -77,6 +77,24 @@ public class GlycanBuilder extends JFrame implements ActionListener, BaseDocumen
 
     public GlycanBuilder() throws MalformedURLException {
 
+	ThemeManager themeManager= new ThemeManager(null, this.getClass());
+    	
+    	ThemeManager.lookupNoneCached = false;
+    	FileUtils.themeManager=themeManager;
+    	
+    	try {
+    		themeManager.addIconPath("/icons/glycan_builder", this.getClass());
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    	try {
+    		themeManager.addIconPath("/icons/crystal_project", this.getClass());
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+
     LogUtils.setReportOwner(this);
     LogUtils.setGraphicalReport(true);       
 
@@ -96,7 +114,7 @@ public class GlycanBuilder extends JFrame implements ActionListener, BaseDocumen
     getContentPane().setLayout(new BorderLayout());
     
     // create canvas
-    theCanvas = new GlycanCanvas(this,theWorkspace,new ThemeManager("", this.getClass()));     
+    theCanvas = new GlycanCanvas(this,theWorkspace, themeManager, false);     
     
     // set the toolbars
     UIManager.getDefaults().put("ToolTip.hideAccelerator",Boolean.TRUE);

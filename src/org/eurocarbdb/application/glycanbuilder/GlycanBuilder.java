@@ -25,6 +25,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 import javax.swing.event.*;
+
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
@@ -164,6 +167,11 @@ public class GlycanBuilder extends JFrame implements ActionListener, BaseDocumen
     theWorkspace.setChanged(false);
 
     updateActions();
+    
+    NativeInterface.open();
+
+	JFrame.setDefaultLookAndFeelDecorated(true);
+	JDialog.setDefaultLookAndFeelDecorated(true);
     }
     
     /**

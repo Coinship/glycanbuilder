@@ -130,9 +130,10 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 		String coreTypesFile=getParameter("coreTypesFile");
 		String crossRingFragmentTypesFile=getParameter("crossRingFragmentTypesFile");
 		
+		System.err.println("here1");
 		// create the default workspace
 		theWorkspace = new BuilderWorkspace(null, false,new GlycanRendererAWT(),residueTypesFile,terminalTypesFile,coreTypesFile,crossRingFragmentTypesFile);
-
+		System.err.println("here2");
 		// create singletons
 		theDoc = theWorkspace.getStructures();
 		theActionManager = new ActionManager();
@@ -145,14 +146,14 @@ public class GlycanBuilderApplet extends JApplet implements ActionListener,
 			theWorkspace.setNotation(getParameter("NOTATION"));
 		if (getParameter("DISPLAY") != null)
 			theWorkspace.setDisplay(getParameter("DISPLAY"));
-
+		System.err.println("here3");
 		// create interface
 		try {
 			createUI();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}System.err.println("here4");
 		
 		// set document
 		if (getParameter("DOCUMENT") != null)
